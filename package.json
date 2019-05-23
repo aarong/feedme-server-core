@@ -8,6 +8,7 @@
     "test": "npm run test-src",
     "test-src": "npm run lint-src && jest /src",
     "lint-src": "eslint src/**",
+    "lint-build-tests": "eslint tests/**",
     "build": "npm run test-src && gulp build && npm run test-build",
     "test-build": "jest /tests",
     "coverage": "jest --coverage",
