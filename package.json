@@ -4,15 +4,22 @@
   "description": "A simple and highly flexible Feedme server library for Node.js.",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test-src": "npm run lint-src && jest",
+    "test": "npm run test-src",
     "lint-src": "eslint src/**"
   },
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "babel-core": "^7.0.0-bridge.0",
     "eslint": "^5.12.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-prettier": "^3.0.1",
+    "jest": "^23.6.0",
+    "jest-cli": "^23.6.0",
     "prettier": "^1.14.3"
   },
   "repository": {
@@ -28,5 +35,10 @@
     "url": "https://github.com/aarong/feedme-server-core/issues"
   },
   "homepage": "https://github.com/aarong/feedme-server-core#readme",
-  "dependencies": {}
+  "dependencies": {},
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js}"
+    ]
+  }
 }
