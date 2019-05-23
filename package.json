@@ -1,0 +1,22 @@
+{
+  "name": "feedme-server-core",
+  "version": "0.0.1",
+  "description": "A simple and highly flexible Feedme server library for Node.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aarong/feedme-server-core.git"
+  },
+  "keywords": [
+    "feedme"
+  ],
+  "author": "Aaron G",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aarong/feedme-server-core/issues"
+  },
+  "homepage": "https://github.com/aarong/feedme-server-core#readme"
+}
