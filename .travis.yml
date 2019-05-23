@@ -13,6 +13,7 @@ jobs:
       node_js: "6"
       script:
         - npm run build # test-src, build, test-build
+        - npm run coveralls
     - stage: Test
       language: node_js
       node_js: "8"
