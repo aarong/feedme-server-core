@@ -4,6 +4,7 @@
   "description": "A simple and highly flexible Feedme server library for Node.js.",
   "main": "index.js",
   "scripts": {
+    "docs": "documentation build src/main.js -f html -o docs --access public --access private --access undefined --sort-order alpha",
     "test": "npm run test-src",
     "test-src": "npm run lint-src && jest /src",
     "lint-src": "eslint src/**",
@@ -18,6 +19,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-plugin-add-module-exports": "^1.0.0",
     "del": "^4.0.0",
+    "documentation": "^9.1.1",
     "eslint": "^5.12.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-prettier": "^3.1.0",
