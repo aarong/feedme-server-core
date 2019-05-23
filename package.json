@@ -4,10 +4,11 @@
   "description": "A simple and highly flexible Feedme server library for Node.js.",
   "main": "index.js",
   "scripts": {
-    "test-src": "npm run lint-src && jest",
     "test": "npm run test-src",
+    "test-src": "npm run lint-src && jest /src",
     "lint-src": "eslint src/**",
-    "build": "npm run test-src && gulp build"
+    "build": "npm run test-src && gulp build && npm run test-build",
+    "test-build": "jest /tests"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
