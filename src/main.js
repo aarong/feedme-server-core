@@ -1,4 +1,7 @@
 import "source-map-support/register";
+import debug from "debug";
+
+const dbg = debug("feedme-server-core");
 
 /**
  * Outward-facing server factory function.
@@ -6,6 +9,6 @@ import "source-map-support/register";
  * Takes a transport from outside, wraps it, and injects it into the server.
  */
 export default function feedmeServer() {
-  console.log("Feedme server factory function");
+  dbg("Feedme server factory function");
   return {};
 }

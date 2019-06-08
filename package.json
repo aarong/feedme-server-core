@@ -14,6 +14,10 @@
     "coverage": "jest --coverage",
     "coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls"
   },
+  "dependencies": {
+    "debug": "^4.1.1",
+    "source-map-support": "^0.5.11"
+  },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
@@ -57,9 +61,6 @@
     "url": "https://github.com/aarong/feedme-server-core/issues"
   },
   "homepage": "https://github.com/aarong/feedme-server-core#readme",
-  "dependencies": {
-    "source-map-support": "^0.5.11"
-  },
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.{js}"
