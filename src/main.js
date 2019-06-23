@@ -1,5 +1,7 @@
 import "source-map-support/register";
 import debug from "debug";
+import transportWrapper from "./transportwrapper";
+import messageParser from "./messageparser";
 
 const dbg = debug("feedme-server-core");
 
@@ -10,5 +12,9 @@ const dbg = debug("feedme-server-core");
  */
 export default function feedmeServer() {
   dbg("Feedme server factory function");
+
+  transportWrapper.a = "a"; // bring into docs
+  messageParser.a = "a"; // bring into docs
+
   return {};
 }
