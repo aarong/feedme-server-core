@@ -206,8 +206,8 @@ Transport objects must always be in one of four states:
 
 Transport objects must only change state in the following circumstances:
 
-1. When `stopped` and an outside call to `start()` is received, the transport
-   state must become `starting`.
+1. When `stopped` and an outside call to `transport.start()` is received, the
+   transport state must become `starting`.
 
 2. When `starting` and the transport successfully begins listening for client
    connections, the transport state must become `started`.
@@ -243,8 +243,8 @@ When a new connection is established by a client, the transport must:
   transport failure, an intentional client disconnect, a call to
   `transport.disconnect()`, or a call to `transport.stop()`, it must emit a
   `disconnect` event referencing the client. It must emit no further `message`
-  or `disconnect` events referencing the client identifier (but is free to reuse
-  the identifier in a future `connect` event).
+  or `disconnect` events referencing the client identifier (but it is free to
+  reuse the identifier in a future `connect` event).
 
 ### Transport Methods
 
@@ -270,47 +270,25 @@ Transport objects must implement the following methods:
   `started` and the `start` event must be emitted.
 
   If the transport fails to start, the transport state must become `stopping`
-  and then `stopped`. The `stopping` and `stop` events must be emitted
-  sequentially.
+  and then eventually `stopped`. The `stopping` and eventually `stop` events
+  must be emitted.
 
 - `transport.stop()`
 
   Allows the server to tell the transport to stop accepting new connections and
-  begin terminating existing connections. Returns nothing.
-
-  The server will only call this method if the transport state is `started`. It
-  will not call this method if the transport state is `starting`.
-
-  The transport state must become `stopping` and the `stopping` event must be
-  emitted synchronously. The transport state must subsequently become `stopped`
-  and the `stop` even must be emitted.
-
-- `transport.clientState(clientId)`
-
-  Allows the server to retrieve the connection state for a given client.
-
-  Returns `"connected"` if there is a client with the supplied identifier and
-  `"disconnected"` if not.
+  terminate existing connections. Returns nothing.
 
   The server will only call this method if the transport state is `started`.
 
-- `transport.clients()`
-
-  Allows the server to retrieve the identifiers of all connected clients.
-
-  Returns an array of string client identifiers.
-
-  The server will only call this method if the transport state is `started`.
+  The transport state must become `stopping` and eventually `stopped`. The
+  `stopping` and eventually `stopped` events must be emitted.
 
 - `transport.send(clientId, msg)`
 
   Allows the server to send a string message to a client. Returns nothing.
 
   The server will only call this method if the transport state is `started` and
-  will only reference `clientId`s that are `connected`.
-
-  The server will only call this method if the transport state is `started` and
-  if the client is understood to be connected.
+  will only reference a `clientId` that is `connected`.
 
 - `transport.disconnect(clientId)`
 
@@ -319,7 +297,7 @@ Transport objects must implement the following methods:
   Returns nothing.
 
   The server will only call this method if the transport state is `started` and
-  if the client is understood to be connected.
+  will only reference a `clientId` that is `connected`.
 
 ### Transport Events
 
@@ -353,23 +331,16 @@ client.
   of the form `new Error("FAILURE: Descriptive error message.")` must be must be
   passed to the listeners.
 
-  The server must emit a `disconnect` event referencing each connected client
-  before emitting the `stopping` event.
+  The server must emit a `disconnect` event referencing each
+  previously-connected client before emitting the `stopping` event.
 
 - `stop([err])`
 
   Informs the server that the transport state is now `stopped`. This event must
   only be emitted when the transport state was previously `stopping`.
 
-  If the stoppage resulted from an explicit server call to `stop()` then the
-  transport must not pass an error object to the listeners. The transport must
-  not pass `null`, `undefined`, `false`, or any other value in place of the
-  error object.
-
-  If the stoppage resulted from a failure to start the transport after a call to
-  `transport.start()` or from an internal failure once `started`, then an error
-  of the form `new Error("FAILURE: Descriptive error message.")` must be must be
-  passed to the listeners.
+  The transport must pass the same `err` object (or not) that was passed with
+  the previous `stopping` event.
 
 - `connect(clientId)`
 
@@ -396,15 +367,20 @@ client.
   Once this event has been emitted, the transport must emit no further `message`
   or `disconnect` events referencing `clientId`.
 
-  If the disconnect resulted from an explicit call to `transport.disconnect()`
-  or `transport.stop()` then the transport must not pass an error object the
-  listeners. The transport must not pass `null`, `undefined`, `false`, or any
-  other value in place of the error object.
+  If the disconnect resulted from an explicit call to `transport.disconnect()`,
+  then the transport must not pass an error object the listeners. The transport
+  must not pass `null`, `undefined`, `false`, or any other value in place of the
+  error object.
 
-  If the event resulted from a connection failure internal to the transport,
-  including an intentional client-side disconnect, then an error of the form
-  `new Error("DISCONNECTED: Descriptive error message.")` must be must be passed
-  to the listeners.
+  If the disconnect resulted from an explicit call to `transport.stop()` then
+  the transport, then an error of the form
+  `new Error("STOPPING: Descriptive error message.")` must be must be passed to
+  the listeners.
 
-  The the server is stopping, a `disconnect` event must be emitted referencing
-  each connected client before the `stopping` event is emitted.
+  If the event resulted from a connection failure internal to the transport or
+  an intentional client-side disconnect, then an error of the form
+  `new Error("FAILURE: Descriptive error message.")` must be must be passed to
+  the listeners.
+
+  If the server is stopping, a `disconnect` event must be emitted for each
+  previously-connected client before the `stopping` event is emitted.

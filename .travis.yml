@@ -1,6 +1,4 @@
 sudo: false
-addons:
-  sauce_connect: true
 branches:
   only:
     - master

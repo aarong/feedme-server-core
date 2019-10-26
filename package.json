@@ -1,7 +1,7 @@
 {
   "name": "feedme-server-core",
   "version": "0.0.2",
-  "description": "A simple and highly flexible Feedme server library for Node.js.",
+  "description": "A low-level Feedme server library for Node.js.",
   "main": "index.js",
   "scripts": {
     "docs": "documentation build src/main.js -f html -o docs --access public --access private --access undefined --sort-order alpha",
@@ -15,11 +15,14 @@
     "coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls"
   },
   "dependencies": {
-    "ajv": "^6.6.2",
     "check-types": "^7.4.0",
     "component-emitter": "^1.2.1",
     "debug": "^4.1.1",
-    "source-map-support": "^0.5.11"
+    "feedme-util": "^0.2.1",
+    "json-expressible": "^1.0.1",
+    "lodash": "^4.17.4",
+    "source-map-support": "^0.5.11",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
