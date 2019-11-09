@@ -595,7 +595,7 @@ proto.actionRevelation = function actionRevelation(params) {
   if (feedSerial in this._feedClientStates) {
     _.each(this._feedClientStates[feedSerial], (state, clientId) => {
       if (state === "open") {
-        this._transportWrapper.send(clientId, msg);
+        this._transportWrapper.send(this._transportClientIds[clientId], msg);
       }
     });
   }
@@ -701,7 +701,6 @@ proto.feedTermination = function feedTermination(params) {
     // 2. All feeds for one client
 
     dbg("Feed termination usage 2");
-
     if (params.clientId in this._clientFeedStates) {
       _.each(this._clientFeedStates[params.clientId], (state, feedSerial) => {
         if (state === "opening") {
@@ -1726,13 +1725,16 @@ proto._terminateOpenFeed = function _terminateOpenFeed(
 
   // Set a termination timer if so configured
   if (this._options.terminationMs > 0) {
-    if (!this._terminationTimers[clientId]) {
-      this._terminationTimers[clientId] = {};
-    }
-    this._terminationTimers[clientId][feedSerial] = setTimeout(() => {
-      this._delete(this._clientFeedStates, clientId, feedSerial);
-      this._delete(this._feedClientStates, feedSerial, clientId);
-    }, this._options.terminationMs);
+    this._set(
+      this._terminationTimers,
+      clientId,
+      feedSerial,
+      setTimeout(() => {
+        this._delete(this._clientFeedStates, clientId, feedSerial);
+        this._delete(this._feedClientStates, feedSerial, clientId);
+        this._delete(this._terminationTimers, clientId, feedSerial);
+      }, this._options.terminationMs)
+    );
   }
 
   // Send FeedTermination message
