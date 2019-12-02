@@ -57,6 +57,11 @@ describe("The test harn", () => {
       expect(l.stop.mock.calls[0].length).toBe(1);
       expect(l.stop.mock.calls[0][0]).toBe(123);
 
+      harn.server.emit("connect", 123);
+      expect(l.connect.mock.calls.length).toBe(1);
+      expect(l.connect.mock.calls[0].length).toBe(1);
+      expect(l.connect.mock.calls[0][0]).toBe(123);
+
       harn.server.emit("handshake", 123);
       expect(l.handshake.mock.calls.length).toBe(1);
       expect(l.handshake.mock.calls[0].length).toBe(1);

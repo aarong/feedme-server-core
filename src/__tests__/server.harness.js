@@ -6,15 +6,6 @@ import server from "../server";
 const harnessProto = {};
 
 export default function harnessFactory(options = {}) {
-  /*
-    Members:
-        .transportWrapper (=server._transportWrapper)
-        .server
-    Functions:
-        .createServerListener()
-        .getServerState()
-  */
-
   const harness = Object.create(harnessProto);
 
   // Create mock transport wrapper (stopped)
@@ -760,6 +751,7 @@ harnessProto.createServerListener = function createServerListener() {
     stopping: jest.fn(),
     stop: jest.fn(),
     handshake: jest.fn(),
+    connect: jest.fn(),
     action: jest.fn(),
     feedOpen: jest.fn(),
     feedClose: jest.fn(),
@@ -772,6 +764,7 @@ harnessProto.createServerListener = function createServerListener() {
     l.start.mockClear();
     l.stopping.mockClear();
     l.stop.mockClear();
+    l.connect.mockClear();
     l.handshake.mockClear();
     l.action.mockClear();
     l.feedOpen.mockClear();
@@ -784,6 +777,7 @@ harnessProto.createServerListener = function createServerListener() {
   this.server.on("start", l.start);
   this.server.on("stopping", l.stopping);
   this.server.on("stop", l.stop);
+  this.server.on("connect", l.connect);
   this.server.on("handshake", l.handshake);
   this.server.on("action", l.action);
   this.server.on("feedOpen", l.feedOpen);

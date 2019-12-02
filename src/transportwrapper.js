@@ -44,8 +44,6 @@ export default function transportWrapperFactory(transport) {
     !check.function(transport.state) ||
     !check.function(transport.start) ||
     !check.function(transport.stop) ||
-    !check.function(transport.clientState) ||
-    !check.function(transport.clients) ||
     !check.function(transport.send) ||
     !check.function(transport.disconnect)
   ) {

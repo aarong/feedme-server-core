@@ -19,8 +19,6 @@ describe("The transportWrapper() factory function", () => {
         state: () => {},
         start: () => {},
         stop: () => {},
-        clientState: () => {},
-        clients: () => {},
         send: () => {},
         disconnect: () => {}
       });
@@ -38,8 +36,6 @@ describe("The transportWrapper() factory function", () => {
         // state: () => {},
         start: () => {},
         stop: () => {},
-        clientState: () => {},
-        clients: () => {},
         send: () => {},
         disconnect: () => {}
       });
@@ -57,8 +53,6 @@ describe("The transportWrapper() factory function", () => {
         state: () => {},
         // start: () => {},
         stop: () => {},
-        clientState: () => {},
-        clients: () => {},
         send: () => {},
         disconnect: () => {}
       });
@@ -76,46 +70,6 @@ describe("The transportWrapper() factory function", () => {
         state: () => {},
         start: () => {},
         // stop: () => {},
-        clientState: () => {},
-        clients: () => {},
-        send: () => {},
-        disconnect: () => {}
-      });
-    }).toThrow(
-      new Error(
-        "INVALID_ARGUMENT: The supplied transport does not implement the required API."
-      )
-    );
-  });
-
-  it("should throw if the transport has no clientState() function", () => {
-    expect(() => {
-      transportWrapper({
-        on: () => {},
-        state: () => {},
-        start: () => {},
-        stop: () => {},
-        // clientState: () => {},
-        clients: () => {},
-        send: () => {},
-        disconnect: () => {}
-      });
-    }).toThrow(
-      new Error(
-        "INVALID_ARGUMENT: The supplied transport does not implement the required API."
-      )
-    );
-  });
-
-  it("should throw if the transport has no clients() function", () => {
-    expect(() => {
-      transportWrapper({
-        on: () => {},
-        state: () => {},
-        start: () => {},
-        stop: () => {},
-        clientState: () => {},
-        // clients: () => {},
         send: () => {},
         disconnect: () => {}
       });
@@ -133,8 +87,6 @@ describe("The transportWrapper() factory function", () => {
         state: () => {},
         start: () => {},
         stop: () => {},
-        clientState: () => {},
-        clients: () => {},
         // send: () => {},
         disconnect: () => {}
       });
@@ -152,8 +104,6 @@ describe("The transportWrapper() factory function", () => {
         state: () => {},
         start: () => {},
         stop: () => {},
-        clientState: () => {},
-        clients: () => {},
         send: () => {}
         // disconnect: () => {}
       });
@@ -171,8 +121,6 @@ describe("The transportWrapper() factory function", () => {
         state: () => "starting",
         start: () => {},
         stop: () => {},
-        clientState: () => {},
-        clients: () => {},
         send: () => {},
         disconnect: () => {}
       });
@@ -188,8 +136,6 @@ describe("The transportWrapper() factory function", () => {
         state: () => "stopped",
         start: () => {},
         stop: () => {},
-        clientState: () => {},
-        clients: () => {},
         send: () => {},
         disconnect: () => {}
       })
@@ -207,8 +153,6 @@ describe("the state() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     };
@@ -244,8 +188,6 @@ describe("the state() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     };
@@ -277,8 +219,6 @@ describe("the state() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     };
@@ -302,8 +242,6 @@ describe("the state() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -332,8 +270,6 @@ describe("the state() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -366,8 +302,6 @@ describe("the state() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -406,8 +340,6 @@ describe("the start() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -442,8 +374,6 @@ describe("the start() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -481,8 +411,6 @@ describe("the start() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -508,8 +436,6 @@ describe("the stop() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -539,8 +465,6 @@ describe("the stop() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -589,8 +513,6 @@ describe("the stop() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -625,8 +547,6 @@ describe("the send() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -656,8 +576,6 @@ describe("the send() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -696,8 +614,6 @@ describe("the send() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -747,8 +663,6 @@ describe("the send() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -794,8 +708,6 @@ describe("the send() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -833,8 +745,6 @@ describe("the disconnect() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -864,8 +774,6 @@ describe("the disconnect() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -904,8 +812,6 @@ describe("the disconnect() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -955,8 +861,6 @@ describe("the disconnect() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1002,8 +906,6 @@ describe("the disconnect() function", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1043,8 +945,6 @@ describe("the transport 'starting' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1081,8 +981,6 @@ describe("the transport 'starting' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1123,8 +1021,6 @@ describe("the transport 'starting' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1169,8 +1065,6 @@ describe("the transport 'starting' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1202,8 +1096,6 @@ describe("the transport 'starting' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1233,8 +1125,6 @@ describe("the transport 'start' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1266,8 +1156,6 @@ describe("the transport 'start' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1308,8 +1196,6 @@ describe("the transport 'start' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1354,8 +1240,6 @@ describe("the transport 'start' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1392,8 +1276,6 @@ describe("the transport 'start' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1428,8 +1310,6 @@ describe("the transport 'stopping' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1461,8 +1341,6 @@ describe("the transport 'stopping' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1507,8 +1385,6 @@ describe("the transport 'stopping' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1545,8 +1421,6 @@ describe("the transport 'stopping' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1583,8 +1457,6 @@ describe("the transport 'stopping' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1619,8 +1491,6 @@ describe("the transport 'stopping' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1657,8 +1527,6 @@ describe("the transport 'stopping' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1699,8 +1567,6 @@ describe("the transport 'stop' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1732,8 +1598,6 @@ describe("the transport 'stop' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1770,8 +1634,6 @@ describe("the transport 'stop' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1812,8 +1674,6 @@ describe("the transport 'stop' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1858,8 +1718,6 @@ describe("the transport 'stop' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1904,8 +1762,6 @@ describe("the transport 'stop' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1946,8 +1802,6 @@ describe("the transport 'stop' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -1992,8 +1846,6 @@ describe("the transport 'connect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2025,8 +1877,6 @@ describe("the transport 'connect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2067,8 +1917,6 @@ describe("the transport 'connect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2109,8 +1957,6 @@ describe("the transport 'connect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2151,8 +1997,6 @@ describe("the transport 'connect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2196,8 +2040,6 @@ describe("the transport 'connect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2243,8 +2085,6 @@ describe("the transport 'message' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2276,8 +2116,6 @@ describe("the transport 'message' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2318,8 +2156,6 @@ describe("the transport 'message' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2360,8 +2196,6 @@ describe("the transport 'message' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2402,8 +2236,6 @@ describe("the transport 'message' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2444,8 +2276,6 @@ describe("the transport 'message' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2486,8 +2316,6 @@ describe("the transport 'message' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2531,8 +2359,6 @@ describe("the transport 'disconnect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2564,8 +2390,6 @@ describe("the transport 'disconnect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2611,8 +2435,6 @@ describe("the transport 'disconnect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2653,8 +2475,6 @@ describe("the transport 'disconnect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2695,8 +2515,6 @@ describe("the transport 'disconnect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2737,8 +2555,6 @@ describe("the transport 'disconnect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2782,8 +2598,6 @@ describe("the transport 'disconnect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });
@@ -2828,8 +2642,6 @@ describe("the transport 'disconnect' event", () => {
       state: () => "stopped",
       start: () => {},
       stop: () => {},
-      clientState: () => {},
-      clients: () => {},
       send: () => {},
       disconnect: () => {}
     });

@@ -39,6 +39,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -108,6 +109,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -180,6 +182,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -257,6 +260,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -329,6 +333,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -401,6 +406,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -473,6 +479,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -550,6 +557,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -622,6 +630,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -694,6 +703,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -795,6 +805,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -898,6 +909,7 @@ describe("The server.feedTermination() function", () => {
               expect(serverListener.start.mock.calls.length).toBe(0);
               expect(serverListener.stopping.mock.calls.length).toBe(0);
               expect(serverListener.stop.mock.calls.length).toBe(0);
+              expect(serverListener.connect.mock.calls.length).toBe(0);
               expect(serverListener.handshake.mock.calls.length).toBe(0);
               expect(serverListener.action.mock.calls.length).toBe(0);
               expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1023,6 +1035,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1126,6 +1139,7 @@ describe("The server.feedTermination() function", () => {
               expect(serverListener.start.mock.calls.length).toBe(0);
               expect(serverListener.stopping.mock.calls.length).toBe(0);
               expect(serverListener.stop.mock.calls.length).toBe(0);
+              expect(serverListener.connect.mock.calls.length).toBe(0);
               expect(serverListener.handshake.mock.calls.length).toBe(0);
               expect(serverListener.action.mock.calls.length).toBe(0);
               expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1276,6 +1290,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1379,6 +1394,7 @@ describe("The server.feedTermination() function", () => {
               expect(serverListener.start.mock.calls.length).toBe(0);
               expect(serverListener.stopping.mock.calls.length).toBe(0);
               expect(serverListener.stop.mock.calls.length).toBe(0);
+              expect(serverListener.connect.mock.calls.length).toBe(0);
               expect(serverListener.handshake.mock.calls.length).toBe(0);
               expect(serverListener.action.mock.calls.length).toBe(0);
               expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1504,6 +1520,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1607,6 +1624,7 @@ describe("The server.feedTermination() function", () => {
               expect(serverListener.start.mock.calls.length).toBe(0);
               expect(serverListener.stopping.mock.calls.length).toBe(0);
               expect(serverListener.stop.mock.calls.length).toBe(0);
+              expect(serverListener.connect.mock.calls.length).toBe(0);
               expect(serverListener.handshake.mock.calls.length).toBe(0);
               expect(serverListener.action.mock.calls.length).toBe(0);
               expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1732,6 +1750,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1833,6 +1852,7 @@ describe("The server.feedTermination() function", () => {
               expect(serverListener.start.mock.calls.length).toBe(0);
               expect(serverListener.stopping.mock.calls.length).toBe(0);
               expect(serverListener.stop.mock.calls.length).toBe(0);
+              expect(serverListener.connect.mock.calls.length).toBe(0);
               expect(serverListener.handshake.mock.calls.length).toBe(0);
               expect(serverListener.action.mock.calls.length).toBe(0);
               expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1963,6 +1983,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -2066,6 +2087,7 @@ describe("The server.feedTermination() function", () => {
               expect(serverListener.start.mock.calls.length).toBe(0);
               expect(serverListener.stopping.mock.calls.length).toBe(0);
               expect(serverListener.stop.mock.calls.length).toBe(0);
+              expect(serverListener.connect.mock.calls.length).toBe(0);
               expect(serverListener.handshake.mock.calls.length).toBe(0);
               expect(serverListener.action.mock.calls.length).toBe(0);
               expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -2216,6 +2238,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -2319,6 +2342,7 @@ describe("The server.feedTermination() function", () => {
               expect(serverListener.start.mock.calls.length).toBe(0);
               expect(serverListener.stopping.mock.calls.length).toBe(0);
               expect(serverListener.stop.mock.calls.length).toBe(0);
+              expect(serverListener.connect.mock.calls.length).toBe(0);
               expect(serverListener.handshake.mock.calls.length).toBe(0);
               expect(serverListener.action.mock.calls.length).toBe(0);
               expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -2444,6 +2468,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -2547,6 +2572,7 @@ describe("The server.feedTermination() function", () => {
               expect(serverListener.start.mock.calls.length).toBe(0);
               expect(serverListener.stopping.mock.calls.length).toBe(0);
               expect(serverListener.stop.mock.calls.length).toBe(0);
+              expect(serverListener.connect.mock.calls.length).toBe(0);
               expect(serverListener.handshake.mock.calls.length).toBe(0);
               expect(serverListener.action.mock.calls.length).toBe(0);
               expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -2672,6 +2698,7 @@ describe("The server.feedTermination() function", () => {
             expect(serverListener.start.mock.calls.length).toBe(0);
             expect(serverListener.stopping.mock.calls.length).toBe(0);
             expect(serverListener.stop.mock.calls.length).toBe(0);
+            expect(serverListener.connect.mock.calls.length).toBe(0);
             expect(serverListener.handshake.mock.calls.length).toBe(0);
             expect(serverListener.action.mock.calls.length).toBe(0);
             expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -2773,6 +2800,7 @@ describe("The server.feedTermination() function", () => {
               expect(serverListener.start.mock.calls.length).toBe(0);
               expect(serverListener.stopping.mock.calls.length).toBe(0);
               expect(serverListener.stop.mock.calls.length).toBe(0);
+              expect(serverListener.connect.mock.calls.length).toBe(0);
               expect(serverListener.handshake.mock.calls.length).toBe(0);
               expect(serverListener.action.mock.calls.length).toBe(0);
               expect(serverListener.feedOpen.mock.calls.length).toBe(0);

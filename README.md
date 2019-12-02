@@ -28,12 +28,13 @@ Library contributors and transport developers should see the
 - [Getting Started](#getting-started)
 - [API](#api)
   - [Initialization](#initialization)
-  - [Server States](#server-states)
+  - [States](#states)
   - [Events](#events)
     - [starting](#starting)
     - [start](#start)
     - [stopping](#stopping)
     - [stop](#stop)
+    - [connect](#connect)
     - [handshake](#handshake)
     - [action](#action)
     - [feedOpen](#feedopen)
@@ -172,7 +173,7 @@ Errors thrown:
 
   The `options` argument was invalid.
 
-### Server States
+### States
 
 The server is always in one of four states:
 
@@ -232,21 +233,31 @@ invoked with no arguments.
 If the stoppage resulted from a transport error condition then listeners are
 passed the `Error` object emitted by the transport.
 
+#### connect
+
+Emitted when a client connects on the transport, before any messages have been
+exchanged.
+
+Arguments passed to the listeners:
+
+1. `clientId` (string) is the identifier assigned by the server to the client
+   The client will be made aware of this identifier once it has submitted an
+   acceptable `Handshake` message.
+
 #### handshake
 
-Emitted when a client transmits a valid `Handshake` message specifying a Feedme
-version that is supported by the library, but before the server has returned a
-`HandshakeResponse` message indicating success. Applications can listen to this
-event to perform any processing that is required before a Feedme conversation is
-initiated with a client.
+Emitted when a client's submits a valid and library-compatible `Handshake`
+message, but before the server has returned a `HandshakeResponse` message
+indicating success. Applications can use this event to perform any processing
+that is required before a Feedme conversation is initiated with a client.
 
 If a client `Handshake` message is invalid or specifies a Feedme version not
 supported by the library, then the `handshake` event is not emitted and a
 `HandshakeResponse` indicating failure is returned to the client immediately.
 
-If no listeners are attached to the `handshake` event, then the server always
-returns a `HandshakeResponse` as soon as a valid `Handshake` message is received
-from the client.
+If no listeners are attached to the `handshake` event, then the event is not
+emitted and the server returns a `HandshakeResponse` indicating success as soon
+as a valid `Handshake` message is received from the client.
 
 Arguments passed to the listeners:
 
@@ -256,12 +267,13 @@ Arguments passed to the listeners:
 2. `handshakeResponse` (Object) is a `HandshakeResponse` object enabling the
    application to respond to the request.
 
-The application must eventually call `handshakeResponse.success()` to return a
-`HandshakeResponse` message to the client.
+The application must eventually call `handshakeResponse.success()`, which
+returns a `HandshakeResponse` message indicating success to the client and sets
+the client state to `ready`.
 
 #### action
 
-Emitted when a client transmits a valid `Action` message.
+Emitted when a client transmits a valid `Action` message
 
 If no listeners are attached to the `action` event, then the server returns
 failure to all action requests with error code `"INTERNAL_ERROR"`.
@@ -308,6 +320,10 @@ If no listeners are attached to the `feedClose` event, then the library returns
 a `FeedCloseResponse` immediately when a valid `FeedClose` message is received
 from the client.
 
+If the feed has already been terminated and the client submits a `FeedClose`
+message within `options.terminationMs` then no `feedClose` event is emitted and
+success is returned immediately to the client.
+
 Arguments passed to the listeners:
 
 1. `feedCloseRequest` (Object) is a `FeedCloseRequest` object describing the
@@ -322,10 +338,12 @@ server is not permitted to reject feed closure requests.
 
 #### disconnect
 
-Emitted when a client connection ends. Only emitted if the client had
-successfully completed a handshake. If a handshake was in progress (i.e. the
-`handshake` event was emitted but the application had not yet called
-`handshakeResponse.success()`) then the `disconnect` event is not emitted.
+Emitted when a client's state transitions from `awaiting_handshake`,
+`processing_handshake`, or `ready` to `not_connected`.
+
+If there were `handshake`, `action`, `feedOpen`, or `feedClose` events
+associated with the client that have not yet been responded to, then subsequent
+`xres.success()` and `xres.failure()` calls will succeed but do nothing.
 
 Arguments passed to the listeners:
 
@@ -337,9 +355,9 @@ Arguments passed to the listeners:
 - If the client was intentionally disconnected by a call to
   `server.disconnect()` then `err` is omitted.
 
-- If the client was disconnected by the library for failing to perform a
-  handshake within the amoutn of configured time, then `err` is an `Error`
-  object with `err.message === "HANDSHAKE_TIMEOUT: ..."`.
+- If the client did not submit a valid and compatible `Handshake` message within
+  `options.handshakeMs` (if enabled), then `err` is an `Error` object with
+  `err.message === "HANDSHAKE_TIMEOUT: ..."`.
 
 - If the connection was severed intentionally by the client or there was a
   transport connectivity problem, then `err` is an `Error` object with
@@ -475,9 +493,8 @@ There are three usages: (1) terminate a specified feed for a specified client,
 (2) terminate all feeds for a specified client, and (3) terminate all clients on
 a specified feed.
 
-If there are no relevant feeds to be closed, including because the client id
-does not exist, then the function returns successfully. You could throw on
-invalid client id; you would never throw on not-open feed.
+If there are no relevant feeds to be closed, including because the client state
+is not `ready`, then the function returns successfully.
 
 Behavior depends on the state of the client feed(s) being terminated:
 
@@ -560,8 +577,10 @@ Errors thrown (for all three usages):
 
 #### server.disconnect(clientId)
 
-Forcibly disconnects a client transport connection. The method returns
-successfully if the specified client is not found.
+Forcibly disconnects a client transport connection.
+
+The method returns successfully irrespective of the specified client's current
+actual connection state.
 
 Arguments:
 

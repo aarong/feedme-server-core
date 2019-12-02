@@ -290,7 +290,7 @@ Transport objects must implement the following methods:
   The server will only call this method if the transport state is `started` and
   will only reference a `clientId` that is `connected`.
 
-- `transport.disconnect(clientId)`
+- `transport.disconnect(clientId, [err])`
 
   Allows the server to forcibly terminate a client's transport connection.
 
@@ -367,10 +367,15 @@ client.
   Once this event has been emitted, the transport must emit no further `message`
   or `disconnect` events referencing `clientId`.
 
-  If the disconnect resulted from an explicit call to `transport.disconnect()`,
-  then the transport must not pass an error object the listeners. The transport
-  must not pass `null`, `undefined`, `false`, or any other value in place of the
-  error object.
+  If the disconnect resulted from a server call to `transport.disconnect()`...
+
+  - If the `disconnect()` call received an `err` argument, then the transport
+    must pass it to the event listeners.
+
+  - If the `disconnect()` call received no `err` argument, then the transport
+    must not pass an error object to the listeners. The transport must not pass
+    `null`, `undefined`, `false`, or any other value in place of the error
+    object.
 
   If the disconnect resulted from an explicit call to `transport.stop()` then
   the transport, then an error of the form

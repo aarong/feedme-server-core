@@ -145,27 +145,6 @@ export default function serverFactory(options) {
   server._transportClientIds = {};
 
   /**
-   * Timer ids for handshake timeout disconnects, indexed by Feedme client id.
-   *
-   * server._handshakeTimers[cid] = timerId
-   *
-   * Added when a client connects to the transport
-   *   Absence does not mean that the handshake process is complete
-   *   HandshakeResponse could be pending if there is a `handshake` event listener
-   *
-   * Removed when
-   *    The client submits a version-compatible Handshake message
-   *    The client disconnects from the transport
-   *    The server stops
-   *
-   * @memberof Server
-   * @instance
-   * @private
-   * @type {Object}
-   */
-  server._handshakeTimers = {};
-
-  /**
    * Handshake status flags.
    *
    * server._handshakeStatus[cid] = missing/string
@@ -209,6 +188,27 @@ export default function serverFactory(options) {
    * @type {Object}
    */
   server._handshakeResponses = {};
+
+  /**
+   * Timer ids for handshake timeout disconnects, indexed by Feedme client id.
+   *
+   * server._handshakeTimers[cid] = timerId
+   *
+   * Added when a client connects to the transport
+   *   Absence does not mean that the handshake process is complete
+   *   HandshakeResponse could be pending if there is a `handshake` event listener
+   *
+   * Removed when
+   *    The client submits a version-compatible Handshake message
+   *    The client disconnects from the transport
+   *    The server stops
+   *
+   * @memberof Server
+   * @instance
+   * @private
+   * @type {Object}
+   */
+  server._handshakeTimers = {};
 
   /**
    * Active ActionResponse objects that have been emitted to the application.
@@ -344,7 +344,7 @@ export default function serverFactory(options) {
     server._processStopping(err);
   });
   server._transportWrapper.on("stop", err => {
-    server._processStopp(err);
+    server._processStop(err);
   });
   server._transportWrapper.on("connect", tcid => {
     server._processConnect(tcid);
@@ -385,6 +385,13 @@ export default function serverFactory(options) {
  * @memberof Server
  * @instance
  * @param {?Error} err Present iff this did not result from a call to `server.stop()`
+ */
+
+/**
+ * @event connect
+ * @memberof Server
+ * @param {string} clientId
+ * @instance
  */
 
 /**
@@ -759,7 +766,8 @@ proto.feedTermination = function feedTermination(params) {
 };
 
 /**
- * Disconnects a client - post-handshake only.
+ * Ensures a client is disconnected from the transport.
+ * Succeeds irrespective of actual client state.
  * @memberof Server
  * @instance
  * @param {string} clientId
@@ -774,20 +782,15 @@ proto.disconnect = function disconnect(clientId) {
     throw new Error("INVALID_STATE: The server is not started.");
   }
 
-  // Check if client id is valid
+  // Check client id
   if (!check.nonEmptyString(clientId)) {
     throw new Error("INVALID_ARGUMENT: Invalid client id.");
   }
 
-  // Throw is client has not completed a handshake (app not in control)
-  if (this._handshakeStatus[clientId] !== "complete") {
-    throw new Error(
-      "INVALID_STATE: Client does not exist or has not completed a hanshake."
-    );
+  // Disconnect on the transport if the client is connected (don't throw otherwise)
+  if (clientId in this._transportClientIds) {
+    this._transportWrapper.disconnect(this._transportClientIds[clientId]);
   }
-
-  // Disconnect on the transport
-  this._transportWrapper.disconnect(clientId);
 };
 
 // Transport listeners
@@ -805,7 +808,7 @@ proto._processStarting = function _processStarting() {
 };
 
 /**
- * Process a transport started event.
+ * Process a transport start event.
  * @memberof Server
  * @instance
  * @private
@@ -821,57 +824,67 @@ proto._processStart = function _processStart() {
  *
  * Transport required to have already emitted `disconnect` events for all
  * previously-connected clients.
+ *
+ * Maybe this is a silly requirement -- you could do it within the core server
  * @memberof Server
  * @instance
  * @private
+ * @param {?Error} err
  */
 proto._processStopping = function _processStopping(err) {
   dbg("Observed transport stopping event");
 
-  // Neutralize all response objects
-  _.each(this._handshakeResponses, hsres => {
-    hsres._neutralize();
-  });
-  _.each(this._actionResponses, client => {
-    _.each(client, ares => {
-      ares._neutralize();
-    });
-  });
-  _.each(this._feedOpenResponses, client => {
-    _.each(client, fores => {
-      fores._neutralize();
-    });
-  });
-  _.each(this._feedCloseResponses, client => {
-    _.each(client, fcres => {
-      fcres._neutralize();
-    });
-  });
+  // The transport is required to emit a disconnect event referencing
+  // each previously-connected client -- no need to neutralize response
+  // objects, clear timers, or reset state
 
-  // Clear all handshake timers
-  _.each(this._handshakeTimers, timerId => {
-    clearTimeout(timerId);
-  });
+  // Delete all of this
 
-  // Clear all termination timers
-  _.each(this._terminationTimers, clientTimers => {
-    _.each(clientTimers, timerId => {
-      clearTimeout(timerId);
-    });
-  });
+  // // Neutralize all response objects
+  // _.each(this._handshakeResponses, hsres => {
+  //   hsres._neutralize();
+  // });
+  // _.each(this._actionResponses, client => {
+  //   _.each(client, ares => {
+  //     ares._neutralize();
+  //   });
+  // });
+  // _.each(this._feedOpenResponses, client => {
+  //   _.each(client, fores => {
+  //     fores._neutralize();
+  //   });
+  // });
+  // _.each(this._feedCloseResponses, client => {
+  //   _.each(client, fcres => {
+  //     fcres._neutralize();
+  //   });
+  // });
 
-  // Reset internal state
-  this._clientIds = {};
-  this._transportClientIds = {};
-  this._handshakeTimers = {};
-  this._handshakeStatus = {};
-  this._handshakeResponses = {};
-  this._actionResponses = {};
-  this._clientFeedStates = {};
-  this._feedClientStates = {};
-  this._terminationTimers = {};
-  this._feedOpenResponses = {};
-  this._feedCloseResponses = {};
+  // // Clear all handshake timers
+  // // eslint-disable-next-line
+  // _.each(this._handshakeTimers, timerId => {
+  //   // clearTimeout(timerId);
+  // });
+
+  // // Clear all termination timers
+  // _.each(this._terminationTimers, clientTimers => {
+  //   _.each(clientTimers, timerId => {
+  //     clearTimeout(timerId);
+  //   });
+  // });
+
+  // // Reset internal state
+  // this._clientIds = {};
+  // this._transportClientIds = {};
+  // this._handshakeTimers = {};
+  // this._handshakeStatus = {};
+  // this._handshakeResponses = {};
+  // this._actionResponses = {};
+  // this._clientFeedStates = {};
+  // this._feedClientStates = {};
+  // this._terminationTimers = {};
+  // this._feedOpenResponses = {};
+  // this._feedCloseResponses = {};
 
   // Emit the event
   if (err) {
@@ -882,10 +895,11 @@ proto._processStopping = function _processStopping(err) {
 };
 
 /**
- * Process a transport stopped event.
+ * Process a transport stop event.
  * @memberof Server
  * @instance
  * @private
+ * @param {?Error} err
  */
 proto._processStop = function _processStop(err) {
   dbg("Observed transport stop event");
@@ -907,18 +921,18 @@ proto._processStop = function _processStop(err) {
 proto._processConnect = function _processConnect(transportClientId) {
   dbg("Observed transport connect event");
 
-  // Pre-assign a Feedme client id
+  // Update internal state
   const clientId = uuid();
   this._clientIds[transportClientId] = clientId;
   this._transportClientIds[clientId] = transportClientId;
-
-  // Set handshake status
   this._handshakeStatus[clientId] = "waiting";
 
   // Set a handshake timer if configured
+  // Cleared if the client disconnects for any reason or submits a
+  // valid and library-compatible handshake
   if (this._options.handshakeMs > 0) {
     this._handshakeTimers[clientId] = setTimeout(() => {
-      // Disconnect event handler resets the client state
+      // Handler for disconnect event resets the client state
       this._transportWrapper.disconnect(
         transportClientId,
         new Error(
@@ -927,6 +941,9 @@ proto._processConnect = function _processConnect(transportClientId) {
       );
     }, this._options.handshakeMs);
   }
+
+  // Emit a connect event
+  this.emit("connect", clientId);
 
   // Await a Handshake message
 };
@@ -943,7 +960,6 @@ proto._processDisconnect = function _processDisconnect(transportClientId, err) {
   dbg("Observed transport disconnect event");
 
   const clientId = this._clientIds[transportClientId];
-  const handshakeStatus = this._handshakeStatus[clientId];
 
   // Neutralize any response objects
   if (this._handshakeResponses[clientId]) {
@@ -968,7 +984,6 @@ proto._processDisconnect = function _processDisconnect(transportClientId, err) {
   // Clear any handshake timeout
   if (this._handshakeTimers[clientId]) {
     clearTimeout(this._handshakeTimers[clientId]);
-    delete this._handshakeTimers[clientId];
   }
 
   // Clear any termination timeouts
@@ -987,7 +1002,7 @@ proto._processDisconnect = function _processDisconnect(transportClientId, err) {
   delete this._actionResponses[clientId];
   if (this._clientFeedStates[clientId]) {
     _.each(this._clientFeedStates[clientId], (state, feedSerial) => {
-      delete this._feedClientStates[feedSerial][clientId];
+      this._delete(this._feedClientStates, feedSerial, clientId);
     });
     delete this._clientFeedStates[clientId];
   }
@@ -995,13 +1010,11 @@ proto._processDisconnect = function _processDisconnect(transportClientId, err) {
   delete this._feedOpenResponses[clientId];
   delete this._feedCloseResponses[clientId];
 
-  // Emit only if the app was aware of this client
-  if (handshakeStatus !== "waiting") {
-    if (err) {
-      this.emit("disconnect", clientId, err);
-    } else {
-      this.emit("disconnect", clientId);
-    }
+  // Emit
+  if (err) {
+    this.emit("disconnect", clientId, err);
+  } else {
+    this.emit("disconnect", clientId);
   }
 };
 
@@ -1019,14 +1032,13 @@ proto._processMessage = function _processMessage(transportClientId, msg) {
   const clientId = this._clientIds[transportClientId];
 
   // Try to parse JSON and validate message structure
-  // No need to check JSON-expressibility (coming from JSON)
-  // Send ViolationResponse if the message was structurally invalid
+  // Send ViolationResponse and emit badClientMessage if the message is structurally invalid
   let val;
   try {
     val = JSON.parse(msg);
     validateClientMessage.check(val);
     if (val.MessageType === "Handshake") {
-      validateHandshake.check(val, false);
+      validateHandshake.check(val, false); // No need to check JSON-expressibility (coming from JSON)
     } else if (val.MessageType === "Action") {
       validateAction.check(val, false);
     } else if (val.MessageType === "FeedOpen") {
@@ -1036,6 +1048,8 @@ proto._processMessage = function _processMessage(transportClientId, msg) {
     }
   } catch (e) {
     dbg("Invalid JSON or schema violation: %0", e);
+
+    // Send a ViolationResponse
     this._transportWrapper.send(
       transportClientId,
       JSON.stringify({
@@ -1046,12 +1060,19 @@ proto._processMessage = function _processMessage(transportClientId, msg) {
         }
       })
     );
-    return;
+
+    // Emit badClientMessage
+    const err = new Error("INVALID_MESSAGE: Invalid JSON or schema violation.");
+    err.clientMessage = msg;
+    err.parseError = e;
+    this.emit("badClientMessage", clientId, err);
+
+    return; // Stop
   }
 
   // Route the message
   dbg("Routing the message");
-  this[`_process${val.MessageType}`](clientId, val);
+  this[`_process${val.MessageType}`](clientId, val, msg);
 };
 
 /**
@@ -1061,25 +1082,34 @@ proto._processMessage = function _processMessage(transportClientId, msg) {
  * @private
  * @param {string} clientId
  * @param {Object} msg Valid Handshake message object
+ * @param {string} msgString
  */
-proto._processHandshake = function _processHandshake(clientId, msg) {
+proto._processHandshake = function _processHandshake(clientId, msg, msgString) {
   dbg("Received Handshake message");
 
   const transportClientId = this._transportClientIds[clientId];
 
-  // Send a ViolationResponse if unexpected
+  // Was the message unexpected?
   if (this._handshakeStatus[clientId] !== "waiting") {
     dbg("Unexpected Handshake message - status not waiting");
+
+    // Send a ViolationResponse
     this._transportWrapper.send(
       transportClientId,
       JSON.stringify({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected Handshake message.",
-          Message: msg
+          Message: msgString
         }
       })
     );
+
+    // Emit badClientMessage
+    const err = new Error("UNEXPECTED_MESSAGE: Unexpected Handshake message.");
+    err.clientMessage = msgString;
+    this.emit("badClientMessage", clientId, err);
+
     return; // Stop
   }
 
@@ -1106,7 +1136,7 @@ proto._processHandshake = function _processHandshake(clientId, msg) {
     delete this._handshakeTimers[clientId];
   }
 
-  // If there is a handshake event listener, emit
+  // If there is a handshake event listener, then emit and wait
   // Otherwise complete the handshake
   if (this.hasListeners("handshake")) {
     dbg("Emitting handshake event to application");
@@ -1124,12 +1154,15 @@ proto._processHandshake = function _processHandshake(clientId, msg) {
     this._handshakeStatus[clientId] = "complete";
 
     // Send HandshakeResponse success
-    this._transportWrapper.send(transportClientId, {
-      MessageType: "HandshakeResponse",
-      Success: true,
-      Version: feedmeVersion,
-      ClientId: clientId
-    });
+    this._transportWrapper.send(
+      transportClientId,
+      JSON.stringify({
+        MessageType: "HandshakeResponse",
+        Success: true,
+        Version: feedmeVersion,
+        ClientId: clientId
+      })
+    );
   }
 };
 
@@ -1140,47 +1173,68 @@ proto._processHandshake = function _processHandshake(clientId, msg) {
  * @private
  * @param {string} clientId
  * @param {Object} msg Valid Action message object
+ * @param {string} msgString
  */
-proto._processAction = function _processAction(clientId, msg) {
+proto._processAction = function _processAction(clientId, msg, msgString) {
   dbg("Received Action message");
 
   const transportClientId = this._transportClientIds[clientId];
 
-  // Send ViolationResponse if handshake not complete
+  // Was a handshake complete?
   if (this._handshakeStatus[clientId] !== "complete") {
     dbg("Unexpected Action message - Handshake required");
+
+    // Send ViolationResponse
     this._transportWrapper.send(
       transportClientId,
       JSON.stringify({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Handshake required.",
-          Message: msg
+          Message: msgString
         }
       })
     );
-    return;
+
+    // Emit badClientMessage
+    const err = new Error(
+      "UNEXPECTED_MESSAGE: Action message received before successful Handshake."
+    );
+    err.clientMessage = msgString;
+    this.emit("badClientMessage", clientId, err);
+
+    return; // stop
   }
 
-  // Send a ViolationResponse if the callback id is in use
-  if (this._actionResponses[clientId][msg.CallbackId]) {
+  // Is the callback id in use?
+  if (this._exists(this._actionResponses, clientId, msg.CallbackId)) {
     dbg("Unexpected Action message - CallbackId in use");
+
+    // Send ViolationResponse
     this._transportWrapper.send(
       transportClientId,
       JSON.stringify({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Action message reused an outstanding CallbackId.",
-          Message: msg
+          Message: msgString
         }
       })
     );
+
+    // Emit badClientMessage
+    const err = new Error(
+      "UNEXPECTED_MESSAGE: Action message reused an outstanding CallbackId."
+    );
+    err.clientMessage = msgString;
+    this.emit("badClientMessage", clientId, err);
+
     return; // Stop
   }
 
   // If there is no action listener then return an error to the client
   if (!this.hasListeners("action")) {
-    dbg("No action listener - stopping");
+    dbg("No action listener - returning error");
     this._transportWrapper.send(
       transportClientId,
       JSON.stringify({
@@ -1217,27 +1271,38 @@ proto._processAction = function _processAction(clientId, msg) {
  * @private
  * @param {string} clientId
  * @param {Object} msg Valid FeedOpen message object
+ * @param {string} msgString
  */
-proto._processFeedOpen = function _processFeedOpen(clientId, msg) {
+proto._processFeedOpen = function _processFeedOpen(clientId, msg, msgString) {
   dbg("Received FeedOpen message");
 
   const transportClientId = this._transportClientIds[clientId];
   const feedSerial = feedSerializer.serialize(msg.FeedName, msg.FeedArgs);
 
-  // Send ViolationResponse if handshake not complete
+  // Was a handshake complete?
   if (this._handshakeStatus[clientId] !== "complete") {
     dbg("Unexpected FeedOpen message - Handshake required");
+
+    // Send ViolationResponse
     this._transportWrapper.send(
       transportClientId,
       JSON.stringify({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Handshake required.",
-          Message: msg
+          Message: msgString
         }
       })
     );
-    return;
+
+    // Emit badClientMessage
+    const err = new Error(
+      "UNEXPECTED_MESSAGE: FeedOpen message received before successful Handshake."
+    );
+    err.clientMessage = msgString;
+    this.emit("badClientMessage", clientId, err);
+
+    return; // Stop
   }
 
   // Get feed state
@@ -1248,45 +1313,63 @@ proto._processFeedOpen = function _processFeedOpen(clientId, msg) {
     "closed"
   );
 
-  // Send a ViolationResponse if the feed isn't closed or terminated
+  // Was the feed not closed or terminated?
   if (feedState !== "closed" && feedState !== "terminated") {
     dbg("Unexpected FeedOpen message - feed not closed/terminated");
+
+    // Send ViolationResponse
     this._transportWrapper.send(
       transportClientId,
       JSON.stringify({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected FeedOpen message.",
-          Message: msg
+          Message: msgString
         }
       })
     );
+
+    // Emit badClientMessage
+    const err = new Error(
+      "UNEXPECTED_MESSAGE: FeedOpen message referenced a feed that was not closed or terminated."
+    );
+    err.clientMessage = msgString;
+    this.emit("badClientMessage", clientId, err);
+
     return; // Stop
+  }
+
+  // If the feed state was terminated then kill the termination timer and
+  // set the feed state to closed (the open could still fail if there is
+  // no feedOpen handler, but the client submitted a valid request and the
+  // feed should no longer be considered terminated)
+  if (feedState === "terminated") {
+    clearTimeout(this._terminationTimers[clientId][feedSerial]);
+    this._delete(this._terminationTimers, clientId, feedSerial);
+    this._delete(this._clientFeedStates, clientId, feedSerial);
+    this._delete(this._feedClientStates, feedSerial, clientId);
   }
 
   // If there are no feedOpen listeners then return an error to the client
   if (!this.hasListeners("feedOpen")) {
-    dbg("No feedOpen listener - stopping");
-    this._transportWrapper.send(transportClientId, {
-      MessageType: "FeedOpenResponse",
-      Success: false,
-      FeedName: msg.FeedName,
-      FeedArgs: msg.FeedArgs,
-      ErrorCode: "INTERNAL_ERROR",
-      ErrorData: {}
-    });
+    dbg("No feedOpen listener - returning error");
+    this._transportWrapper.send(
+      transportClientId,
+      JSON.stringify({
+        MessageType: "FeedOpenResponse",
+        Success: false,
+        FeedName: msg.FeedName,
+        FeedArgs: msg.FeedArgs,
+        ErrorCode: "INTERNAL_ERROR",
+        ErrorData: {}
+      })
+    );
     return; // Stop
   }
 
   // Success
 
   dbg("Successful FeedOpen message - emitting feedOpen event to application");
-
-  // If the feed state was terminated then kill the termination timer
-  if (feedState === "terminated") {
-    clearTimeout(this._terminationTimers[clientId][feedSerial]);
-    this._delete(this._terminationTimers, clientId, feedSerial);
-  }
 
   // Update the feed state
   this._set(this._clientFeedStates, clientId, feedSerial, "opening");
@@ -1306,27 +1389,38 @@ proto._processFeedOpen = function _processFeedOpen(clientId, msg) {
  * @private
  * @param {string} clientId
  * @param {Object} msg Valid FeedClose message object
+ * @param {string} msgString
  */
-proto._processFeedClose = function _processFeedClose(clientId, msg) {
+proto._processFeedClose = function _processFeedClose(clientId, msg, msgString) {
   dbg("Received FeedClose message");
 
   const transportClientId = this._transportClientIds[clientId];
   const feedSerial = feedSerializer.serialize(msg.FeedName, msg.FeedArgs);
 
-  // Send ViolationResponse if handshake not complete
+  // Was a handshake complete?
   if (this._handshakeStatus[clientId] !== "complete") {
     dbg("Unexpected FeedClose message - Handshake required");
+
+    // Send ViolationResponse
     this._transportWrapper.send(
       transportClientId,
       JSON.stringify({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Handshake required.",
-          Message: msg
+          Message: msgString
         }
       })
     );
-    return;
+
+    // Emit badClientMessage
+    const err = new Error(
+      "UNEXPECTED_MESSAGE: FeedClose message received before successful Handshake."
+    );
+    err.clientMessage = msgString;
+    this.emit("badClientMessage", clientId, err);
+
+    return; // Stop
   }
 
   // Get the feed state
@@ -1337,20 +1431,30 @@ proto._processFeedClose = function _processFeedClose(clientId, msg) {
     "closed"
   );
 
-  // Send a ViolationResponse if the feed was not open or terminated
+  // Was the feed not open or terminated?
   if (feedState !== "open" && feedState !== "terminated") {
     dbg("Unexpected FeedClose message - feed not closed/terminated");
+
+    // Send ViolationResponse
     this._transportWrapper.send(
       transportClientId,
       JSON.stringify({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected FeedClose message.",
-          Message: msg
+          Message: msgString
         }
       })
     );
-    return;
+
+    // Emit badClientMessage
+    const err = new Error(
+      "UNEXPECTED_MESSAGE: FeedClose message referenced a feed that was not open or terminated."
+    );
+    err.clientMessage = msgString;
+    this.emit("badClientMessage", clientId, err);
+
+    return; // Stop
   }
 
   // Success
@@ -1751,25 +1855,8 @@ proto._terminateOpenFeed = function _terminateOpenFeed(
 };
 
 /**
- * Delete obj.key1.key2 and then delete obj.key1 if it is empty.
- * Assume that obj.key1 exists.
- * @instance
- * @private
- * @param {Object} obj
- * @param {string} key1
- * @param {string} key2
- * @returns {void}
- */
-proto._delete = function _delete(obj, key1, key2) {
-  delete obj[key1][key2]; // eslint-disable-line no-param-reassign
-  if (_.isEmpty(obj[key1])) {
-    delete obj[key1]; // eslint-disable-line no-param-reassign
-  }
-};
-
-/**
  * Set obj.key1.key2 equal to val and create the obj.key1 object if it
- * doesn't exist.
+ * doesn't exist. If obj.key1 exists, it is assumed to be an object.
  * @instance
  * @private
  * @param {Object} obj
@@ -1786,14 +1873,31 @@ proto._set = function _set(obj, key1, key2, val) {
 };
 
 /**
+ * Delete obj.key1.key2 and then delete obj.key1 if it is empty.
+ * Assume that obj.key1 and obj.key1.key2 exist.
+ * @instance
+ * @private
+ * @param {Object} obj
+ * @param {string} key1
+ * @param {string} key2
+ * @returns {void}
+ */
+proto._delete = function _delete(obj, key1, key2) {
+  delete obj[key1][key2]; // eslint-disable-line no-param-reassign
+  if (_.isEmpty(obj[key1])) {
+    delete obj[key1]; // eslint-disable-line no-param-reassign
+  }
+};
+
+/**
  * Return obj.key1.key2 if it exists, otherwise return missing value.
+ * obj.key1, if present, must be an object.
  * @instance
  * @private
  * @param {Object} obj
  * @param {string} key1
  * @param {string} key2
  * @param {*} missing
- * @param {*} val
  * @returns {void}
  */
 proto._get = function _get(obj, key1, key2, missing) {
@@ -1801,4 +1905,17 @@ proto._get = function _get(obj, key1, key2, missing) {
     return obj[key1][key2];
   }
   return missing;
+};
+
+/**
+ * Return true if obj.key1.key2 exists, otherwise false if either key does not
+ * @instance
+ * @private
+ * @param {Object} obj
+ * @param {string} key1
+ * @param {string} key2
+ * @returns {void}
+ */
+proto._exists = function _exists(obj, key1, key2) {
+  return key1 in obj && key2 in obj[key1];
 };
