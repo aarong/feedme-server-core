@@ -648,245 +648,66 @@ describe("The server.actionRevelation() function", () => {
   });
 
   describe("can return success", () => {
-    let harn;
-    let cidClosed; // eslint-disable-line no-unused-vars
-    let cidOpening; // eslint-disable-line no-unused-vars
-    let cidOpen; // eslint-disable-line no-unused-vars
-    let cidClosing; // eslint-disable-line no-unused-vars
-    let cidOtherfaOpen; // eslint-disable-line no-unused-vars
-    let cidOtherfnOpen; // eslint-disable-line no-unused-vars
-    beforeEach(() => {
-      harn = harness();
-      harn.makeServerStarted();
+    describe("it may have clients", () => {
+      let harn;
+      let cidClosed; // eslint-disable-line no-unused-vars
+      let cidOpening; // eslint-disable-line no-unused-vars
+      let cidOpen; // eslint-disable-line no-unused-vars
+      let cidClosing; // eslint-disable-line no-unused-vars
+      let cidOtherfaOpen; // eslint-disable-line no-unused-vars
+      let cidOtherfnOpen; // eslint-disable-line no-unused-vars
+      beforeEach(() => {
+        harn = harness();
+        harn.makeServerStarted();
 
-      // Client with the feed closed
-      cidClosed = harn.makeClient("tcid_client_closed");
+        // Client with the feed closed
+        cidClosed = harn.makeClient("tcid_client_closed");
 
-      // Client with the feed opening
-      cidOpening = harn.makeClient("tcid_client_opening");
-      harn.makeFeedOpening("tcid_client_opening", "some_feed", {
-        feed: "args"
+        // Client with the feed opening
+        cidOpening = harn.makeClient("tcid_client_opening");
+        harn.makeFeedOpening("tcid_client_opening", "some_feed", {
+          feed: "args"
+        });
+
+        // Client with the feed open
+        cidOpen = harn.makeClient("tcid_client_open");
+        harn.makeFeedOpen(
+          "tcid_client_open",
+          "some_feed",
+          { feed: "args" },
+          { feed: "data" }
+        );
+
+        // Client with the feed closing
+        cidClosing = harn.makeClient("tcid_client_closing");
+        harn.makeFeedClosing("tcid_client_closing", "some_feed", {
+          feed: "args"
+        });
+
+        // Client with another feed argument open
+        cidOtherfaOpen = harn.makeClient("tcid_client_otherfa_open");
+        harn.makeFeedOpen(
+          "tcid_client_otherfa_open",
+          "some_feed",
+          { feed: "args_other" },
+          { feed: "data" }
+        );
+
+        // Client with another feed name open
+        cidOtherfnOpen = harn.makeClient("tcid_client_otherfn_open");
+        harn.makeFeedOpen(
+          "tcid_client_otherfn_open",
+          "some_other_feed",
+          { feed: "args" },
+          { feed: "data" }
+        );
       });
 
-      // Client with the feed open
-      cidOpen = harn.makeClient("tcid_client_open");
-      harn.makeFeedOpen(
-        "tcid_client_open",
-        "some_feed",
-        { feed: "args" },
-        { feed: "data" }
-      );
+      // Events
 
-      // Client with the feed closing
-      cidClosing = harn.makeClient("tcid_client_closing");
-      harn.makeFeedClosing("tcid_client_closing", "some_feed", {
-        feed: "args"
-      });
+      it("should emit nothing", () => {
+        const serverListener = harn.createServerListener();
 
-      // Client with another feed argument open
-      cidOtherfaOpen = harn.makeClient("tcid_client_otherfa_open");
-      harn.makeFeedOpen(
-        "tcid_client_otherfa_open",
-        "some_feed",
-        { feed: "args_other" },
-        { feed: "data" }
-      );
-
-      // Client with another feed name open
-      cidOtherfnOpen = harn.makeClient("tcid_client_otherfn_open");
-      harn.makeFeedOpen(
-        "tcid_client_otherfn_open",
-        "some_other_feed",
-        { feed: "args" },
-        { feed: "data" }
-      );
-    });
-
-    // Events
-
-    it("should emit nothing", () => {
-      const serverListener = harn.createServerListener();
-
-      harn.server.actionRevelation({
-        actionName: "some_action",
-        actionData: { action: "data" },
-        feedName: "some_feed",
-        feedArgs: { feed: "args" },
-        feedDeltas: [
-          {
-            Operation: "Set",
-            Path: ["feed"],
-            Value: "data2"
-          }
-        ]
-      });
-
-      expect(serverListener.starting.mock.calls.length).toBe(0);
-      expect(serverListener.start.mock.calls.length).toBe(0);
-      expect(serverListener.stopping.mock.calls.length).toBe(0);
-      expect(serverListener.stop.mock.calls.length).toBe(0);
-      expect(serverListener.connect.mock.calls.length).toBe(0);
-      expect(serverListener.handshake.mock.calls.length).toBe(0);
-      expect(serverListener.action.mock.calls.length).toBe(0);
-      expect(serverListener.feedOpen.mock.calls.length).toBe(0);
-      expect(serverListener.feedClose.mock.calls.length).toBe(0);
-      expect(serverListener.disconnect.mock.calls.length).toBe(0);
-      expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
-      expect(serverListener.transportError.mock.calls.length).toBe(0);
-    });
-
-    // State
-
-    it("should not change the state", () => {
-      const newState = harn.getServerState();
-
-      harn.server.actionRevelation({
-        actionName: "some_action",
-        actionData: { action: "data" },
-        feedName: "some_feed",
-        feedArgs: { feed: "args" },
-        feedDeltas: [
-          {
-            Operation: "Set",
-            Path: ["feed"],
-            Value: "data2"
-          }
-        ]
-      });
-
-      expect(harn.server).toHaveState(newState);
-    });
-
-    // Transport calls
-
-    it("should call .send() for appropriate clients - with no data verification", () => {
-      harn.server.actionRevelation({
-        actionName: "some_action",
-        actionData: { action: "data" },
-        feedName: "some_feed",
-        feedArgs: { feed: "args" },
-        feedDeltas: [
-          {
-            Operation: "Set",
-            Path: ["feed"],
-            Value: "data2"
-          }
-        ]
-      });
-
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
-        "tcid_client_open"
-      );
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
-        MessageType: "ActionRevelation",
-        ActionName: "some_action",
-        ActionData: { action: "data" },
-        FeedName: "some_feed",
-        FeedArgs: { feed: "args" },
-        FeedDeltas: [
-          {
-            Operation: "Set",
-            Path: ["feed"],
-            Value: "data2"
-          }
-        ]
-      });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
-    });
-
-    it("should call .send() for appropriate clients - with hash", () => {
-      harn.server.actionRevelation({
-        actionName: "some_action",
-        actionData: { action: "data" },
-        feedName: "some_feed",
-        feedArgs: { feed: "args" },
-        feedDeltas: [
-          {
-            Operation: "Set",
-            Path: ["feed"],
-            Value: "data2"
-          }
-        ],
-        feedMd5: "123456789012345678901234"
-      });
-
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
-        "tcid_client_open"
-      );
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
-        MessageType: "ActionRevelation",
-        ActionName: "some_action",
-        ActionData: { action: "data" },
-        FeedName: "some_feed",
-        FeedArgs: { feed: "args" },
-        FeedDeltas: [
-          {
-            Operation: "Set",
-            Path: ["feed"],
-            Value: "data2"
-          }
-        ],
-        FeedMd5: "123456789012345678901234"
-      });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
-    });
-
-    it("should call .send() for appropriate clients - with feed data", () => {
-      harn.server.actionRevelation({
-        actionName: "some_action",
-        actionData: { action: "data" },
-        feedName: "some_feed",
-        feedArgs: { feed: "args" },
-        feedDeltas: [
-          {
-            Operation: "Set",
-            Path: ["feed"],
-            Value: "data2"
-          }
-        ],
-        feedData: { feed: "data2" }
-      });
-
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
-        "tcid_client_open"
-      );
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
-        MessageType: "ActionRevelation",
-        ActionName: "some_action",
-        ActionData: { action: "data" },
-        FeedName: "some_feed",
-        FeedArgs: { feed: "args" },
-        FeedDeltas: [
-          {
-            Operation: "Set",
-            Path: ["feed"],
-            Value: "data2"
-          }
-        ],
-        FeedMd5: md5Calculator.calculate({ feed: "data2" })
-      });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
-    });
-
-    // Outbound callbacks - N/A
-
-    // Inbound callbacks (events, state, transport, outer callbacks) - N/A
-
-    // Return value
-    it("should return void", () => {
-      expect(
         harn.server.actionRevelation({
           actionName: "some_action",
           actionData: { action: "data" },
@@ -899,8 +720,304 @@ describe("The server.actionRevelation() function", () => {
               Value: "data2"
             }
           ]
-        })
-      ).toBe(undefined);
+        });
+
+        expect(serverListener.starting.mock.calls.length).toBe(0);
+        expect(serverListener.start.mock.calls.length).toBe(0);
+        expect(serverListener.stopping.mock.calls.length).toBe(0);
+        expect(serverListener.stop.mock.calls.length).toBe(0);
+        expect(serverListener.connect.mock.calls.length).toBe(0);
+        expect(serverListener.handshake.mock.calls.length).toBe(0);
+        expect(serverListener.action.mock.calls.length).toBe(0);
+        expect(serverListener.feedOpen.mock.calls.length).toBe(0);
+        expect(serverListener.feedClose.mock.calls.length).toBe(0);
+        expect(serverListener.disconnect.mock.calls.length).toBe(0);
+        expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
+        expect(serverListener.transportError.mock.calls.length).toBe(0);
+      });
+
+      // State
+
+      it("should not change the state", () => {
+        const newState = harn.getServerState();
+
+        harn.server.actionRevelation({
+          actionName: "some_action",
+          actionData: { action: "data" },
+          feedName: "some_feed",
+          feedArgs: { feed: "args" },
+          feedDeltas: [
+            {
+              Operation: "Set",
+              Path: ["feed"],
+              Value: "data2"
+            }
+          ]
+        });
+
+        expect(harn.server).toHaveState(newState);
+      });
+
+      // Transport calls
+
+      it("should call .send() for appropriate clients - with no data verification", () => {
+        harn.server.actionRevelation({
+          actionName: "some_action",
+          actionData: { action: "data" },
+          feedName: "some_feed",
+          feedArgs: { feed: "args" },
+          feedDeltas: [
+            {
+              Operation: "Set",
+              Path: ["feed"],
+              Value: "data2"
+            }
+          ]
+        });
+
+        expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
+        expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
+        expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
+        expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
+        expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
+          "tcid_client_open"
+        );
+        expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual(
+          {
+            MessageType: "ActionRevelation",
+            ActionName: "some_action",
+            ActionData: { action: "data" },
+            FeedName: "some_feed",
+            FeedArgs: { feed: "args" },
+            FeedDeltas: [
+              {
+                Operation: "Set",
+                Path: ["feed"],
+                Value: "data2"
+              }
+            ]
+          }
+        );
+        expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      });
+
+      it("should call .send() for appropriate clients - with hash", () => {
+        harn.server.actionRevelation({
+          actionName: "some_action",
+          actionData: { action: "data" },
+          feedName: "some_feed",
+          feedArgs: { feed: "args" },
+          feedDeltas: [
+            {
+              Operation: "Set",
+              Path: ["feed"],
+              Value: "data2"
+            }
+          ],
+          feedMd5: "123456789012345678901234"
+        });
+
+        expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
+        expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
+        expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
+        expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
+        expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
+          "tcid_client_open"
+        );
+        expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual(
+          {
+            MessageType: "ActionRevelation",
+            ActionName: "some_action",
+            ActionData: { action: "data" },
+            FeedName: "some_feed",
+            FeedArgs: { feed: "args" },
+            FeedDeltas: [
+              {
+                Operation: "Set",
+                Path: ["feed"],
+                Value: "data2"
+              }
+            ],
+            FeedMd5: "123456789012345678901234"
+          }
+        );
+        expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      });
+
+      it("should call .send() for appropriate clients - with feed data", () => {
+        harn.server.actionRevelation({
+          actionName: "some_action",
+          actionData: { action: "data" },
+          feedName: "some_feed",
+          feedArgs: { feed: "args" },
+          feedDeltas: [
+            {
+              Operation: "Set",
+              Path: ["feed"],
+              Value: "data2"
+            }
+          ],
+          feedData: { feed: "data2" }
+        });
+
+        expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
+        expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
+        expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
+        expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
+        expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
+          "tcid_client_open"
+        );
+        expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual(
+          {
+            MessageType: "ActionRevelation",
+            ActionName: "some_action",
+            ActionData: { action: "data" },
+            FeedName: "some_feed",
+            FeedArgs: { feed: "args" },
+            FeedDeltas: [
+              {
+                Operation: "Set",
+                Path: ["feed"],
+                Value: "data2"
+              }
+            ],
+            FeedMd5: md5Calculator.calculate({ feed: "data2" })
+          }
+        );
+        expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      });
+
+      // Outbound callbacks - N/A
+
+      // Inbound callbacks (events, state, transport, outer callbacks) - N/A
+
+      // Return value
+      it("should return void", () => {
+        expect(
+          harn.server.actionRevelation({
+            actionName: "some_action",
+            actionData: { action: "data" },
+            feedName: "some_feed",
+            feedArgs: { feed: "args" },
+            feedDeltas: [
+              {
+                Operation: "Set",
+                Path: ["feed"],
+                Value: "data2"
+              }
+            ]
+          })
+        ).toBe(undefined);
+      });
+    });
+
+    describe("it may have no clients", () => {
+      let harn;
+      beforeEach(() => {
+        harn = harness();
+        harn.makeServerStarted();
+      });
+
+      // Events
+
+      it("should emit nothing", () => {
+        const serverListener = harn.createServerListener();
+
+        harn.server.actionRevelation({
+          actionName: "some_action",
+          actionData: { action: "data" },
+          feedName: "some_feed",
+          feedArgs: { feed: "args" },
+          feedDeltas: [
+            {
+              Operation: "Set",
+              Path: ["feed"],
+              Value: "data2"
+            }
+          ]
+        });
+
+        expect(serverListener.starting.mock.calls.length).toBe(0);
+        expect(serverListener.start.mock.calls.length).toBe(0);
+        expect(serverListener.stopping.mock.calls.length).toBe(0);
+        expect(serverListener.stop.mock.calls.length).toBe(0);
+        expect(serverListener.connect.mock.calls.length).toBe(0);
+        expect(serverListener.handshake.mock.calls.length).toBe(0);
+        expect(serverListener.action.mock.calls.length).toBe(0);
+        expect(serverListener.feedOpen.mock.calls.length).toBe(0);
+        expect(serverListener.feedClose.mock.calls.length).toBe(0);
+        expect(serverListener.disconnect.mock.calls.length).toBe(0);
+        expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
+        expect(serverListener.transportError.mock.calls.length).toBe(0);
+      });
+
+      // State
+
+      it("should not change the state", () => {
+        const newState = harn.getServerState();
+
+        harn.server.actionRevelation({
+          actionName: "some_action",
+          actionData: { action: "data" },
+          feedName: "some_feed",
+          feedArgs: { feed: "args" },
+          feedDeltas: [
+            {
+              Operation: "Set",
+              Path: ["feed"],
+              Value: "data2"
+            }
+          ]
+        });
+
+        expect(harn.server).toHaveState(newState);
+      });
+
+      // Transport calls
+
+      it("should do nothing on the transport", () => {
+        harn.server.actionRevelation({
+          actionName: "some_action",
+          actionData: { action: "data" },
+          feedName: "some_feed",
+          feedArgs: { feed: "args" },
+          feedDeltas: [
+            {
+              Operation: "Set",
+              Path: ["feed"],
+              Value: "data2"
+            }
+          ]
+        });
+
+        expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
+        expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
+        expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
+        expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      });
+
+      // Outbound callbacks - N/A
+
+      // Inbound callbacks (events, state, transport, outer callbacks) - N/A
+
+      // Return value
+      it("should return void", () => {
+        expect(
+          harn.server.actionRevelation({
+            actionName: "some_action",
+            actionData: { action: "data" },
+            feedName: "some_feed",
+            feedArgs: { feed: "args" },
+            feedDeltas: [
+              {
+                Operation: "Set",
+                Path: ["feed"],
+                Value: "data2"
+              }
+            ]
+          })
+        ).toBe(undefined);
+      });
     });
   });
 });

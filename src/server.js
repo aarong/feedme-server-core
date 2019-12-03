@@ -1043,7 +1043,7 @@ proto._processMessage = function _processMessage(transportClientId, msg) {
       validateAction.check(val, false);
     } else if (val.MessageType === "FeedOpen") {
       validateFeedOpen.check(val, false);
-    } else if (val.MessageType === "FeedClose") {
+    } else {
       validateFeedClose.check(val, false);
     }
   } catch (e) {
@@ -1909,6 +1909,7 @@ proto._get = function _get(obj, key1, key2, missing) {
 
 /**
  * Return true if obj.key1.key2 exists, otherwise false if either key does not
+ * If obj.key1 exists it must be an object.
  * @instance
  * @private
  * @param {Object} obj

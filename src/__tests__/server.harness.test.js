@@ -6,7 +6,7 @@ expect.extend({
   toHaveState: harness.toHaveState
 });
 
-describe("The test harn", () => {
+describe("The test harness", () => {
   describe("the factory function", () => {
     it("should return an appropriately structured object", () => {
       const harn = harness();
@@ -114,6 +114,17 @@ describe("The test harn", () => {
   });
 
   describe("the harn.getServerState() and expect(x).toHaveState(y) functions", () => {
+    describe("should handle invalid root keys correctly", () => {
+      it("should throw if root keys are invalid", () => {
+        const harn = harness();
+        const result = harness.toHaveState(harn.server, {});
+        expect(result.pass).toBe(false);
+        expect(result.message()).toEqual(
+          "expected root keys to be valid, but they weren't"
+        );
+      });
+    });
+
     describe("should handle ._options correctly", () => {
       let harn;
       beforeEach(() => {

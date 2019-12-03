@@ -1,5 +1,6 @@
 import "source-map-support/register";
 import check from "check-types";
+import _ from "lodash";
 import server from "./server";
 import transportWrapper from "./transportwrapper";
 
@@ -22,12 +23,10 @@ export default function feedmeServer(options) {
     throw new Error("INVALID_ARGUMENT: Invalid options.transport.");
   }
 
-  // Create transport wrapper
-  const wrapper = transportWrapper(options.transport);
-
-  // Create a server using the transport and return it
-  delete options.transport; // eslint-disable-line no-param-reassign
-  options.transportWrapper = wrapper; // eslint-disable-line no-param-reassign
-  const s = server(options);
+  // Create a server with a wrapped transport and return it
+  const serverOptions = _.cloneDeep(options);
+  delete serverOptions.transport;
+  serverOptions.transportWrapper = transportWrapper(options.transport);
+  const s = server(serverOptions);
   return s;
 }
