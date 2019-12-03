@@ -345,9 +345,10 @@ proto.send = function send(clientId, msg) {
  * @memberof TransportWrapper
  * @instance
  * @param {string} clientId
+ * @param {?Error} err
  * @throws {Error} Transport errors and "TRANSPORT_ERROR: ..." and "INVALID_CALL: ..."
  */
-proto.disconnect = function disconnect(clientId) {
+proto.disconnect = function disconnect(clientId, inErr) {
   // Was this a valid call from the server? Check server state
   if (this._lastStateEmission !== "start") {
     throw new Error(
@@ -365,7 +366,11 @@ proto.disconnect = function disconnect(clientId) {
   // Try to disconnect the client
   let result;
   try {
-    result = this._transport.disconnect(clientId);
+    if (inErr) {
+      result = this._transport.disconnect(clientId, inErr);
+    } else {
+      result = this._transport.disconnect(clientId);
+    }
   } catch (e) {
     // Invalid behavior from the transport
     const emitErr = new Error(

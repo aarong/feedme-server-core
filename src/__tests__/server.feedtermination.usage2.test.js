@@ -63,10 +63,10 @@ describe("The server.feedTermination() function", () => {
           it("should do nothing on the transport", () => {
             go();
 
-            expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-            expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-            expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-            expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+            expect(harn.transport.start.mock.calls.length).toBe(0);
+            expect(harn.transport.stop.mock.calls.length).toBe(0);
+            expect(harn.transport.send.mock.calls.length).toBe(0);
+            expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
 
           // Outbound callbacks - N/A
@@ -133,12 +133,10 @@ describe("The server.feedTermination() function", () => {
             it("should do nothing on the transport", () => {
               go();
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(0);
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
 
             // Outbound callbacks - N/A
@@ -207,12 +205,10 @@ describe("The server.feedTermination() function", () => {
             it("should do nothing on the transport", () => {
               go();
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(0);
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
           });
 
@@ -276,12 +272,10 @@ describe("The server.feedTermination() function", () => {
             it("should do nothing on the transport", () => {
               go();
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(0);
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
           });
 
@@ -340,12 +334,10 @@ describe("The server.feedTermination() function", () => {
             it("should do nothing on the transport", () => {
               go();
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(0);
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
           });
 
@@ -404,12 +396,10 @@ describe("The server.feedTermination() function", () => {
             it("should do nothing on the transport", () => {
               go();
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(0);
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
           });
         });
@@ -468,10 +458,10 @@ describe("The server.feedTermination() function", () => {
           it("should do nothing on the transport", () => {
             go();
 
-            expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-            expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-            expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-            expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+            expect(harn.transport.start.mock.calls.length).toBe(0);
+            expect(harn.transport.stop.mock.calls.length).toBe(0);
+            expect(harn.transport.send.mock.calls.length).toBe(0);
+            expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
 
           // Outbound callbacks - N/A
@@ -541,12 +531,10 @@ describe("The server.feedTermination() function", () => {
             it("should do nothing on the transport", () => {
               go();
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(0);
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
 
             // Outbound callbacks - N/A
@@ -618,12 +606,10 @@ describe("The server.feedTermination() function", () => {
             it("should do nothing on the transport", () => {
               go();
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(0);
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
           });
 
@@ -690,12 +676,10 @@ describe("The server.feedTermination() function", () => {
             it("should do nothing on the transport", () => {
               go();
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(0);
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
           });
 
@@ -757,12 +741,10 @@ describe("The server.feedTermination() function", () => {
             it("should do nothing on the transport", () => {
               go();
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(0);
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
           });
 
@@ -824,12 +806,10 @@ describe("The server.feedTermination() function", () => {
             it("should do nothing on the transport", () => {
               go();
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(0);
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
           });
         });
@@ -940,39 +920,39 @@ describe("The server.feedTermination() function", () => {
               ErrorData: { error: "data" }
             };
 
-            expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-            expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-            expect(harn.transportWrapper.send.mock.calls.length).toBe(2);
-            expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-            expect(harn.transportWrapper.send.mock.calls[1].length).toBe(2);
+            expect(harn.transport.start.mock.calls.length).toBe(0);
+            expect(harn.transport.stop.mock.calls.length).toBe(0);
+            expect(harn.transport.send.mock.calls.length).toBe(2);
+            expect(harn.transport.send.mock.calls[0].length).toBe(2);
+            expect(harn.transport.send.mock.calls[1].length).toBe(2);
 
-            expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
+            expect(harn.transport.send.mock.calls[0][0]).toBe(
               "tcid_client_target"
             );
-            expect(harn.transportWrapper.send.mock.calls[1][0]).toBe(
+            expect(harn.transport.send.mock.calls[1][0]).toBe(
               "tcid_client_target"
             );
 
             expect(
               (_.isEqual(
-                JSON.parse(harn.transportWrapper.send.mock.calls[0][1]),
+                JSON.parse(harn.transport.send.mock.calls[0][1]),
                 msg1
               ) &&
                 _.isEqual(
-                  JSON.parse(harn.transportWrapper.send.mock.calls[1][1]),
+                  JSON.parse(harn.transport.send.mock.calls[1][1]),
                   msg2
                 )) ||
                 (_.isEqual(
-                  JSON.parse(harn.transportWrapper.send.mock.calls[1][1]),
+                  JSON.parse(harn.transport.send.mock.calls[1][1]),
                   msg1
                 ) &&
                   _.isEqual(
-                    JSON.parse(harn.transportWrapper.send.mock.calls[0][1]),
+                    JSON.parse(harn.transport.send.mock.calls[0][1]),
                     msg2
                   ))
             ).toBe(true);
 
-            expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+            expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
 
           // Outbound callbacks - N/A
@@ -1033,16 +1013,14 @@ describe("The server.feedTermination() function", () => {
             it("should do nothing on the transport", () => {
               go();
 
-              harn.transportWrapper.mockClear();
+              harn.transport.mockClear();
 
               jest.runAllTimers(); // Fire the termination timer
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(0);
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
           });
 
@@ -1166,41 +1144,39 @@ describe("The server.feedTermination() function", () => {
                 ErrorData: { error: "data" }
               };
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(2);
-              expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-              expect(harn.transportWrapper.send.mock.calls[1].length).toBe(2);
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(2);
+              expect(harn.transport.send.mock.calls[0].length).toBe(2);
+              expect(harn.transport.send.mock.calls[1].length).toBe(2);
 
-              expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
+              expect(harn.transport.send.mock.calls[0][0]).toBe(
                 "tcid_client_target"
               );
-              expect(harn.transportWrapper.send.mock.calls[1][0]).toBe(
+              expect(harn.transport.send.mock.calls[1][0]).toBe(
                 "tcid_client_target"
               );
 
               expect(
                 (_.isEqual(
-                  JSON.parse(harn.transportWrapper.send.mock.calls[0][1]),
+                  JSON.parse(harn.transport.send.mock.calls[0][1]),
                   msg1
                 ) &&
                   _.isEqual(
-                    JSON.parse(harn.transportWrapper.send.mock.calls[1][1]),
+                    JSON.parse(harn.transport.send.mock.calls[1][1]),
                     msg2
                   )) ||
                   (_.isEqual(
-                    JSON.parse(harn.transportWrapper.send.mock.calls[1][1]),
+                    JSON.parse(harn.transport.send.mock.calls[1][1]),
                     msg1
                   ) &&
                     _.isEqual(
-                      JSON.parse(harn.transportWrapper.send.mock.calls[0][1]),
+                      JSON.parse(harn.transport.send.mock.calls[0][1]),
                       msg2
                     ))
               ).toBe(true);
 
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
 
             // Outbound callbacks - N/A
@@ -1265,16 +1241,14 @@ describe("The server.feedTermination() function", () => {
               it("should do nothing on the transport", () => {
                 go();
 
-                harn.transportWrapper.mockClear();
+                harn.transport.mockClear();
 
                 jest.runAllTimers(); // Fire the termination timer
 
-                expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                  0
-                );
+                expect(harn.transport.start.mock.calls.length).toBe(0);
+                expect(harn.transport.stop.mock.calls.length).toBe(0);
+                expect(harn.transport.send.mock.calls.length).toBe(0);
+                expect(harn.transport.disconnect.mock.calls.length).toBe(0);
               });
             });
 
@@ -1401,41 +1375,39 @@ describe("The server.feedTermination() function", () => {
                 ErrorData: { error: "data" }
               };
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(2);
-              expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-              expect(harn.transportWrapper.send.mock.calls[1].length).toBe(2);
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(2);
+              expect(harn.transport.send.mock.calls[0].length).toBe(2);
+              expect(harn.transport.send.mock.calls[1].length).toBe(2);
 
-              expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
+              expect(harn.transport.send.mock.calls[0][0]).toBe(
                 "tcid_client_target"
               );
-              expect(harn.transportWrapper.send.mock.calls[1][0]).toBe(
+              expect(harn.transport.send.mock.calls[1][0]).toBe(
                 "tcid_client_target"
               );
 
               expect(
                 (_.isEqual(
-                  JSON.parse(harn.transportWrapper.send.mock.calls[0][1]),
+                  JSON.parse(harn.transport.send.mock.calls[0][1]),
                   msg1
                 ) &&
                   _.isEqual(
-                    JSON.parse(harn.transportWrapper.send.mock.calls[1][1]),
+                    JSON.parse(harn.transport.send.mock.calls[1][1]),
                     msg2
                   )) ||
                   (_.isEqual(
-                    JSON.parse(harn.transportWrapper.send.mock.calls[1][1]),
+                    JSON.parse(harn.transport.send.mock.calls[1][1]),
                     msg1
                   ) &&
                     _.isEqual(
-                      JSON.parse(harn.transportWrapper.send.mock.calls[0][1]),
+                      JSON.parse(harn.transport.send.mock.calls[0][1]),
                       msg2
                     ))
               ).toBe(true);
 
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
 
             // Outbound callbacks - N/A
@@ -1500,16 +1472,14 @@ describe("The server.feedTermination() function", () => {
               it("should do nothing on the transport", () => {
                 go();
 
-                harn.transportWrapper.mockClear();
+                harn.transport.mockClear();
 
                 jest.runAllTimers(); // Fire the termination timer
 
-                expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                  0
-                );
+                expect(harn.transport.start.mock.calls.length).toBe(0);
+                expect(harn.transport.stop.mock.calls.length).toBe(0);
+                expect(harn.transport.send.mock.calls.length).toBe(0);
+                expect(harn.transport.disconnect.mock.calls.length).toBe(0);
               });
             });
 
@@ -1640,41 +1610,39 @@ describe("The server.feedTermination() function", () => {
                 ErrorData: { error: "data" }
               };
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(2);
-              expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-              expect(harn.transportWrapper.send.mock.calls[1].length).toBe(2);
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(2);
+              expect(harn.transport.send.mock.calls[0].length).toBe(2);
+              expect(harn.transport.send.mock.calls[1].length).toBe(2);
 
-              expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
+              expect(harn.transport.send.mock.calls[0][0]).toBe(
                 "tcid_client_target"
               );
-              expect(harn.transportWrapper.send.mock.calls[1][0]).toBe(
+              expect(harn.transport.send.mock.calls[1][0]).toBe(
                 "tcid_client_target"
               );
 
               expect(
                 (_.isEqual(
-                  JSON.parse(harn.transportWrapper.send.mock.calls[0][1]),
+                  JSON.parse(harn.transport.send.mock.calls[0][1]),
                   msg1
                 ) &&
                   _.isEqual(
-                    JSON.parse(harn.transportWrapper.send.mock.calls[1][1]),
+                    JSON.parse(harn.transport.send.mock.calls[1][1]),
                     msg2
                   )) ||
                   (_.isEqual(
-                    JSON.parse(harn.transportWrapper.send.mock.calls[1][1]),
+                    JSON.parse(harn.transport.send.mock.calls[1][1]),
                     msg1
                   ) &&
                     _.isEqual(
-                      JSON.parse(harn.transportWrapper.send.mock.calls[0][1]),
+                      JSON.parse(harn.transport.send.mock.calls[0][1]),
                       msg2
                     ))
               ).toBe(true);
 
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
 
             // Outbound callbacks - N/A
@@ -1739,16 +1707,14 @@ describe("The server.feedTermination() function", () => {
               it("should do nothing on the transport", () => {
                 go();
 
-                harn.transportWrapper.mockClear();
+                harn.transport.mockClear();
 
                 jest.runAllTimers(); // Fire the termination timer
 
-                expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                  0
-                );
+                expect(harn.transport.start.mock.calls.length).toBe(0);
+                expect(harn.transport.stop.mock.calls.length).toBe(0);
+                expect(harn.transport.send.mock.calls.length).toBe(0);
+                expect(harn.transport.disconnect.mock.calls.length).toBe(0);
               });
             });
 
@@ -1879,41 +1845,39 @@ describe("The server.feedTermination() function", () => {
                 ErrorData: { error: "data" }
               };
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(2);
-              expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-              expect(harn.transportWrapper.send.mock.calls[1].length).toBe(2);
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(2);
+              expect(harn.transport.send.mock.calls[0].length).toBe(2);
+              expect(harn.transport.send.mock.calls[1].length).toBe(2);
 
-              expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
+              expect(harn.transport.send.mock.calls[0][0]).toBe(
                 "tcid_client_target"
               );
-              expect(harn.transportWrapper.send.mock.calls[1][0]).toBe(
+              expect(harn.transport.send.mock.calls[1][0]).toBe(
                 "tcid_client_target"
               );
 
               expect(
                 (_.isEqual(
-                  JSON.parse(harn.transportWrapper.send.mock.calls[0][1]),
+                  JSON.parse(harn.transport.send.mock.calls[0][1]),
                   msg1
                 ) &&
                   _.isEqual(
-                    JSON.parse(harn.transportWrapper.send.mock.calls[1][1]),
+                    JSON.parse(harn.transport.send.mock.calls[1][1]),
                     msg2
                   )) ||
                   (_.isEqual(
-                    JSON.parse(harn.transportWrapper.send.mock.calls[1][1]),
+                    JSON.parse(harn.transport.send.mock.calls[1][1]),
                     msg1
                   ) &&
                     _.isEqual(
-                      JSON.parse(harn.transportWrapper.send.mock.calls[0][1]),
+                      JSON.parse(harn.transport.send.mock.calls[0][1]),
                       msg2
                     ))
               ).toBe(true);
 
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
 
             // Outbound callbacks - N/A
@@ -1978,16 +1942,14 @@ describe("The server.feedTermination() function", () => {
               it("should do nothing on the transport", () => {
                 go();
 
-                harn.transportWrapper.mockClear();
+                harn.transport.mockClear();
 
                 jest.runAllTimers(); // Fire the termination timer
 
-                expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                  0
-                );
+                expect(harn.transport.start.mock.calls.length).toBe(0);
+                expect(harn.transport.stop.mock.calls.length).toBe(0);
+                expect(harn.transport.send.mock.calls.length).toBe(0);
+                expect(harn.transport.disconnect.mock.calls.length).toBe(0);
               });
             });
 
@@ -2118,41 +2080,39 @@ describe("The server.feedTermination() function", () => {
                 ErrorData: { error: "data" }
               };
 
-              expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-              expect(harn.transportWrapper.send.mock.calls.length).toBe(2);
-              expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-              expect(harn.transportWrapper.send.mock.calls[1].length).toBe(2);
+              expect(harn.transport.start.mock.calls.length).toBe(0);
+              expect(harn.transport.stop.mock.calls.length).toBe(0);
+              expect(harn.transport.send.mock.calls.length).toBe(2);
+              expect(harn.transport.send.mock.calls[0].length).toBe(2);
+              expect(harn.transport.send.mock.calls[1].length).toBe(2);
 
-              expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
+              expect(harn.transport.send.mock.calls[0][0]).toBe(
                 "tcid_client_target"
               );
-              expect(harn.transportWrapper.send.mock.calls[1][0]).toBe(
+              expect(harn.transport.send.mock.calls[1][0]).toBe(
                 "tcid_client_target"
               );
 
               expect(
                 (_.isEqual(
-                  JSON.parse(harn.transportWrapper.send.mock.calls[0][1]),
+                  JSON.parse(harn.transport.send.mock.calls[0][1]),
                   msg1
                 ) &&
                   _.isEqual(
-                    JSON.parse(harn.transportWrapper.send.mock.calls[1][1]),
+                    JSON.parse(harn.transport.send.mock.calls[1][1]),
                     msg2
                   )) ||
                   (_.isEqual(
-                    JSON.parse(harn.transportWrapper.send.mock.calls[1][1]),
+                    JSON.parse(harn.transport.send.mock.calls[1][1]),
                     msg1
                   ) &&
                     _.isEqual(
-                      JSON.parse(harn.transportWrapper.send.mock.calls[0][1]),
+                      JSON.parse(harn.transport.send.mock.calls[0][1]),
                       msg2
                     ))
               ).toBe(true);
 
-              expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                0
-              );
+              expect(harn.transport.disconnect.mock.calls.length).toBe(0);
             });
 
             // Outbound callbacks - N/A
@@ -2219,16 +2179,14 @@ describe("The server.feedTermination() function", () => {
               it("should do nothing on the transport", () => {
                 go();
 
-                harn.transportWrapper.mockClear();
+                harn.transport.mockClear();
 
                 jest.runAllTimers(); // Fire the termination timer
 
-                expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-                expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(
-                  0
-                );
+                expect(harn.transport.start.mock.calls.length).toBe(0);
+                expect(harn.transport.stop.mock.calls.length).toBe(0);
+                expect(harn.transport.send.mock.calls.length).toBe(0);
+                expect(harn.transport.disconnect.mock.calls.length).toBe(0);
               });
             });
 

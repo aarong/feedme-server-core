@@ -2,6 +2,7 @@ import emitter from "component-emitter";
 import _ from "lodash";
 import check from "check-types";
 import server from "../server";
+import transportWrapper from "../transportwrapper";
 
 const harnessProto = {};
 
@@ -17,7 +18,7 @@ export default function harnessFactory(options = {}) {
   t.stop = jest.fn();
   t.send = jest.fn();
   t.disconnect = jest.fn();
-  harness.transportWrapper = t;
+  harness.transport = t;
 
   // Function to reset mock transport functions
   t.mockClear = function mockClear() {
@@ -29,7 +30,7 @@ export default function harnessFactory(options = {}) {
   };
 
   // Create the server
-  options.transportWrapper = t; // eslint-disable-line no-param-reassign
+  options.transportWrapper = transportWrapper(t); // eslint-disable-line no-param-reassign
   harness.server = server(options);
 
   return harness;
@@ -871,11 +872,11 @@ harnessProto.getServerState = function getServerState() {
 
 harnessProto.makeServerStarted = function makeServerStarted() {
   this.server.start();
-  this.transportWrapper.state.mockReturnValue("starting");
-  this.transportWrapper.emit("starting");
-  this.transportWrapper.state.mockReturnValue("started");
-  this.transportWrapper.emit("start");
-  this.transportWrapper.mockClear();
+  this.transport.state.mockReturnValue("starting");
+  this.transport.emit("starting");
+  this.transport.state.mockReturnValue("started");
+  this.transport.emit("start");
+  this.transport.mockClear();
 };
 
 harnessProto.makeClient = function connectClient(tcid) {
@@ -887,8 +888,8 @@ harnessProto.makeClient = function connectClient(tcid) {
     cid = hsreq.clientId;
     hsres.success();
   });
-  this.transportWrapper.emit("connect", tcid);
-  this.transportWrapper.emit(
+  this.transport.emit("connect", tcid);
+  this.transport.emit(
     "message",
     tcid,
     JSON.stringify({
@@ -896,7 +897,7 @@ harnessProto.makeClient = function connectClient(tcid) {
       Versions: ["0.1"]
     })
   );
-  this.transportWrapper.mockClear();
+  this.transport.mockClear();
   return cid;
 };
 
@@ -908,7 +909,7 @@ harnessProto.makeFeedOpening = function makeFeedOpening(tcid, fn, fa) {
   this.server.once("feedOpen", (foreq, fores) => {
     res = fores;
   });
-  this.transportWrapper.emit(
+  this.transport.emit(
     "message",
     tcid,
     JSON.stringify({
@@ -917,7 +918,7 @@ harnessProto.makeFeedOpening = function makeFeedOpening(tcid, fn, fa) {
       FeedArgs: fa
     })
   );
-  this.transportWrapper.mockClear();
+  this.transport.mockClear();
   return res;
 };
 
@@ -927,7 +928,7 @@ harnessProto.makeFeedOpen = function makeFeedOpening(tcid, fn, fa, fd) {
   this.server.once("feedOpen", (foreq, fores) => {
     fores.success(fd);
   });
-  this.transportWrapper.emit(
+  this.transport.emit(
     "message",
     tcid,
     JSON.stringify({
@@ -936,7 +937,7 @@ harnessProto.makeFeedOpen = function makeFeedOpening(tcid, fn, fa, fd) {
       FeedArgs: fa
     })
   );
-  this.transportWrapper.mockClear();
+  this.transport.mockClear();
 };
 
 harnessProto.makeFeedClosing = function makeFeedOpening(tcid, fn, fa) {
@@ -946,7 +947,7 @@ harnessProto.makeFeedClosing = function makeFeedOpening(tcid, fn, fa) {
   this.server.once("feedOpen", (foreq, fores) => {
     fores.success({});
   });
-  this.transportWrapper.emit(
+  this.transport.emit(
     "message",
     tcid,
     JSON.stringify({
@@ -960,7 +961,7 @@ harnessProto.makeFeedClosing = function makeFeedOpening(tcid, fn, fa) {
   this.server.once("feedClose", (fcreq, fcres) => {
     res = fcres;
   });
-  this.transportWrapper.emit(
+  this.transport.emit(
     "message",
     tcid,
     JSON.stringify({
@@ -969,7 +970,7 @@ harnessProto.makeFeedClosing = function makeFeedOpening(tcid, fn, fa) {
       FeedArgs: fa
     })
   );
-  this.transportWrapper.mockClear();
+  this.transport.mockClear();
   return res;
 };
 
@@ -979,7 +980,7 @@ harnessProto.makeFeedTerminated = function makeFeedOpening(tcid, fn, fa) {
   this.server.once("feedOpen", (foreq, fores) => {
     fores.success({});
   });
-  this.transportWrapper.emit(
+  this.transport.emit(
     "message",
     tcid,
     JSON.stringify({
@@ -997,5 +998,5 @@ harnessProto.makeFeedTerminated = function makeFeedOpening(tcid, fn, fa) {
     errorData: { discarded: "data" }
   });
 
-  this.transportWrapper.mockClear();
+  this.transport.mockClear();
 };

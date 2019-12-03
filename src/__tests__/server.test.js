@@ -134,7 +134,7 @@ describe("The server() factory function", () => {
 
     // The transport argument is checked by transportWrapper in main
 
-    it("should throw on invalid options.transportWrapper argument - missing", () => {
+    it("should throw on invalid options.transport argument - missing", () => {
       expect(() => {
         server({});
       }).toThrow(
@@ -142,7 +142,7 @@ describe("The server() factory function", () => {
       );
     });
 
-    it("should throw on invalid options.transportWrapper argument - bad type", () => {
+    it("should throw on invalid options.transport argument - bad type", () => {
       expect(() => {
         server({ transportWrapper: "junk" });
       }).toThrow(
@@ -199,7 +199,7 @@ describe("The server() factory function", () => {
           handshakeMs: config.defaults.handshakeMs,
           terminationMs: config.defaults.terminationMs
         },
-        _transportWrapper: harn.transportWrapper,
+        _transportWrapper: harn.server._transportWrapper,
         _transportWrapperState: "stopped",
         _clientIds: {},
         _transportClientIds: {},
@@ -229,7 +229,7 @@ describe("The server() factory function", () => {
           handshakeMs: 123,
           terminationMs: 456
         },
-        _transportWrapper: harn.transportWrapper,
+        _transportWrapper: harn.server._transportWrapper,
         _transportWrapperState: "stopped",
         _clientIds: {},
         _transportClientIds: {},
@@ -253,11 +253,10 @@ describe("The server() factory function", () => {
 
     it("should make no transport calls", () => {
       const harn = harness();
-      expect(harn.transportWrapper.state.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -278,8 +277,8 @@ describe("The server.start() function", () => {
     it("should throw if the server is not stopped", () => {
       const harn = harness();
       harn.server.start();
-      harn.transportWrapper.state.mockReturnValue("starting");
-      harn.transportWrapper.emit("starting");
+      harn.transport.state.mockReturnValue("starting");
+      harn.transport.emit("starting");
       expect(() => {
         harn.server.start();
       }).toThrow(new Error("INVALID_STATE: The server is not stopped."));
@@ -326,11 +325,11 @@ describe("The server.start() function", () => {
       const harn = harness();
       harn.server.start();
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.start.mock.calls[0].length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(1);
+      expect(harn.transport.start.mock.calls[0].length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -400,11 +399,11 @@ describe("The server.stop() function", () => {
 
       harn.server.stop();
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.stop.mock.calls[0].length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(1);
+      expect(harn.transport.stop.mock.calls[0].length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -775,30 +774,26 @@ describe("The server.actionRevelation() function", () => {
           ]
         });
 
-        expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-        expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-        expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-        expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-        expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
-          "tcid_client_open"
-        );
-        expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual(
-          {
-            MessageType: "ActionRevelation",
-            ActionName: "some_action",
-            ActionData: { action: "data" },
-            FeedName: "some_feed",
-            FeedArgs: { feed: "args" },
-            FeedDeltas: [
-              {
-                Operation: "Set",
-                Path: ["feed"],
-                Value: "data2"
-              }
-            ]
-          }
-        );
-        expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+        expect(harn.transport.start.mock.calls.length).toBe(0);
+        expect(harn.transport.stop.mock.calls.length).toBe(0);
+        expect(harn.transport.send.mock.calls.length).toBe(1);
+        expect(harn.transport.send.mock.calls[0].length).toBe(2);
+        expect(harn.transport.send.mock.calls[0][0]).toBe("tcid_client_open");
+        expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
+          MessageType: "ActionRevelation",
+          ActionName: "some_action",
+          ActionData: { action: "data" },
+          FeedName: "some_feed",
+          FeedArgs: { feed: "args" },
+          FeedDeltas: [
+            {
+              Operation: "Set",
+              Path: ["feed"],
+              Value: "data2"
+            }
+          ]
+        });
+        expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
 
       it("should call .send() for appropriate clients - with hash", () => {
@@ -817,31 +812,27 @@ describe("The server.actionRevelation() function", () => {
           feedMd5: "123456789012345678901234"
         });
 
-        expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-        expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-        expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-        expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-        expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
-          "tcid_client_open"
-        );
-        expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual(
-          {
-            MessageType: "ActionRevelation",
-            ActionName: "some_action",
-            ActionData: { action: "data" },
-            FeedName: "some_feed",
-            FeedArgs: { feed: "args" },
-            FeedDeltas: [
-              {
-                Operation: "Set",
-                Path: ["feed"],
-                Value: "data2"
-              }
-            ],
-            FeedMd5: "123456789012345678901234"
-          }
-        );
-        expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+        expect(harn.transport.start.mock.calls.length).toBe(0);
+        expect(harn.transport.stop.mock.calls.length).toBe(0);
+        expect(harn.transport.send.mock.calls.length).toBe(1);
+        expect(harn.transport.send.mock.calls[0].length).toBe(2);
+        expect(harn.transport.send.mock.calls[0][0]).toBe("tcid_client_open");
+        expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
+          MessageType: "ActionRevelation",
+          ActionName: "some_action",
+          ActionData: { action: "data" },
+          FeedName: "some_feed",
+          FeedArgs: { feed: "args" },
+          FeedDeltas: [
+            {
+              Operation: "Set",
+              Path: ["feed"],
+              Value: "data2"
+            }
+          ],
+          FeedMd5: "123456789012345678901234"
+        });
+        expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
 
       it("should call .send() for appropriate clients - with feed data", () => {
@@ -860,31 +851,27 @@ describe("The server.actionRevelation() function", () => {
           feedData: { feed: "data2" }
         });
 
-        expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-        expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-        expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-        expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-        expect(harn.transportWrapper.send.mock.calls[0][0]).toBe(
-          "tcid_client_open"
-        );
-        expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual(
-          {
-            MessageType: "ActionRevelation",
-            ActionName: "some_action",
-            ActionData: { action: "data" },
-            FeedName: "some_feed",
-            FeedArgs: { feed: "args" },
-            FeedDeltas: [
-              {
-                Operation: "Set",
-                Path: ["feed"],
-                Value: "data2"
-              }
-            ],
-            FeedMd5: md5Calculator.calculate({ feed: "data2" })
-          }
-        );
-        expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+        expect(harn.transport.start.mock.calls.length).toBe(0);
+        expect(harn.transport.stop.mock.calls.length).toBe(0);
+        expect(harn.transport.send.mock.calls.length).toBe(1);
+        expect(harn.transport.send.mock.calls[0].length).toBe(2);
+        expect(harn.transport.send.mock.calls[0][0]).toBe("tcid_client_open");
+        expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
+          MessageType: "ActionRevelation",
+          ActionName: "some_action",
+          ActionData: { action: "data" },
+          FeedName: "some_feed",
+          FeedArgs: { feed: "args" },
+          FeedDeltas: [
+            {
+              Operation: "Set",
+              Path: ["feed"],
+              Value: "data2"
+            }
+          ],
+          FeedMd5: md5Calculator.calculate({ feed: "data2" })
+        });
+        expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
 
       // Outbound callbacks - N/A
@@ -990,10 +977,10 @@ describe("The server.actionRevelation() function", () => {
           ]
         });
 
-        expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-        expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-        expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-        expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+        expect(harn.transport.start.mock.calls.length).toBe(0);
+        expect(harn.transport.stop.mock.calls.length).toBe(0);
+        expect(harn.transport.send.mock.calls.length).toBe(0);
+        expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
 
       // Outbound callbacks - N/A
@@ -1097,10 +1084,10 @@ describe("The server.disconnect() function", () => {
 
       harn.server.disconnect("junk");
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     it("should call transport.disconnect() if client is connected", () => {
@@ -1110,14 +1097,12 @@ describe("The server.disconnect() function", () => {
 
       harn.server.disconnect(cidTarget);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.disconnect.mock.calls[0].length).toBe(1);
-      expect(harn.transportWrapper.disconnect.mock.calls[0][0]).toBe(
-        "some_tcid"
-      );
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(1);
+      expect(harn.transport.disconnect.mock.calls[0].length).toBe(1);
+      expect(harn.transport.disconnect.mock.calls[0][0]).toBe("some_tcid");
     });
 
     // Outbound callbacks - N/A
@@ -1153,8 +1138,8 @@ describe("The server._appHandshakeSuccess() function - via handshakeResponse.suc
         serverListener.mockClear();
         hsres.success();
       });
-      harn.transportWrapper.emit("connect", "some_tcid");
-      harn.transportWrapper.emit(
+      harn.transport.emit("connect", "some_tcid");
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1190,8 +1175,8 @@ describe("The server._appHandshakeSuccess() function - via handshakeResponse.suc
         newState = harn.getServerState();
         hsres.success();
       });
-      harn.transportWrapper.emit("connect", "some_tcid");
-      harn.transportWrapper.emit(
+      harn.transport.emit("connect", "some_tcid");
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1216,11 +1201,11 @@ describe("The server._appHandshakeSuccess() function - via handshakeResponse.suc
 
       harn.server.once("handshake", (hsreq, hsres) => {
         cid = hsreq.clientId;
-        harn.transportWrapper.mockClear();
+        harn.transport.mockClear();
         hsres.success();
       });
-      harn.transportWrapper.emit("connect", "some_tcid");
-      harn.transportWrapper.emit(
+      harn.transport.emit("connect", "some_tcid");
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1229,18 +1214,18 @@ describe("The server._appHandshakeSuccess() function - via handshakeResponse.suc
         })
       );
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "HandshakeResponse",
         Success: true,
         Version: "0.1",
         ClientId: cid
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -1269,7 +1254,7 @@ describe("The server._appActionSuccess() function - via actionResponse.success()
         serverListener.mockClear();
         ares.success({ action: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1308,7 +1293,7 @@ describe("The server._appActionSuccess() function - via actionResponse.success()
         newState = harn.getServerState();
         ares.success({ action: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1334,7 +1319,7 @@ describe("The server._appActionSuccess() function - via actionResponse.success()
       harn.server.once("action", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1350,7 +1335,7 @@ describe("The server._appActionSuccess() function - via actionResponse.success()
         newState = harn.getServerState();
         ares.success({ action: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1376,7 +1361,7 @@ describe("The server._appActionSuccess() function - via actionResponse.success()
       harn.server.once("action", (areq, ares) => {
         ares.success({ action: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1387,18 +1372,18 @@ describe("The server._appActionSuccess() function - via actionResponse.success()
         })
       );
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ActionResponse",
         Success: true,
         CallbackId: "123",
         ActionData: { action: "data" }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -1427,7 +1412,7 @@ describe("The server._appActionFailure() function - via actionResponse.failure()
         serverListener.mockClear();
         ares.failure("SOME_ERROR", { error: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1466,7 +1451,7 @@ describe("The server._appActionFailure() function - via actionResponse.failure()
         newState = harn.getServerState();
         ares.failure("SOME_ERROR", { error: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1492,7 +1477,7 @@ describe("The server._appActionFailure() function - via actionResponse.failure()
       harn.server.once("action", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1508,7 +1493,7 @@ describe("The server._appActionFailure() function - via actionResponse.failure()
         newState = harn.getServerState();
         ares.failure("SOME_ERROR", { error: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1534,7 +1519,7 @@ describe("The server._appActionFailure() function - via actionResponse.failure()
       harn.server.once("action", (areq, ares) => {
         ares.failure("SOME_ERROR", { error: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1545,19 +1530,19 @@ describe("The server._appActionFailure() function - via actionResponse.failure()
         })
       );
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ActionResponse",
         Success: false,
         CallbackId: "123",
         ErrorCode: "SOME_ERROR",
         ErrorData: { error: "data" }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -1586,7 +1571,7 @@ describe("The server._appFeedOpenSuccess() function - via feedOpenResponse.succe
         serverListener.mockClear();
         fores.success({ feed: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1624,7 +1609,7 @@ describe("The server._appFeedOpenSuccess() function - via feedOpenResponse.succe
         newState = harn.getServerState();
         fores.success({ feed: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1654,7 +1639,7 @@ describe("The server._appFeedOpenSuccess() function - via feedOpenResponse.succe
       harn.server.once("feedOpen", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1669,7 +1654,7 @@ describe("The server._appFeedOpenSuccess() function - via feedOpenResponse.succe
         newState = harn.getServerState();
         fores.success({ feed: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1700,7 +1685,7 @@ describe("The server._appFeedOpenSuccess() function - via feedOpenResponse.succe
       harn.server.once("feedOpen", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "other_tcid",
         JSON.stringify({
@@ -1715,7 +1700,7 @@ describe("The server._appFeedOpenSuccess() function - via feedOpenResponse.succe
         newState = harn.getServerState();
         fores.success({ feed: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1745,7 +1730,7 @@ describe("The server._appFeedOpenSuccess() function - via feedOpenResponse.succe
       harn.server.once("feedOpen", (foreq, fores) => {
         fores.success({ feed: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1755,19 +1740,19 @@ describe("The server._appFeedOpenSuccess() function - via feedOpenResponse.succe
         })
       );
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "FeedOpenResponse",
         Success: true,
         FeedName: "some_feed",
         FeedArgs: { feed: "args" },
         FeedData: { feed: "data" }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -1796,7 +1781,7 @@ describe("The server._appFeedOpenFailure() function - via feedOpenResponse.failu
         serverListener.mockClear();
         fores.failure("SOME_ERROR", { error: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1834,7 +1819,7 @@ describe("The server._appFeedOpenFailure() function - via feedOpenResponse.failu
         newState = harn.getServerState();
         fores.failure("SOME_ERROR", { error: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1864,7 +1849,7 @@ describe("The server._appFeedOpenFailure() function - via feedOpenResponse.failu
       harn.server.once("feedOpen", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1879,7 +1864,7 @@ describe("The server._appFeedOpenFailure() function - via feedOpenResponse.failu
         newState = harn.getServerState();
         fores.failure("SOME_ERROR", { error: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1910,7 +1895,7 @@ describe("The server._appFeedOpenFailure() function - via feedOpenResponse.failu
       harn.server.once("feedOpen", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "other_tcid",
         JSON.stringify({
@@ -1925,7 +1910,7 @@ describe("The server._appFeedOpenFailure() function - via feedOpenResponse.failu
         newState = harn.getServerState();
         fores.failure("SOME_ERROR", { error: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1955,7 +1940,7 @@ describe("The server._appFeedOpenFailure() function - via feedOpenResponse.failu
       harn.server.once("feedOpen", (foreq, fores) => {
         fores.failure("SOME_ERROR", { error: "data" });
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -1965,12 +1950,12 @@ describe("The server._appFeedOpenFailure() function - via feedOpenResponse.failu
         })
       );
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "FeedOpenResponse",
         Success: false,
         FeedName: "some_feed",
@@ -1978,7 +1963,7 @@ describe("The server._appFeedOpenFailure() function - via feedOpenResponse.failu
         ErrorCode: "SOME_ERROR",
         ErrorData: { error: "data" }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -2013,7 +1998,7 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
         serverListener.mockClear();
         fcres.success();
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -2057,7 +2042,7 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
         newState = harn.getServerState();
         fcres.success();
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -2099,7 +2084,7 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
       harn.server.once("feedClose", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -2114,7 +2099,7 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
         newState = harn.getServerState();
         fcres.success();
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -2157,7 +2142,7 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
       harn.server.once("feedClose", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "other_tcid",
         JSON.stringify({
@@ -2172,7 +2157,7 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
         newState = harn.getServerState();
         fcres.success();
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -2208,7 +2193,7 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
       harn.server.once("feedClose", (fcreq, fcres) => {
         fcres.success();
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -2218,18 +2203,18 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
         })
       );
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "FeedCloseResponse",
         Success: true,
         FeedName: "some_feed",
         FeedArgs: { feed: "args" }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -2250,8 +2235,8 @@ describe("The server._processStarting() function", () => {
     harn.server.start();
     const serverListener = harn.createServerListener();
 
-    harn.transportWrapper.state.mockReturnValue("starting");
-    harn.transportWrapper.emit("starting");
+    harn.transport.state.mockReturnValue("starting");
+    harn.transport.emit("starting");
 
     expect(serverListener.starting.mock.calls.length).toBe(1);
     expect(serverListener.starting.mock.calls[0].length).toBe(0);
@@ -2275,8 +2260,8 @@ describe("The server._processStarting() function", () => {
     harn.server.start();
 
     const newState = harn.getServerState();
-    harn.transportWrapper.state.mockReturnValue("starting");
-    harn.transportWrapper.emit("starting");
+    harn.transport.state.mockReturnValue("starting");
+    harn.transport.emit("starting");
 
     newState._transportWrapperState = "starting";
     expect(harn.server).toHaveState(newState);
@@ -2287,15 +2272,15 @@ describe("The server._processStarting() function", () => {
   it("should act appropriately on the transport", () => {
     const harn = harness();
     harn.server.start();
-    harn.transportWrapper.mockClear();
+    harn.transport.mockClear();
 
-    harn.transportWrapper.state.mockReturnValue("starting");
-    harn.transportWrapper.emit("starting");
+    harn.transport.state.mockReturnValue("starting");
+    harn.transport.emit("starting");
 
-    expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+    expect(harn.transport.start.mock.calls.length).toBe(0);
+    expect(harn.transport.stop.mock.calls.length).toBe(0);
+    expect(harn.transport.send.mock.calls.length).toBe(0);
+    expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
   // Outbound callbacks - N/A
@@ -2311,12 +2296,12 @@ describe("The server._processStart() function", () => {
   it("should emit appropriate events", () => {
     const harn = harness();
     harn.server.start();
-    harn.transportWrapper.state.mockReturnValue("starting");
-    harn.transportWrapper.emit("starting");
+    harn.transport.state.mockReturnValue("starting");
+    harn.transport.emit("starting");
 
     const serverListener = harn.createServerListener();
-    harn.transportWrapper.state.mockReturnValue("started");
-    harn.transportWrapper.emit("start");
+    harn.transport.state.mockReturnValue("started");
+    harn.transport.emit("start");
 
     expect(serverListener.starting.mock.calls.length).toBe(0);
     expect(serverListener.start.mock.calls.length).toBe(1);
@@ -2338,12 +2323,12 @@ describe("The server._processStart() function", () => {
   it("should update the state appropriately", () => {
     const harn = harness();
     harn.server.start();
-    harn.transportWrapper.state.mockReturnValue("starting");
-    harn.transportWrapper.emit("starting");
+    harn.transport.state.mockReturnValue("starting");
+    harn.transport.emit("starting");
 
     const newState = harn.getServerState();
-    harn.transportWrapper.state.mockReturnValue("started");
-    harn.transportWrapper.emit("start");
+    harn.transport.state.mockReturnValue("started");
+    harn.transport.emit("start");
 
     newState._transportWrapperState = "started";
     expect(harn.server).toHaveState(newState);
@@ -2354,17 +2339,17 @@ describe("The server._processStart() function", () => {
   it("should act appropriately on the transport", () => {
     const harn = harness();
     harn.server.start();
-    harn.transportWrapper.state.mockReturnValue("starting");
-    harn.transportWrapper.emit("starting");
+    harn.transport.state.mockReturnValue("starting");
+    harn.transport.emit("starting");
 
-    harn.transportWrapper.mockClear();
-    harn.transportWrapper.state.mockReturnValue("started");
-    harn.transportWrapper.emit("start");
+    harn.transport.mockClear();
+    harn.transport.state.mockReturnValue("started");
+    harn.transport.emit("start");
 
-    expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+    expect(harn.transport.start.mock.calls.length).toBe(0);
+    expect(harn.transport.stop.mock.calls.length).toBe(0);
+    expect(harn.transport.send.mock.calls.length).toBe(0);
+    expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
   // Outbound callbacks - N/A
@@ -2382,9 +2367,9 @@ describe("The server._processStopping() function", () => {
     harn.makeServerStarted();
 
     harn.server.stop();
-    harn.transportWrapper.state.mockReturnValue("stopping");
+    harn.transport.state.mockReturnValue("stopping");
     const serverListener = harn.createServerListener();
-    harn.transportWrapper.emit("stopping");
+    harn.transport.emit("stopping");
 
     expect(serverListener.starting.mock.calls.length).toBe(0);
     expect(serverListener.start.mock.calls.length).toBe(0);
@@ -2406,8 +2391,8 @@ describe("The server._processStopping() function", () => {
     harn.makeServerStarted();
 
     const serverListener = harn.createServerListener();
-    harn.transportWrapper.state.mockReturnValue("stopping");
-    harn.transportWrapper.emit("stopping", new Error("FAILURE: ..."));
+    harn.transport.state.mockReturnValue("stopping");
+    harn.transport.emit("stopping", new Error("FAILURE: ..."));
 
     expect(serverListener.starting.mock.calls.length).toBe(0);
     expect(serverListener.start.mock.calls.length).toBe(0);
@@ -2435,8 +2420,8 @@ describe("The server._processStopping() function", () => {
     harn.makeServerStarted();
 
     const newState = harn.getServerState();
-    harn.transportWrapper.state.mockReturnValue("stopping");
-    harn.transportWrapper.emit("stopping", new Error("FAILURE: ..."));
+    harn.transport.state.mockReturnValue("stopping");
+    harn.transport.emit("stopping", new Error("FAILURE: ..."));
 
     newState._transportWrapperState = "stopping";
     expect(harn.server).toHaveState(newState);
@@ -2449,14 +2434,14 @@ describe("The server._processStopping() function", () => {
     harn.makeServerStarted();
 
     harn.server.stop();
-    harn.transportWrapper.state.mockReturnValue("stopping");
-    harn.transportWrapper.mockClear();
-    harn.transportWrapper.emit("stopping");
+    harn.transport.state.mockReturnValue("stopping");
+    harn.transport.mockClear();
+    harn.transport.emit("stopping");
 
-    expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+    expect(harn.transport.start.mock.calls.length).toBe(0);
+    expect(harn.transport.stop.mock.calls.length).toBe(0);
+    expect(harn.transport.send.mock.calls.length).toBe(0);
+    expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
   // Outbound callbacks - N/A
@@ -2474,11 +2459,11 @@ describe("The server._processStop() function", () => {
     harn.makeServerStarted();
 
     harn.server.stop();
-    harn.transportWrapper.state.mockReturnValue("stopping");
-    harn.transportWrapper.emit("stopping");
-    harn.transportWrapper.state.mockReturnValue("stopped");
+    harn.transport.state.mockReturnValue("stopping");
+    harn.transport.emit("stopping");
+    harn.transport.state.mockReturnValue("stopped");
     const serverListener = harn.createServerListener();
-    harn.transportWrapper.emit("stop");
+    harn.transport.emit("stop");
 
     expect(serverListener.starting.mock.calls.length).toBe(0);
     expect(serverListener.start.mock.calls.length).toBe(0);
@@ -2499,11 +2484,11 @@ describe("The server._processStop() function", () => {
     const harn = harness();
     harn.makeServerStarted();
 
-    harn.transportWrapper.state.mockReturnValue("stopping");
-    harn.transportWrapper.emit("stopping", new Error("FAILURE: ..."));
-    harn.transportWrapper.state.mockReturnValue("stopped");
+    harn.transport.state.mockReturnValue("stopping");
+    harn.transport.emit("stopping", new Error("FAILURE: ..."));
+    harn.transport.state.mockReturnValue("stopped");
     const serverListener = harn.createServerListener();
-    harn.transportWrapper.emit("stop", new Error("FAILURE: ..."));
+    harn.transport.emit("stop", new Error("FAILURE: ..."));
 
     expect(serverListener.starting.mock.calls.length).toBe(0);
     expect(serverListener.start.mock.calls.length).toBe(0);
@@ -2529,11 +2514,11 @@ describe("The server._processStop() function", () => {
     harn.makeServerStarted();
 
     harn.server.stop();
-    harn.transportWrapper.state.mockReturnValue("stopping");
-    harn.transportWrapper.emit("stopping");
-    harn.transportWrapper.state.mockReturnValue("stopped");
+    harn.transport.state.mockReturnValue("stopping");
+    harn.transport.emit("stopping");
     const newState = harn.getServerState();
-    harn.transportWrapper.emit("stop");
+    harn.transport.state.mockReturnValue("stopped");
+    harn.transport.emit("stop");
 
     newState._transportWrapperState = "stopped";
     expect(harn.server).toHaveState(newState);
@@ -2546,16 +2531,16 @@ describe("The server._processStop() function", () => {
     harn.makeServerStarted();
 
     harn.server.stop();
-    harn.transportWrapper.state.mockReturnValue("stopping");
-    harn.transportWrapper.emit("stopping");
-    harn.transportWrapper.state.mockReturnValue("stopped");
-    harn.transportWrapper.mockClear();
-    harn.transportWrapper.emit("stop");
+    harn.transport.state.mockReturnValue("stopping");
+    harn.transport.emit("stopping");
+    harn.transport.state.mockReturnValue("stopped");
+    harn.transport.mockClear();
+    harn.transport.emit("stop");
 
-    expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+    expect(harn.transport.start.mock.calls.length).toBe(0);
+    expect(harn.transport.stop.mock.calls.length).toBe(0);
+    expect(harn.transport.send.mock.calls.length).toBe(0);
+    expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
   // Outbound callbacks - N/A
@@ -2573,7 +2558,7 @@ describe("The server._processConnect() function", () => {
     harn.makeServerStarted();
 
     const serverListener = harn.createServerListener();
-    harn.transportWrapper.emit("connect", "some_tcid");
+    harn.transport.emit("connect", "some_tcid");
 
     expect(serverListener.starting.mock.calls.length).toBe(0);
     expect(serverListener.start.mock.calls.length).toBe(0);
@@ -2598,7 +2583,7 @@ describe("The server._processConnect() function", () => {
     harn.makeServerStarted();
 
     const newState = harn.getServerState();
-    harn.transportWrapper.emit("connect", "some_tcid");
+    harn.transport.emit("connect", "some_tcid");
 
     const cid = harn.server._clientIds.some_tcid;
     newState._clientIds.some_tcid = cid;
@@ -2613,7 +2598,7 @@ describe("The server._processConnect() function", () => {
     harn.makeServerStarted();
 
     const newState = harn.getServerState();
-    harn.transportWrapper.emit("connect", "some_tcid");
+    harn.transport.emit("connect", "some_tcid");
 
     const cid = harn.server._clientIds.some_tcid;
     newState._clientIds.some_tcid = cid;
@@ -2628,13 +2613,13 @@ describe("The server._processConnect() function", () => {
     const harn = harness();
     harn.makeServerStarted();
 
-    harn.transportWrapper.mockClear();
-    harn.transportWrapper.emit("connect", "some_tcid");
+    harn.transport.mockClear();
+    harn.transport.emit("connect", "some_tcid");
 
-    expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+    expect(harn.transport.start.mock.calls.length).toBe(0);
+    expect(harn.transport.stop.mock.calls.length).toBe(0);
+    expect(harn.transport.send.mock.calls.length).toBe(0);
+    expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
   // Outbound callbacks - N/A
@@ -2646,39 +2631,39 @@ describe("The server._processConnect() function", () => {
       const harn = harness({ handshakeMs: 0 });
       harn.makeServerStarted();
 
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
 
-      harn.transportWrapper.mockClear();
+      harn.transport.mockClear();
       jest.runAllTimers();
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     it("if enabled and client disconnects (no fire), it should not call transport.disconnect()", () => {
       const harn = harness({ handshakeMs: 1 });
       harn.makeServerStarted();
 
-      harn.transportWrapper.emit("connect", "some_tcid");
-      harn.transportWrapper.emit("disconnect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
+      harn.transport.emit("disconnect", "some_tcid");
 
-      harn.transportWrapper.mockClear();
+      harn.transport.mockClear();
       jest.runAllTimers();
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     it("if enabled and client submits a valid handshake (no fire), it should not call transport.disconnect()", () => {
       const harn = harness({ handshakeMs: 1 });
       harn.makeServerStarted();
 
-      harn.transportWrapper.emit("connect", "some_tcid");
-      harn.transportWrapper.emit(
+      harn.transport.emit("connect", "some_tcid");
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -2687,21 +2672,21 @@ describe("The server._processConnect() function", () => {
         })
       );
 
-      harn.transportWrapper.mockClear();
+      harn.transport.mockClear();
       jest.runAllTimers();
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     it("if enabled and fires, it should emit nothing (done via transport)", () => {
       const harn = harness({ handshakeMs: 1 });
       harn.makeServerStarted();
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.mockClear();
+      harn.transport.emit("connect", "some_tcid");
 
       const serverListener = harn.createServerListener();
       jest.runAllTimers();
@@ -2724,8 +2709,8 @@ describe("The server._processConnect() function", () => {
       const harn = harness({ handshakeMs: 1 });
       harn.makeServerStarted();
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.mockClear();
+      harn.transport.emit("connect", "some_tcid");
 
       const newState = harn.getServerState();
       jest.runAllTimers();
@@ -2737,23 +2722,19 @@ describe("The server._processConnect() function", () => {
       const harn = harness({ handshakeMs: 1 });
       harn.makeServerStarted();
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.mockClear();
+      harn.transport.emit("connect", "some_tcid");
 
       jest.runAllTimers();
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.disconnect.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.disconnect.mock.calls[0][0]).toBe(
-        "some_tcid"
-      );
-      expect(harn.transportWrapper.disconnect.mock.calls[0][1]).toBeInstanceOf(
-        Error
-      );
-      expect(harn.transportWrapper.disconnect.mock.calls[0][1].message).toBe(
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(1);
+      expect(harn.transport.disconnect.mock.calls[0].length).toBe(2);
+      expect(harn.transport.disconnect.mock.calls[0][0]).toBe("some_tcid");
+      expect(harn.transport.disconnect.mock.calls[0][1]).toBeInstanceOf(Error);
+      expect(harn.transport.disconnect.mock.calls[0][1].message).toBe(
         "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time."
       );
     });
@@ -2772,7 +2753,7 @@ describe("The server._processDisconnect() function", () => {
 
     harn.server.disconnect(cid);
     const serverListener = harn.createServerListener();
-    harn.transportWrapper.emit("disconnect", "some_tcid");
+    harn.transport.emit("disconnect", "some_tcid");
 
     expect(serverListener.starting.mock.calls.length).toBe(0);
     expect(serverListener.start.mock.calls.length).toBe(0);
@@ -2796,11 +2777,7 @@ describe("The server._processDisconnect() function", () => {
     const cid = harn.makeClient("some_tcid");
 
     const serverListener = harn.createServerListener();
-    harn.transportWrapper.emit(
-      "disconnect",
-      "some_tcid",
-      new Error("FAILURE: ...")
-    );
+    harn.transport.emit("disconnect", "some_tcid", new Error("FAILURE: ..."));
 
     expect(serverListener.starting.mock.calls.length).toBe(0);
     expect(serverListener.start.mock.calls.length).toBe(0);
@@ -2830,7 +2807,7 @@ describe("The server._processDisconnect() function", () => {
     harn.makeServerStarted();
 
     // Leaver
-    harn.transportWrapper.emit("connect", "tcid_leaver");
+    harn.transport.emit("connect", "tcid_leaver");
     let leaverCid;
     let leaverHandshakeRes;
     harn.server.once("handshake", (hsreq, hsres) => {
@@ -2838,7 +2815,7 @@ describe("The server._processDisconnect() function", () => {
       leaverHandshakeRes = hsres;
       // Sit on it
     });
-    harn.transportWrapper.emit(
+    harn.transport.emit(
       "message",
       "tcid_leaver",
       JSON.stringify({
@@ -2848,13 +2825,13 @@ describe("The server._processDisconnect() function", () => {
     );
 
     // Stayer
-    harn.transportWrapper.emit("connect", "tcid_stayer");
+    harn.transport.emit("connect", "tcid_stayer");
     let stayerHandshakeRes;
     harn.server.once("handshake", (hreq, hres) => {
       stayerHandshakeRes = hres;
       // Sit on it
     });
-    harn.transportWrapper.emit(
+    harn.transport.emit(
       "message",
       "tcid_stayer",
       JSON.stringify({
@@ -2869,11 +2846,7 @@ describe("The server._processDisconnect() function", () => {
 
     // Emit
     const newState = harn.getServerState();
-    harn.transportWrapper.emit(
-      "disconnect",
-      "tcid_leaver",
-      new Error("FAILURE: ...")
-    );
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
 
     // Check that neutralize functions are called/not
     expect(leaverHandshakeRes._neutralize.mock.calls.length).toBe(1);
@@ -2902,7 +2875,7 @@ describe("The server._processDisconnect() function", () => {
       leaverActionRes1 = ares;
       // Sit on it
     });
-    harn.transportWrapper.emit(
+    harn.transport.emit(
       "message",
       "tcid_leaver",
       JSON.stringify({
@@ -2917,7 +2890,7 @@ describe("The server._processDisconnect() function", () => {
       leaverActionRes2 = ares;
       // Sit on it
     });
-    harn.transportWrapper.emit(
+    harn.transport.emit(
       "message",
       "tcid_leaver",
       JSON.stringify({
@@ -2935,7 +2908,7 @@ describe("The server._processDisconnect() function", () => {
       stayerActionRes = ares;
       // Sit on it
     });
-    harn.transportWrapper.emit(
+    harn.transport.emit(
       "message",
       "tcid_stayer",
       JSON.stringify({
@@ -2953,11 +2926,7 @@ describe("The server._processDisconnect() function", () => {
 
     // Emit
     const newState = harn.getServerState();
-    harn.transportWrapper.emit(
-      "disconnect",
-      "tcid_leaver",
-      new Error("FAILURE: ...")
-    );
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
 
     // Check that neutralize functions are called/not
     expect(leaverActionRes1._neutralize.mock.calls.length).toBe(1);
@@ -3006,11 +2975,7 @@ describe("The server._processDisconnect() function", () => {
 
     // Emit
     const newState = harn.getServerState();
-    harn.transportWrapper.emit(
-      "disconnect",
-      "tcid_leaver",
-      new Error("FAILURE: ...")
-    );
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
 
     // Check that neutralize functions are called/not
     expect(leaverFeedOpenRes1._neutralize.mock.calls.length).toBe(1);
@@ -3070,11 +3035,7 @@ describe("The server._processDisconnect() function", () => {
 
     // Emit
     const newState = harn.getServerState();
-    harn.transportWrapper.emit(
-      "disconnect",
-      "tcid_leaver",
-      new Error("FAILURE: ...")
-    );
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
 
     // Check that neutralize functions are called/not
     expect(leaverFeedCloseRes1._neutralize.mock.calls.length).toBe(1);
@@ -3130,11 +3091,7 @@ describe("The server._processDisconnect() function", () => {
 
     // Emit
     const newState = harn.getServerState();
-    harn.transportWrapper.emit(
-      "disconnect",
-      "tcid_leaver",
-      new Error("FAILURE: ...")
-    );
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
 
     // Check state
     delete newState._clientIds.tcid_leaver;
@@ -3166,11 +3123,7 @@ describe("The server._processDisconnect() function", () => {
 
     // Emit
     const newState = harn.getServerState();
-    harn.transportWrapper.emit(
-      "disconnect",
-      "tcid_leaver",
-      new Error("FAILURE: ...")
-    );
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
 
     // Check state
     delete newState._clientIds.tcid_leaver;
@@ -3192,31 +3145,23 @@ describe("The server._processDisconnect() function", () => {
     const harn = harness({ handshakeMs: 1 });
     harn.makeServerStarted();
 
-    harn.transportWrapper.emit("connect", "tcid_leaver");
-    harn.transportWrapper.emit("connect", "tcid_stayer");
+    harn.transport.emit("connect", "tcid_leaver");
+    harn.transport.emit("connect", "tcid_stayer");
 
-    harn.transportWrapper.emit(
-      "disconnect",
-      "tcid_leaver",
-      new Error("FAILURE: ...")
-    );
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
 
-    harn.transportWrapper.mockClear();
+    harn.transport.mockClear();
 
     jest.runAllTimers();
 
-    expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(1);
-    expect(harn.transportWrapper.disconnect.mock.calls[0].length).toBe(2);
-    expect(harn.transportWrapper.disconnect.mock.calls[0][0]).toBe(
-      "tcid_stayer"
-    );
-    expect(harn.transportWrapper.disconnect.mock.calls[0][1]).toBeInstanceOf(
-      Error
-    );
-    expect(harn.transportWrapper.disconnect.mock.calls[0][1].message).toBe(
+    expect(harn.transport.start.mock.calls.length).toBe(0);
+    expect(harn.transport.stop.mock.calls.length).toBe(0);
+    expect(harn.transport.send.mock.calls.length).toBe(0);
+    expect(harn.transport.disconnect.mock.calls.length).toBe(1);
+    expect(harn.transport.disconnect.mock.calls[0].length).toBe(2);
+    expect(harn.transport.disconnect.mock.calls[0][0]).toBe("tcid_stayer");
+    expect(harn.transport.disconnect.mock.calls[0][1]).toBeInstanceOf(Error);
+    expect(harn.transport.disconnect.mock.calls[0][1].message).toBe(
       "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time."
     );
   });
@@ -3235,20 +3180,16 @@ describe("The server._processDisconnect() function", () => {
     const harn = harness();
     harn.makeServerStarted();
 
-    harn.transportWrapper.emit("connect", "tcid_leaver");
-    harn.transportWrapper.emit("connect", "tcid_stayer");
+    harn.transport.emit("connect", "tcid_leaver");
+    harn.transport.emit("connect", "tcid_stayer");
 
-    harn.transportWrapper.mockClear();
-    harn.transportWrapper.emit(
-      "disconnect",
-      "tcid_leaver",
-      new Error("FAILURE: ...")
-    );
+    harn.transport.mockClear();
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
 
-    expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+    expect(harn.transport.start.mock.calls.length).toBe(0);
+    expect(harn.transport.stop.mock.calls.length).toBe(0);
+    expect(harn.transport.send.mock.calls.length).toBe(0);
+    expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
   // Outbound callbacks - N/A
@@ -3266,11 +3207,11 @@ describe("The server._processMessage() function", () => {
       const harn = harness();
       harn.makeServerStarted();
 
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", '"bad message"');
+      harn.transport.emit("message", "some_tcid", '"bad message"');
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -3306,10 +3247,10 @@ describe("The server._processMessage() function", () => {
       const harn = harness();
       harn.makeServerStarted();
 
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", '"bad message"');
+      harn.transport.emit("message", "some_tcid", '"bad message"');
 
       expect(harn.server).toHaveState(newState);
     });
@@ -3320,24 +3261,24 @@ describe("The server._processMessage() function", () => {
       const harn = harness();
       harn.makeServerStarted();
 
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", '"bad message"');
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", '"bad message"');
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Invalid JSON or schema violation.",
           Message: '"bad message"'
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -3359,7 +3300,7 @@ describe("The server._processMessage() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -3400,7 +3341,7 @@ describe("The server._processMessage() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -3415,22 +3356,22 @@ describe("The server._processMessage() function", () => {
         MessageType: "Handshake"
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Invalid JSON or schema violation.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -3452,7 +3393,7 @@ describe("The server._processMessage() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -3493,7 +3434,7 @@ describe("The server._processMessage() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -3508,22 +3449,22 @@ describe("The server._processMessage() function", () => {
         MessageType: "Action"
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Invalid JSON or schema violation.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -3545,7 +3486,7 @@ describe("The server._processMessage() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -3586,7 +3527,7 @@ describe("The server._processMessage() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -3601,22 +3542,22 @@ describe("The server._processMessage() function", () => {
         MessageType: "FeedOpen"
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Invalid JSON or schema violation.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -3638,7 +3579,7 @@ describe("The server._processMessage() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -3679,7 +3620,7 @@ describe("The server._processMessage() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -3694,22 +3635,22 @@ describe("The server._processMessage() function", () => {
         MessageType: "FeedClose"
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Invalid JSON or schema violation.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -3726,10 +3667,10 @@ describe("The server._processMessage() function", () => {
       const harn = harness();
       harn.makeServerStarted();
       harn.server._processHandshake = () => {}; // No further processing
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -3758,10 +3699,10 @@ describe("The server._processMessage() function", () => {
       const harn = harness();
       harn.makeServerStarted();
       harn.server._processHandshake = () => {}; // No further processing
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -3779,10 +3720,10 @@ describe("The server._processMessage() function", () => {
       const harn = harness();
       harn.makeServerStarted();
       harn.server._processHandshake = () => {}; // No further processing
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit(
+      harn.transport.mockClear();
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -3791,10 +3732,10 @@ describe("The server._processMessage() function", () => {
         })
       );
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Function calls
@@ -3803,14 +3744,14 @@ describe("The server._processMessage() function", () => {
       const harn = harness();
       harn.makeServerStarted();
       harn.server._processHandshake = jest.fn();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
       const msg = {
         MessageType: "Handshake",
         Versions: ["0.1"]
       };
 
-      harn.transportWrapper.emit("message", "some_tcid", JSON.stringify(msg));
+      harn.transport.emit("message", "some_tcid", JSON.stringify(msg));
 
       expect(harn.server._processHandshake.mock.calls.length).toBe(1);
       expect(harn.server._processHandshake.mock.calls[0].length).toBe(3);
@@ -3838,7 +3779,7 @@ describe("The server._processMessage() function", () => {
       harn.makeClient("some_tcid");
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -3872,7 +3813,7 @@ describe("The server._processMessage() function", () => {
       harn.makeClient("some_tcid");
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -3894,8 +3835,8 @@ describe("The server._processMessage() function", () => {
       harn.server._processAction = () => {}; // No further processing
       harn.makeClient("some_tcid");
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit(
+      harn.transport.mockClear();
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -3906,10 +3847,10 @@ describe("The server._processMessage() function", () => {
         })
       );
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Function calls
@@ -3926,7 +3867,7 @@ describe("The server._processMessage() function", () => {
         CallbackId: "123"
       };
 
-      harn.transportWrapper.emit("message", "some_tcid", JSON.stringify(msg));
+      harn.transport.emit("message", "some_tcid", JSON.stringify(msg));
 
       expect(harn.server._processAction.mock.calls.length).toBe(1);
       expect(harn.server._processAction.mock.calls[0].length).toBe(3);
@@ -3954,7 +3895,7 @@ describe("The server._processMessage() function", () => {
       harn.makeClient("some_tcid");
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -3987,7 +3928,7 @@ describe("The server._processMessage() function", () => {
       harn.makeClient("some_tcid");
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -4008,8 +3949,8 @@ describe("The server._processMessage() function", () => {
       harn.server._processFeedOpen = () => {}; // No further processing
       harn.makeClient("some_tcid");
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit(
+      harn.transport.mockClear();
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -4019,10 +3960,10 @@ describe("The server._processMessage() function", () => {
         })
       );
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Function calls
@@ -4038,7 +3979,7 @@ describe("The server._processMessage() function", () => {
         FeedArgs: { feed: "args" }
       };
 
-      harn.transportWrapper.emit("message", "some_tcid", JSON.stringify(msg));
+      harn.transport.emit("message", "some_tcid", JSON.stringify(msg));
 
       expect(harn.server._processFeedOpen.mock.calls.length).toBe(1);
       expect(harn.server._processFeedOpen.mock.calls[0].length).toBe(3);
@@ -4066,7 +4007,7 @@ describe("The server._processMessage() function", () => {
       harn.makeClient("some_tcid");
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -4099,7 +4040,7 @@ describe("The server._processMessage() function", () => {
       harn.makeClient("some_tcid");
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -4120,8 +4061,8 @@ describe("The server._processMessage() function", () => {
       harn.server._processFeedClose = () => {}; // No further processing
       harn.makeClient("some_tcid");
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit(
+      harn.transport.mockClear();
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -4131,10 +4072,10 @@ describe("The server._processMessage() function", () => {
         })
       );
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Function calls
@@ -4150,7 +4091,7 @@ describe("The server._processMessage() function", () => {
         FeedArgs: { feed: "args" }
       };
 
-      harn.transportWrapper.emit("message", "some_tcid", JSON.stringify(msg));
+      harn.transport.emit("message", "some_tcid", JSON.stringify(msg));
 
       expect(harn.server._processFeedClose.mock.calls.length).toBe(1);
       expect(harn.server._processFeedClose.mock.calls[0].length).toBe(3);
@@ -4175,19 +4116,20 @@ describe("The server._processHandshake() function", () => {
 
     it("should emit badClientMessage", () => {
       const harn = harness();
+      harn.makeServerStarted();
       harn.server.once("handshake", () => {
         // Sit on it - processing
       });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
       });
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -4221,15 +4163,15 @@ describe("The server._processHandshake() function", () => {
       harn.server.once("handshake", () => {
         // Sit on it - processing
       });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
       });
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -4238,32 +4180,33 @@ describe("The server._processHandshake() function", () => {
 
     it("should send a ViolationResponse message", () => {
       const harn = harness();
+      harn.makeServerStarted();
       harn.server.once("handshake", () => {
         // Sit on it - processing
       });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
       });
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected Handshake message.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -4278,6 +4221,7 @@ describe("The server._processHandshake() function", () => {
 
     it("should emit badClientMessage", () => {
       const harn = harness();
+      harn.makeServerStarted();
       const cid = harn.makeClient("some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
@@ -4285,7 +4229,7 @@ describe("The server._processHandshake() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -4323,7 +4267,7 @@ describe("The server._processHandshake() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -4332,28 +4276,29 @@ describe("The server._processHandshake() function", () => {
 
     it("should sent a ViolationResponse message", () => {
       const harn = harness();
+      harn.makeServerStarted();
       harn.makeClient("some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected Handshake message.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -4368,14 +4313,14 @@ describe("The server._processHandshake() function", () => {
 
     it("should emit nothing", () => {
       const harn = harness();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["X.X"]
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -4395,14 +4340,14 @@ describe("The server._processHandshake() function", () => {
 
     it("should not change the state", () => {
       const harn = harness();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["X.X"]
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -4411,25 +4356,26 @@ describe("The server._processHandshake() function", () => {
 
     it("should sent a HandshakeResponse message indicating failure", () => {
       const harn = harness();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.makeServerStarted();
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["X.X"]
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "HandshakeResponse",
         Success: false
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -4451,7 +4397,8 @@ describe("The server._processHandshake() function", () => {
 
     it("should update handshake status", () => {
       const harn = harness({ handshakeMs: 0 });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.makeServerStarted();
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
@@ -4459,7 +4406,7 @@ describe("The server._processHandshake() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       newState._handshakeStatus[cid] = "complete";
       expect(harn.server).toHaveState(newState);
@@ -4469,28 +4416,29 @@ describe("The server._processHandshake() function", () => {
 
     it("should transmit HandshakeResponse indicating success", () => {
       const harn = harness({ handshakeMs: 0 });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.makeServerStarted();
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "HandshakeResponse",
         Success: true,
         Version: "0.1",
         ClientId: cid
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -4505,7 +4453,8 @@ describe("The server._processHandshake() function", () => {
 
     it("should emit a handshake event", () => {
       const harn = harness({ handshakeMs: 0 });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.makeServerStarted();
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
@@ -4513,7 +4462,7 @@ describe("The server._processHandshake() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -4536,7 +4485,8 @@ describe("The server._processHandshake() function", () => {
 
     it("should update the handshake state", () => {
       const harn = harness({ handshakeMs: 0 });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.makeServerStarted();
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
@@ -4551,7 +4501,7 @@ describe("The server._processHandshake() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       newState._handshakeStatus[cid] = "processing";
       newState._handshakeResponses[cid] = handshakeResponse;
@@ -4568,7 +4518,7 @@ describe("The server._processHandshake() function", () => {
 
     it("should do nothing on the transport", () => {
       const harn = harness({ handshakeMs: 0 });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
@@ -4577,13 +4527,13 @@ describe("The server._processHandshake() function", () => {
         // Sit on it
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -4605,7 +4555,8 @@ describe("The server._processHandshake() function", () => {
 
     it("should update handshake status", () => {
       const harn = harness({ handshakeMs: 1 });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.makeServerStarted();
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
@@ -4613,7 +4564,7 @@ describe("The server._processHandshake() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       newState._handshakeStatus[cid] = "complete";
       delete newState._handshakeTimers[cid];
@@ -4624,28 +4575,29 @@ describe("The server._processHandshake() function", () => {
 
     it("should transmit HandshakeResponse indicating success", () => {
       const harn = harness({ handshakeMs: 1 });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.makeServerStarted();
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "HandshakeResponse",
         Success: true,
         Version: "0.1",
         ClientId: cid
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -4654,20 +4606,20 @@ describe("The server._processHandshake() function", () => {
 
     it("should clear the handshake timeout", () => {
       const harn = harness({ handshakeMs: 1 });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
       });
 
-      harn.transportWrapper.emit("message", "some_tcid", msg);
-      harn.transportWrapper.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
       jest.runAllTimers();
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Return value - N/A
@@ -4678,7 +4630,8 @@ describe("The server._processHandshake() function", () => {
 
     it("should emit a handshake event", () => {
       const harn = harness({ handshakeMs: 1 });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.makeServerStarted();
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
@@ -4686,7 +4639,7 @@ describe("The server._processHandshake() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -4709,7 +4662,8 @@ describe("The server._processHandshake() function", () => {
 
     it("should update the handshake state", () => {
       const harn = harness({ handshakeMs: 1 });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.makeServerStarted();
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
@@ -4724,7 +4678,7 @@ describe("The server._processHandshake() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       newState._handshakeStatus[cid] = "processing";
       delete newState._handshakeTimers[cid];
@@ -4742,7 +4696,7 @@ describe("The server._processHandshake() function", () => {
 
     it("should do nothing on the transport", () => {
       const harn = harness({ handshakeMs: 1 });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
@@ -4751,13 +4705,13 @@ describe("The server._processHandshake() function", () => {
         // Sit on it
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -4766,7 +4720,7 @@ describe("The server._processHandshake() function", () => {
 
     it("should clear the handshake timeout", () => {
       const harn = harness({ handshakeMs: 1 });
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
@@ -4775,14 +4729,14 @@ describe("The server._processHandshake() function", () => {
         // Sit on it
       });
 
-      harn.transportWrapper.emit("message", "some_tcid", msg);
-      harn.transportWrapper.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
       jest.runAllTimers();
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Return value - N/A
@@ -4796,7 +4750,7 @@ describe("The server._processAction() function", () => {
     it("should emit a badClientMessage event", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Action",
@@ -4806,7 +4760,7 @@ describe("The server._processAction() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -4838,7 +4792,7 @@ describe("The server._processAction() function", () => {
     it("should not change the state", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Action",
         ActionName: "some_action",
@@ -4847,7 +4801,7 @@ describe("The server._processAction() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -4857,7 +4811,7 @@ describe("The server._processAction() function", () => {
     it("should transmit a ViolationResponse indicating failure", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Action",
         ActionName: "some_action",
@@ -4865,22 +4819,22 @@ describe("The server._processAction() function", () => {
         CallbackId: "123"
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Handshake required.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -4896,13 +4850,13 @@ describe("The server._processAction() function", () => {
     it("should emit a badClientMessage event", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       let cid;
       harn.server.on("handshake", hreq => {
         cid = hreq.clientId;
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -4918,7 +4872,7 @@ describe("The server._processAction() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -4950,11 +4904,11 @@ describe("The server._processAction() function", () => {
     it("should not change the state", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       harn.server.on("handshake", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -4970,7 +4924,7 @@ describe("The server._processAction() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -4980,11 +4934,11 @@ describe("The server._processAction() function", () => {
     it("should transmit a ViolationResponse indicating error", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       harn.server.on("handshake", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -4999,22 +4953,22 @@ describe("The server._processAction() function", () => {
         CallbackId: "123"
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Handshake required.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -5040,10 +4994,10 @@ describe("The server._processAction() function", () => {
       harn.server.on("action", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -5085,10 +5039,10 @@ describe("The server._processAction() function", () => {
       harn.server.on("action", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -5108,24 +5062,24 @@ describe("The server._processAction() function", () => {
       harn.server.on("action", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Action message reused an outstanding CallbackId.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -5157,7 +5111,7 @@ describe("The server._processAction() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -5175,22 +5129,22 @@ describe("The server._processAction() function", () => {
         CallbackId: "123"
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ActionResponse",
         Success: false,
         CallbackId: "123",
         ErrorCode: "INTERNAL_ERROR",
         ErrorData: {}
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -5215,7 +5169,7 @@ describe("The server._processAction() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -5259,7 +5213,7 @@ describe("The server._processAction() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       newState._actionResponses[cid] = {
         abc: actionResponse
@@ -5291,13 +5245,13 @@ describe("The server._processAction() function", () => {
         // Sit on it
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -5315,7 +5269,7 @@ describe("The server._processFeedOpen() function", () => {
     it("should emit badClientMessage", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "FeedOpen",
@@ -5324,7 +5278,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -5356,7 +5310,7 @@ describe("The server._processFeedOpen() function", () => {
     it("should not change the state", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "FeedOpen",
         FeedName: "some_feed",
@@ -5364,7 +5318,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -5374,29 +5328,29 @@ describe("The server._processFeedOpen() function", () => {
     it("should transmit a ViolationResponse indicating failure", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "FeedOpen",
         FeedName: "some_feed",
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Handshake required.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -5412,13 +5366,13 @@ describe("The server._processFeedOpen() function", () => {
     it("should emit a badClientMessage event", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       let cid;
       harn.server.on("handshake", hreq => {
         cid = hreq.clientId;
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -5433,7 +5387,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -5465,11 +5419,11 @@ describe("The server._processFeedOpen() function", () => {
     it("should not change the state", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       harn.server.on("handshake", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -5484,7 +5438,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -5494,11 +5448,11 @@ describe("The server._processFeedOpen() function", () => {
     it("should transmit a ViolationResponse indicating error", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       harn.server.on("handshake", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -5512,22 +5466,22 @@ describe("The server._processFeedOpen() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Handshake required.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -5552,7 +5506,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -5593,7 +5547,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -5611,22 +5565,22 @@ describe("The server._processFeedOpen() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected FeedOpen message.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -5656,7 +5610,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -5702,7 +5656,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -5725,22 +5679,22 @@ describe("The server._processFeedOpen() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected FeedOpen message.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -5765,7 +5719,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -5806,7 +5760,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -5824,22 +5778,22 @@ describe("The server._processFeedOpen() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected FeedOpen message.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -5870,7 +5824,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -5887,15 +5841,15 @@ describe("The server._processFeedOpen() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "FeedOpenResponse",
         Success: false,
         FeedName: "some_feed",
@@ -5903,7 +5857,7 @@ describe("The server._processFeedOpen() function", () => {
         ErrorCode: "INTERNAL_ERROR",
         ErrorData: {}
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -5935,7 +5889,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       const feedSerial = feedSerializer.serialize("some_feed", {
         feed: "args"
@@ -5959,15 +5913,15 @@ describe("The server._processFeedOpen() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "FeedOpenResponse",
         Success: false,
         FeedName: "some_feed",
@@ -5975,7 +5929,7 @@ describe("The server._processFeedOpen() function", () => {
         ErrorCode: "INTERNAL_ERROR",
         ErrorData: {}
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -6006,7 +5960,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -6049,7 +6003,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       const feedSerial = feedSerializer.serialize("some_feed", {
         feed: "args"
@@ -6097,13 +6051,13 @@ describe("The server._processFeedOpen() function", () => {
         // Sit on it
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -6128,7 +6082,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -6172,7 +6126,7 @@ describe("The server._processFeedOpen() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       const feedSerial = feedSerializer.serialize("some_feed", {
         feed: "args"
@@ -6222,13 +6176,13 @@ describe("The server._processFeedOpen() function", () => {
         // Sit on it
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -6253,7 +6207,7 @@ describe("The server._processFeedClose() function", () => {
     it("should emit badClientMessage", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "FeedClose",
@@ -6262,7 +6216,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -6294,7 +6248,7 @@ describe("The server._processFeedClose() function", () => {
     it("should not change the state", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "FeedClose",
         FeedName: "some_feed",
@@ -6302,7 +6256,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -6312,29 +6266,29 @@ describe("The server._processFeedClose() function", () => {
     it("should transmit a ViolationResponse indicating failure", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "FeedClose",
         FeedName: "some_feed",
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Handshake required.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -6350,13 +6304,13 @@ describe("The server._processFeedClose() function", () => {
     it("should emit a badClientMessage event", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       let cid;
       harn.server.on("handshake", hreq => {
         cid = hreq.clientId;
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -6371,7 +6325,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -6403,11 +6357,11 @@ describe("The server._processFeedClose() function", () => {
     it("should not change the state", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       harn.server.on("handshake", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -6422,7 +6376,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -6432,11 +6386,11 @@ describe("The server._processFeedClose() function", () => {
     it("should transmit a ViolationResponse indicating error", () => {
       const harn = harness();
       harn.makeServerStarted();
-      harn.transportWrapper.emit("connect", "some_tcid");
+      harn.transport.emit("connect", "some_tcid");
       harn.server.on("handshake", () => {
         // Sit on it
       });
-      harn.transportWrapper.emit(
+      harn.transport.emit(
         "message",
         "some_tcid",
         JSON.stringify({
@@ -6450,22 +6404,22 @@ describe("The server._processFeedClose() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Handshake required.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -6489,7 +6443,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -6529,7 +6483,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -6546,22 +6500,22 @@ describe("The server._processFeedClose() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected FeedClose message.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -6586,7 +6540,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -6627,7 +6581,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -6645,22 +6599,22 @@ describe("The server._processFeedClose() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected FeedClose message.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -6685,7 +6639,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -6726,7 +6680,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -6744,22 +6698,22 @@ describe("The server._processFeedClose() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected FeedClose message.",
           Message: msg
         }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -6795,7 +6749,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       const feedSerial = feedSerializer.serialize("some_feed", {
         feed: "args"
@@ -6823,20 +6777,20 @@ describe("The server._processFeedClose() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "FeedCloseResponse",
         FeedName: "some_feed",
         FeedArgs: { feed: "args" }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -6867,7 +6821,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       const feedSerial = feedSerializer.serialize("some_feed", {
         feed: "args"
@@ -6891,20 +6845,20 @@ describe("The server._processFeedClose() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "FeedCloseResponse",
         FeedName: "some_feed",
         FeedArgs: { feed: "args" }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -6941,7 +6895,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -6990,7 +6944,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       const feedSerial = feedSerializer.serialize("some_feed", {
         feed: "args"
@@ -7032,13 +6986,13 @@ describe("The server._processFeedClose() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -7063,7 +7017,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const serverListener = harn.createServerListener();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -7096,7 +7050,7 @@ describe("The server._processFeedClose() function", () => {
       });
 
       const newState = harn.getServerState();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.emit("message", "some_tcid", msg);
 
       const feedSerial = feedSerializer.serialize("some_feed", {
         feed: "args"
@@ -7123,20 +7077,20 @@ describe("The server._processFeedClose() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      harn.transportWrapper.mockClear();
-      harn.transportWrapper.emit("message", "some_tcid", msg);
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
 
-      expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-      expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-      expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-      expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-      expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "FeedCloseResponse",
         FeedName: "some_feed",
         FeedArgs: { feed: "args" }
       });
-      expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
     // Outbound callbacks - N/A
@@ -7221,7 +7175,7 @@ describe("The server._terminateOpeningFeed() function", () => {
     const cid = harn.makeClient("some_tcid");
     harn.makeFeedOpening("some_tcid", "some_feed", { feed: "args" });
 
-    harn.transportWrapper.mockClear();
+    harn.transport.mockClear();
     harn.server._terminateOpeningFeed(
       cid,
       "some_feed",
@@ -7230,12 +7184,12 @@ describe("The server._terminateOpeningFeed() function", () => {
       { error: "data" }
     );
 
-    expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-    expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-    expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-    expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+    expect(harn.transport.start.mock.calls.length).toBe(0);
+    expect(harn.transport.stop.mock.calls.length).toBe(0);
+    expect(harn.transport.send.mock.calls.length).toBe(1);
+    expect(harn.transport.send.mock.calls[0].length).toBe(2);
+    expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+    expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
       MessageType: "FeedOpenResponse",
       Success: false,
       FeedName: "some_feed",
@@ -7243,7 +7197,7 @@ describe("The server._terminateOpeningFeed() function", () => {
       ErrorCode: "SOME_ERROR",
       ErrorData: { error: "data" }
     });
-    expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+    expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
   // Outbound callbacks - N/A
@@ -7360,7 +7314,7 @@ describe("The server._terminateOpenFeed() function", () => {
       { feed: "data" }
     );
 
-    harn.transportWrapper.mockClear();
+    harn.transport.mockClear();
     harn.server._terminateOpenFeed(
       cid,
       "some_feed",
@@ -7369,19 +7323,19 @@ describe("The server._terminateOpenFeed() function", () => {
       { error: "data" }
     );
 
-    expect(harn.transportWrapper.start.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.stop.mock.calls.length).toBe(0);
-    expect(harn.transportWrapper.send.mock.calls.length).toBe(1);
-    expect(harn.transportWrapper.send.mock.calls[0].length).toBe(2);
-    expect(harn.transportWrapper.send.mock.calls[0][0]).toBe("some_tcid");
-    expect(JSON.parse(harn.transportWrapper.send.mock.calls[0][1])).toEqual({
+    expect(harn.transport.start.mock.calls.length).toBe(0);
+    expect(harn.transport.stop.mock.calls.length).toBe(0);
+    expect(harn.transport.send.mock.calls.length).toBe(1);
+    expect(harn.transport.send.mock.calls[0].length).toBe(2);
+    expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+    expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
       MessageType: "FeedTermination",
       FeedName: "some_feed",
       FeedArgs: { feed: "args" },
       ErrorCode: "SOME_ERROR",
       ErrorData: { error: "data" }
     });
-    expect(harn.transportWrapper.disconnect.mock.calls.length).toBe(0);
+    expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
   // Outbound callbacks - N/A
@@ -7500,7 +7454,10 @@ describe("The server._delete() function", () => {
 describe("The server.state() function", () => {
   it("should return the state indicated by the transport", () => {
     const harn = harness();
-    harn.transportWrapper.state.mockReturnValue("stopping");
+    harn.makeServerStarted();
+    harn.server.stop();
+    harn.transport.state.mockReturnValue("stopping");
+    harn.transport.emit("stopping");
     expect(harn.server.state()).toBe("stopping");
   });
 });
