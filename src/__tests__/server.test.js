@@ -2583,9 +2583,13 @@ describe("The server._processConnect() function", () => {
     harn.makeServerStarted();
 
     const newState = harn.getServerState();
+
+    let cid;
+    harn.server.once("connect", ecid => {
+      cid = ecid;
+    });
     harn.transport.emit("connect", "some_tcid");
 
-    const cid = harn.server._clientIds.some_tcid;
     newState._clientIds.some_tcid = cid;
     newState._transportClientIds[cid] = "some_tcid";
     newState._handshakeStatus[cid] = "waiting";
@@ -2597,10 +2601,14 @@ describe("The server._processConnect() function", () => {
     const harn = harness({ handshakeMs: 0 });
     harn.makeServerStarted();
 
+    let cid;
+    harn.server.once("connect", ecid => {
+      cid = ecid;
+    });
+
     const newState = harn.getServerState();
     harn.transport.emit("connect", "some_tcid");
 
-    const cid = harn.server._clientIds.some_tcid;
     newState._clientIds.some_tcid = cid;
     newState._transportClientIds[cid] = "some_tcid";
     newState._handshakeStatus[cid] = "waiting";
@@ -3207,8 +3215,12 @@ describe("The server._processMessage() function", () => {
       const harn = harness();
       harn.makeServerStarted();
 
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
+
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
 
       const serverListener = harn.createServerListener();
       harn.transport.emit("message", "some_tcid", '"bad message"');
@@ -3744,8 +3756,11 @@ describe("The server._processMessage() function", () => {
       const harn = harness();
       harn.makeServerStarted();
       harn.server._processHandshake = jest.fn();
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
       const msg = {
         MessageType: "Handshake",
         Versions: ["0.1"]
@@ -4120,8 +4135,11 @@ describe("The server._processHandshake() function", () => {
       harn.server.once("handshake", () => {
         // Sit on it - processing
       });
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
@@ -4398,8 +4416,11 @@ describe("The server._processHandshake() function", () => {
     it("should update handshake status", () => {
       const harn = harness({ handshakeMs: 0 });
       harn.makeServerStarted();
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
@@ -4417,8 +4438,11 @@ describe("The server._processHandshake() function", () => {
     it("should transmit HandshakeResponse indicating success", () => {
       const harn = harness({ handshakeMs: 0 });
       harn.makeServerStarted();
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
@@ -4454,8 +4478,11 @@ describe("The server._processHandshake() function", () => {
     it("should emit a handshake event", () => {
       const harn = harness({ handshakeMs: 0 });
       harn.makeServerStarted();
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
@@ -4486,8 +4513,11 @@ describe("The server._processHandshake() function", () => {
     it("should update the handshake state", () => {
       const harn = harness({ handshakeMs: 0 });
       harn.makeServerStarted();
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
@@ -4556,8 +4586,11 @@ describe("The server._processHandshake() function", () => {
     it("should update handshake status", () => {
       const harn = harness({ handshakeMs: 1 });
       harn.makeServerStarted();
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
@@ -4576,8 +4609,11 @@ describe("The server._processHandshake() function", () => {
     it("should transmit HandshakeResponse indicating success", () => {
       const harn = harness({ handshakeMs: 1 });
       harn.makeServerStarted();
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
@@ -4631,8 +4667,11 @@ describe("The server._processHandshake() function", () => {
     it("should emit a handshake event", () => {
       const harn = harness({ handshakeMs: 1 });
       harn.makeServerStarted();
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
@@ -4663,8 +4702,11 @@ describe("The server._processHandshake() function", () => {
     it("should update the handshake state", () => {
       const harn = harness({ handshakeMs: 1 });
       harn.makeServerStarted();
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
@@ -4750,8 +4792,11 @@ describe("The server._processAction() function", () => {
     it("should emit a badClientMessage event", () => {
       const harn = harness();
       harn.makeServerStarted();
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "Action",
         ActionName: "some_action",
@@ -5269,8 +5314,11 @@ describe("The server._processFeedOpen() function", () => {
     it("should emit badClientMessage", () => {
       const harn = harness();
       harn.makeServerStarted();
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "FeedOpen",
         FeedName: "some_feed",
@@ -6207,8 +6255,11 @@ describe("The server._processFeedClose() function", () => {
     it("should emit badClientMessage", () => {
       const harn = harness();
       harn.makeServerStarted();
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
       harn.transport.emit("connect", "some_tcid");
-      const cid = harn.server._clientIds.some_tcid;
       const msg = JSON.stringify({
         MessageType: "FeedClose",
         FeedName: "some_feed",
