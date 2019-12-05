@@ -499,11 +499,15 @@ proto._processTransportStopping = function _processTransportStopping(...args) {
   }
 
   // Error valid if specified?
-  if (args.length === 1 && !check.instance(args[0], Error)) {
+  if (
+    args.length === 1 &&
+    (!check.instance(args[0], Error) ||
+      args[0].message.substr(0, 8) !== "FAILURE:")
+  ) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed a non-Error argument with the 'stopping' event."
+        "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stopping' event."
       )
     );
     return; // Stop
@@ -548,11 +552,15 @@ proto._processTransportStop = function _processTransportStop(...args) {
   }
 
   // Error valid if specified?
-  if (args.length === 1 && !check.instance(args[0], Error)) {
+  if (
+    args.length === 1 &&
+    (!check.instance(args[0], Error) ||
+      args[0].message.substr(0, 8) !== "FAILURE:")
+  ) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed a non-Error argument with the 'stop' event."
+        "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stop' event."
       )
     );
     return; // Stop
@@ -746,11 +754,16 @@ proto._processTransportDisconnect = function _processTransportDisconnect(
   }
 
   // Error valid if specified?
-  if (args.length === 2 && !check.instance(args[1], Error)) {
+  if (
+    args.length === 2 &&
+    (!check.instance(args[1], Error) ||
+      (args[1].message.substr(0, 8) !== "FAILURE:" &&
+        args[1].message.substr(0, 9) !== "STOPPING:"))
+  ) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed a non-Error argument with the 'disconnect' event."
+        "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'disconnect' event."
       )
     );
     return; // Stop

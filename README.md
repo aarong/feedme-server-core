@@ -212,7 +212,7 @@ If the stoppage resulted from a call to `server.stop()` then listeners are
 invoked with no arguments.
 
 If the stoppage resulted from a transport error condition then listeners are
-passed the `Error` object emitted by the transport.
+passed an `Error` object of the form `err.message = "FAILURE: ..."`.
 
 When the server transitions to `stopping`, any outstanding `HandshakeResponse`,
 `ActionResponse`, `FeedOpenResponse`, and `FeedCloseResponse` objects are
@@ -231,7 +231,7 @@ If the stoppage resulted from a call to `server.stop()` then listeners are
 invoked with no arguments.
 
 If the stoppage resulted from a transport error condition then listeners are
-passed the `Error` object emitted by the transport.
+passed an `Error` object of the form `err.message = "FAILURE: ..."`.
 
 #### connect
 

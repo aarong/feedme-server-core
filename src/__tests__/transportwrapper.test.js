@@ -1414,7 +1414,7 @@ describe("the transport 'stopping' event", () => {
     expect(stoppingListener.mock.calls.length).toBe(0);
   });
 
-  it("if the last emission was 'starting/started' and there was an invalid error argument, it should emit the transportError", () => {
+  it("if the last emission was 'starting/started' and there was an invalid error argument type, it should emit the transportError", () => {
     // Set up the transport
     const transport = emitter({
       on: () => {},
@@ -1445,7 +1445,43 @@ describe("the transport 'stopping' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed a non-Error argument with the 'stopping' event."
+      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stopping' event."
+    );
+    expect(stoppingListener.mock.calls.length).toBe(0);
+  });
+
+  it("if the last emission was 'starting/started' and there was an invalid error argument message, it should emit the transportError", () => {
+    // Set up the transport
+    const transport = emitter({
+      on: () => {},
+      state: () => "stopped",
+      start: () => {},
+      stop: () => {},
+      send: () => {},
+      disconnect: () => {}
+    });
+    const wrapper = transportWrapper(transport);
+
+    // Get the transport into starting state
+    wrapper.start();
+    transport.state = () => "starting";
+    transport.emit("starting");
+
+    // Set up listeners
+    const transportErrorListener = jest.fn();
+    wrapper.on("transportError", transportErrorListener);
+    const stoppingListener = jest.fn();
+    wrapper.on("stopping", stoppingListener);
+
+    // Emit
+    transport.emit("stopping", new Error("JUNK: ..."));
+
+    // Check the listeners
+    expect(transportErrorListener.mock.calls.length).toBe(1);
+    expect(transportErrorListener.mock.calls[0].length).toBe(1);
+    expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
+    expect(transportErrorListener.mock.calls[0][0].message).toBe(
+      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stopping' event."
     );
     expect(stoppingListener.mock.calls.length).toBe(0);
   });
@@ -1711,7 +1747,7 @@ describe("the transport 'stop' event", () => {
     expect(stopListener.mock.calls.length).toBe(0);
   });
 
-  it("if the last emission was 'stopping' and there was an invalid error argument, it should emit the transportError", () => {
+  it("if the last emission was 'stopping' and there was an invalid error argument type, it should emit the transportError", () => {
     // Set up the transport
     const transport = emitter({
       on: () => {},
@@ -1750,7 +1786,51 @@ describe("the transport 'stop' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed a non-Error argument with the 'stop' event."
+      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stop' event."
+    );
+    expect(stopListener.mock.calls.length).toBe(0);
+  });
+
+  it("if the last emission was 'stopping' and there was an invalid error argument message, it should emit the transportError", () => {
+    // Set up the transport
+    const transport = emitter({
+      on: () => {},
+      state: () => "stopped",
+      start: () => {},
+      stop: () => {},
+      send: () => {},
+      disconnect: () => {}
+    });
+    const wrapper = transportWrapper(transport);
+
+    // Get the transport into starting state
+    wrapper.start();
+    transport.state = () => "starting";
+    transport.emit("starting");
+
+    // Get the transport into started state
+    transport.state = () => "started";
+    transport.emit("start");
+
+    // Get the transport into stopping state
+    transport.state = () => "stopping";
+    transport.emit("stopping", new Error("FAILURE: ..."));
+
+    // Set up listeners
+    const transportErrorListener = jest.fn();
+    wrapper.on("transportError", transportErrorListener);
+    const stopListener = jest.fn();
+    wrapper.on("stop", stopListener);
+
+    // Emit
+    transport.emit("stop", new Error("JUNK: ..."));
+
+    // Check the listeners
+    expect(transportErrorListener.mock.calls.length).toBe(1);
+    expect(transportErrorListener.mock.calls[0].length).toBe(1);
+    expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
+    expect(transportErrorListener.mock.calls[0][0].message).toBe(
+      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stop' event."
     );
     expect(stopListener.mock.calls.length).toBe(0);
   });
@@ -2548,7 +2628,7 @@ describe("the transport 'disconnect' event", () => {
     expect(disconnectListener.mock.calls.length).toBe(0);
   });
 
-  it("if the last state emission was 'start' but the error was invalid, it should emit transportError", () => {
+  it("if the last state emission was 'start' but the error had invalid type, it should emit transportError", () => {
     // Set up the transport
     const transport = emitter({
       on: () => {},
@@ -2586,7 +2666,50 @@ describe("the transport 'disconnect' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed a non-Error argument with the 'disconnect' event."
+      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'disconnect' event."
+    );
+    expect(disconnectListener.mock.calls.length).toBe(0);
+  });
+
+  it("if the last state emission was 'start' but the error had invalid message, it should emit transportError", () => {
+    // Set up the transport
+    const transport = emitter({
+      on: () => {},
+      state: () => "stopped",
+      start: () => {},
+      stop: () => {},
+      send: () => {},
+      disconnect: () => {}
+    });
+    const wrapper = transportWrapper(transport);
+
+    // Get the transport into starting state
+    wrapper.start();
+    transport.state = () => "starting";
+    transport.emit("starting");
+
+    // Get the transport into started
+    transport.state = () => "started";
+    transport.emit("start");
+
+    // Connect the client
+    transport.emit("connect", "client1");
+
+    // Set up listeners
+    const transportErrorListener = jest.fn();
+    wrapper.on("transportError", transportErrorListener);
+    const disconnectListener = jest.fn();
+    wrapper.on("disconnect", disconnectListener);
+
+    // Emit
+    transport.emit("disconnect", "client1", new Error("JUNK: ..."));
+
+    // Check the listeners
+    expect(transportErrorListener.mock.calls.length).toBe(1);
+    expect(transportErrorListener.mock.calls[0].length).toBe(1);
+    expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
+    expect(transportErrorListener.mock.calls[0][0].message).toBe(
+      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'disconnect' event."
     );
     expect(disconnectListener.mock.calls.length).toBe(0);
   });
@@ -2635,7 +2758,7 @@ describe("the transport 'disconnect' event", () => {
     expect(wrapper._clientIds).toEqual(["client2"]);
   });
 
-  it("if the last state emission was 'start' and arguments were valid with an error, it should emit the event", () => {
+  it("if the last state emission was 'start' and arguments were valid with a STOPPING error, it should emit the event", () => {
     // Set up the transport
     const transport = emitter({
       on: () => {},
@@ -2667,7 +2790,7 @@ describe("the transport 'disconnect' event", () => {
     wrapper.on("disconnect", disconnectListener);
 
     // Emit
-    transport.emit("disconnect", "client1", new Error("DISCONNECTED: ..."));
+    transport.emit("disconnect", "client1", new Error("STOPPING: ..."));
 
     // Check the listeners
     expect(transportErrorListener.mock.calls.length).toBe(0);
@@ -2675,9 +2798,53 @@ describe("the transport 'disconnect' event", () => {
     expect(disconnectListener.mock.calls[0].length).toBe(2);
     expect(disconnectListener.mock.calls[0][0]).toBe("client1");
     expect(disconnectListener.mock.calls[0][1]).toBeInstanceOf(Error);
-    expect(disconnectListener.mock.calls[0][1].message).toBe(
-      "DISCONNECTED: ..."
-    );
+    expect(disconnectListener.mock.calls[0][1].message).toBe("STOPPING: ...");
+
+    // Check wrapper._clientIds
+    expect(wrapper._clientIds).toEqual(["client2"]);
+  });
+
+  it("if the last state emission was 'start' and arguments were valid with a FAILURE error, it should emit the event", () => {
+    // Set up the transport
+    const transport = emitter({
+      on: () => {},
+      state: () => "stopped",
+      start: () => {},
+      stop: () => {},
+      send: () => {},
+      disconnect: () => {}
+    });
+    const wrapper = transportWrapper(transport);
+
+    // Get the transport into starting state
+    wrapper.start();
+    transport.state = () => "starting";
+    transport.emit("starting");
+
+    // Get the transport into started
+    transport.state = () => "started";
+    transport.emit("start");
+
+    // Connect the client
+    transport.emit("connect", "client1");
+    transport.emit("connect", "client2");
+
+    // Set up listeners
+    const transportErrorListener = jest.fn();
+    wrapper.on("transportError", transportErrorListener);
+    const disconnectListener = jest.fn();
+    wrapper.on("disconnect", disconnectListener);
+
+    // Emit
+    transport.emit("disconnect", "client1", new Error("FAILURE: ..."));
+
+    // Check the listeners
+    expect(transportErrorListener.mock.calls.length).toBe(0);
+    expect(disconnectListener.mock.calls.length).toBe(1);
+    expect(disconnectListener.mock.calls[0].length).toBe(2);
+    expect(disconnectListener.mock.calls[0][0]).toBe("client1");
+    expect(disconnectListener.mock.calls[0][1]).toBeInstanceOf(Error);
+    expect(disconnectListener.mock.calls[0][1].message).toBe("FAILURE: ...");
 
     // Check wrapper._clientIds
     expect(wrapper._clientIds).toEqual(["client2"]);
