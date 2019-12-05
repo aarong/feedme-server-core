@@ -45,9 +45,14 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       new Error("INVALID_ARGUMENT: Feed data is not JSON-expressible.")
     );
 
-    // Failure - throw on invalid errorCode type
+    // Failure - throw on invalid errorCode - type
     expect(() => {
       fores.failure(123);
+    }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
+
+    // Failure - throw on invalid errorCode - empty
+    expect(() => {
+      fores.failure("");
     }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
 
     // Failure - throw on invalid errorData type
