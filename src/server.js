@@ -355,6 +355,9 @@ export default function serverFactory(options) {
   server._transportWrapper.on("disconnect", (tcid, err) => {
     server._processDisconnect(tcid, err);
   });
+  server._transportWrapper.on("transportError", err => {
+    server._processTransportError(err);
+  });
 
   return server;
 }
@@ -435,19 +438,19 @@ export default function serverFactory(options) {
  */
 
 /**
+ * @event transportError
+ * @memberof Server
+ * @instance
+ * @param {Error} err
+ */
+
+/**
  * @event badClientMessage
  * @memberof Server
  * @instance
  * @param {string} clientId
  * @param {Error} err "INVALID_MESSAGE: ..."
  *                    "UNEXPECTED_MESSAGE: ..."
- */
-
-/**
- * @event transportError
- * @memberof Server
- * @instance
- * @param {Error} err
  */
 
 // Public functions
@@ -949,76 +952,6 @@ proto._processConnect = function _processConnect(transportClientId) {
 };
 
 /**
- * Process a transport disconnect event.
- * @memberof Server
- * @instance
- * @private
- * @param {string} transportClientId
- * @param {?Error} err
- */
-proto._processDisconnect = function _processDisconnect(transportClientId, err) {
-  dbg("Observed transport disconnect event");
-
-  const clientId = this._clientIds[transportClientId];
-
-  // Neutralize any response objects
-  if (this._handshakeResponses[clientId]) {
-    this._handshakeResponses[clientId]._neutralize();
-  }
-  if (this._actionResponses[clientId]) {
-    _.each(this._actionResponses[clientId], ares => {
-      ares._neutralize();
-    });
-  }
-  if (this._feedOpenResponses[clientId]) {
-    _.each(this._feedOpenResponses[clientId], fores => {
-      fores._neutralize();
-    });
-  }
-  if (this._feedCloseResponses[clientId]) {
-    _.each(this._feedCloseResponses[clientId], fcres => {
-      fcres._neutralize();
-    });
-  }
-
-  // Clear any handshake timeout
-  if (this._handshakeTimers[clientId]) {
-    clearTimeout(this._handshakeTimers[clientId]);
-  }
-
-  // Clear any termination timeouts
-  if (this._terminationTimers[clientId]) {
-    _.each(this._terminationTimers[clientId], timerId => {
-      clearTimeout(timerId);
-    });
-  }
-
-  // Reset internal state related to this client
-  delete this._clientIds[transportClientId];
-  delete this._transportClientIds[clientId];
-  delete this._handshakeTimers[clientId];
-  delete this._handshakeStatus[clientId];
-  delete this._handshakeResponses[clientId];
-  delete this._actionResponses[clientId];
-  if (this._clientFeedStates[clientId]) {
-    _.each(this._clientFeedStates[clientId], (state, feedSerial) => {
-      this._delete(this._feedClientStates, feedSerial, clientId);
-    });
-    delete this._clientFeedStates[clientId];
-  }
-  delete this._terminationTimers[clientId];
-  delete this._feedOpenResponses[clientId];
-  delete this._feedCloseResponses[clientId];
-
-  // Emit
-  if (err) {
-    this.emit("disconnect", clientId, err);
-  } else {
-    this.emit("disconnect", clientId);
-  }
-};
-
-/**
  * Process a transport message event. Parse, validate, and route.
  * @memberof Server
  * @instance
@@ -1502,6 +1435,89 @@ proto._processFeedClose = function _processFeedClose(clientId, msg, msgString) {
       })
     );
   }
+};
+
+/**
+ * Process a transport disconnect event.
+ * @memberof Server
+ * @instance
+ * @private
+ * @param {string} transportClientId
+ * @param {?Error} err
+ */
+proto._processDisconnect = function _processDisconnect(transportClientId, err) {
+  dbg("Observed transport disconnect event");
+
+  const clientId = this._clientIds[transportClientId];
+
+  // Neutralize any response objects
+  if (this._handshakeResponses[clientId]) {
+    this._handshakeResponses[clientId]._neutralize();
+  }
+  if (this._actionResponses[clientId]) {
+    _.each(this._actionResponses[clientId], ares => {
+      ares._neutralize();
+    });
+  }
+  if (this._feedOpenResponses[clientId]) {
+    _.each(this._feedOpenResponses[clientId], fores => {
+      fores._neutralize();
+    });
+  }
+  if (this._feedCloseResponses[clientId]) {
+    _.each(this._feedCloseResponses[clientId], fcres => {
+      fcres._neutralize();
+    });
+  }
+
+  // Clear any handshake timeout
+  if (this._handshakeTimers[clientId]) {
+    clearTimeout(this._handshakeTimers[clientId]);
+  }
+
+  // Clear any termination timeouts
+  if (this._terminationTimers[clientId]) {
+    _.each(this._terminationTimers[clientId], timerId => {
+      clearTimeout(timerId);
+    });
+  }
+
+  // Reset internal state related to this client
+  delete this._clientIds[transportClientId];
+  delete this._transportClientIds[clientId];
+  delete this._handshakeTimers[clientId];
+  delete this._handshakeStatus[clientId];
+  delete this._handshakeResponses[clientId];
+  delete this._actionResponses[clientId];
+  if (this._clientFeedStates[clientId]) {
+    _.each(this._clientFeedStates[clientId], (state, feedSerial) => {
+      this._delete(this._feedClientStates, feedSerial, clientId);
+    });
+    delete this._clientFeedStates[clientId];
+  }
+  delete this._terminationTimers[clientId];
+  delete this._feedOpenResponses[clientId];
+  delete this._feedCloseResponses[clientId];
+
+  // Emit
+  if (err) {
+    this.emit("disconnect", clientId, err);
+  } else {
+    this.emit("disconnect", clientId);
+  }
+};
+
+/**
+ * Process an inbound transportError event.
+ * @memberof Server
+ * @instance
+ * @private
+ * @param {Error} err
+ */
+proto._processTransportError = function _processTransportError(err) {
+  dbg("Observed transport wrapper transportError event");
+
+  this.emit("transportError", err);
 };
 
 // Response object functions

@@ -93,12 +93,13 @@ State: Server members
       ._processStopping()
       ._processStop()
       ._processConnect()
-      ._processDisconnect()
       ._processMessage()
         ._processHandshake()
         ._processAction()
         ._processFeedOpen()
         ._processFeedClose()
+      ._processDisconnect()
+      ._processTransportError()
     Internal
       ._set()
       ._delete()
@@ -2751,462 +2752,6 @@ describe("The server._processConnect() function", () => {
   // Return value - N/A
 });
 
-describe("The server._processDisconnect() function", () => {
-  // Events
-
-  it("should emit disconnect - no error", () => {
-    const harn = harness();
-    harn.makeServerStarted();
-    const cid = harn.makeClient("some_tcid");
-
-    harn.server.disconnect(cid);
-    const serverListener = harn.createServerListener();
-    harn.transport.emit("disconnect", "some_tcid");
-
-    expect(serverListener.starting.mock.calls.length).toBe(0);
-    expect(serverListener.start.mock.calls.length).toBe(0);
-    expect(serverListener.stopping.mock.calls.length).toBe(0);
-    expect(serverListener.stop.mock.calls.length).toBe(0);
-    expect(serverListener.connect.mock.calls.length).toBe(0);
-    expect(serverListener.handshake.mock.calls.length).toBe(0);
-    expect(serverListener.action.mock.calls.length).toBe(0);
-    expect(serverListener.feedOpen.mock.calls.length).toBe(0);
-    expect(serverListener.feedClose.mock.calls.length).toBe(0);
-    expect(serverListener.disconnect.mock.calls.length).toBe(1);
-    expect(serverListener.disconnect.mock.calls[0].length).toBe(1);
-    expect(serverListener.disconnect.mock.calls[0][0]).toBe(cid);
-    expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
-    expect(serverListener.transportError.mock.calls.length).toBe(0);
-  });
-
-  it("should emit disconnect - with error", () => {
-    const harn = harness();
-    harn.makeServerStarted();
-    const cid = harn.makeClient("some_tcid");
-
-    const serverListener = harn.createServerListener();
-    harn.transport.emit("disconnect", "some_tcid", new Error("FAILURE: ..."));
-
-    expect(serverListener.starting.mock.calls.length).toBe(0);
-    expect(serverListener.start.mock.calls.length).toBe(0);
-    expect(serverListener.stopping.mock.calls.length).toBe(0);
-    expect(serverListener.stop.mock.calls.length).toBe(0);
-    expect(serverListener.connect.mock.calls.length).toBe(0);
-    expect(serverListener.handshake.mock.calls.length).toBe(0);
-    expect(serverListener.action.mock.calls.length).toBe(0);
-    expect(serverListener.feedOpen.mock.calls.length).toBe(0);
-    expect(serverListener.feedClose.mock.calls.length).toBe(0);
-    expect(serverListener.disconnect.mock.calls.length).toBe(1);
-    expect(serverListener.disconnect.mock.calls[0].length).toBe(2);
-    expect(serverListener.disconnect.mock.calls[0][0]).toBe(cid);
-    expect(serverListener.disconnect.mock.calls[0][1]).toBeInstanceOf(Error);
-    expect(serverListener.disconnect.mock.calls[0][1].message).toBe(
-      "FAILURE: ..."
-    );
-    expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
-    expect(serverListener.transportError.mock.calls.length).toBe(0);
-  });
-
-  // State
-
-  it("should update state and neutralize appropriately - HandshakeResponse", () => {
-    // Two clients, leaver and stayer, both with handshakes processing
-    const harn = harness();
-    harn.makeServerStarted();
-
-    // Leaver
-    harn.transport.emit("connect", "tcid_leaver");
-    let leaverCid;
-    let leaverHandshakeRes;
-    harn.server.once("handshake", (hsreq, hsres) => {
-      leaverCid = hsreq.clientId;
-      leaverHandshakeRes = hsres;
-      // Sit on it
-    });
-    harn.transport.emit(
-      "message",
-      "tcid_leaver",
-      JSON.stringify({
-        MessageType: "Handshake",
-        Versions: ["0.1"]
-      })
-    );
-
-    // Stayer
-    harn.transport.emit("connect", "tcid_stayer");
-    let stayerHandshakeRes;
-    harn.server.once("handshake", (hreq, hres) => {
-      stayerHandshakeRes = hres;
-      // Sit on it
-    });
-    harn.transport.emit(
-      "message",
-      "tcid_stayer",
-      JSON.stringify({
-        MessageType: "Handshake",
-        Versions: ["0.1"]
-      })
-    );
-
-    // Mock _neutralize() functions
-    leaverHandshakeRes._neutralize = jest.fn();
-    stayerHandshakeRes._neutralize = jest.fn();
-
-    // Emit
-    const newState = harn.getServerState();
-    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
-
-    // Check that neutralize functions are called/not
-    expect(leaverHandshakeRes._neutralize.mock.calls.length).toBe(1);
-    expect(leaverHandshakeRes._neutralize.mock.calls[0].length).toBe(0);
-    expect(stayerHandshakeRes._neutralize.mock.calls.length).toBe(0);
-
-    // Check state
-    delete newState._clientIds.tcid_leaver;
-    delete newState._transportClientIds[leaverCid];
-    delete newState._handshakeTimers[leaverCid];
-    delete newState._handshakeStatus[leaverCid];
-    delete newState._handshakeResponses[leaverCid];
-    delete newState._handshakeResponseStates[leaverCid];
-    expect(harn.server).toHaveState(newState);
-  });
-
-  it("should update state and neutralize appropriately - ActionResponse", () => {
-    // Two clients, leaver with two actions processing, stayer with one
-    const harn = harness();
-    harn.makeServerStarted();
-
-    // Leaver
-    const leaverCid = harn.makeClient("tcid_leaver");
-    let leaverActionRes1;
-    harn.server.once("action", (areq, ares) => {
-      leaverActionRes1 = ares;
-      // Sit on it
-    });
-    harn.transport.emit(
-      "message",
-      "tcid_leaver",
-      JSON.stringify({
-        MessageType: "Action",
-        ActionName: "SomeAction",
-        ActionArgs: { action: "args" },
-        CallbackId: "123"
-      })
-    );
-    let leaverActionRes2;
-    harn.server.once("action", (areq, ares) => {
-      leaverActionRes2 = ares;
-      // Sit on it
-    });
-    harn.transport.emit(
-      "message",
-      "tcid_leaver",
-      JSON.stringify({
-        MessageType: "Action",
-        ActionName: "SomeAction",
-        ActionArgs: { action: "args" },
-        CallbackId: "456"
-      })
-    );
-
-    // Stayer
-    harn.makeClient("tcid_stayer");
-    let stayerActionRes;
-    harn.server.once("action", (areq, ares) => {
-      stayerActionRes = ares;
-      // Sit on it
-    });
-    harn.transport.emit(
-      "message",
-      "tcid_stayer",
-      JSON.stringify({
-        MessageType: "Action",
-        ActionName: "SomeAction",
-        ActionArgs: { action: "args" },
-        CallbackId: "123"
-      })
-    );
-
-    // Mock _neutralize() functions
-    leaverActionRes1._neutralize = jest.fn();
-    leaverActionRes2._neutralize = jest.fn();
-    stayerActionRes._neutralize = jest.fn();
-
-    // Emit
-    const newState = harn.getServerState();
-    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
-
-    // Check that neutralize functions are called/not
-    expect(leaverActionRes1._neutralize.mock.calls.length).toBe(1);
-    expect(leaverActionRes1._neutralize.mock.calls[0].length).toBe(0);
-    expect(leaverActionRes2._neutralize.mock.calls.length).toBe(1);
-    expect(leaverActionRes2._neutralize.mock.calls[0].length).toBe(0);
-    expect(stayerActionRes._neutralize.mock.calls.length).toBe(0);
-
-    // Check state
-    delete newState._clientIds.tcid_leaver;
-    delete newState._transportClientIds[leaverCid];
-    delete newState._handshakeStatus[leaverCid];
-    delete newState._actionResponses[leaverCid];
-    delete newState._actionResponseStates[leaverCid];
-    expect(harn.server).toHaveState(newState);
-  });
-
-  it("should update state and neutralize appropriately - FeedOpenResponse", () => {
-    // Two clients, leaver with two feeds opening, stayer with one
-    const harn = harness();
-    harn.makeServerStarted();
-
-    // Leaver
-    const leaverCid = harn.makeClient("tcid_leaver");
-    const leaverFeedOpenRes1 = harn.makeFeedOpening(
-      "tcid_leaver",
-      "some_feed",
-      { feed: "args" }
-    );
-    const leaverFeedOpenRes2 = harn.makeFeedOpening(
-      "tcid_leaver",
-      "other_feed",
-      { feed: "args" }
-    );
-
-    // Stayer
-    harn.makeClient("tcid_stayer");
-    const stayerFeedOpenRes = harn.makeFeedOpening("tcid_stayer", "some_feed", {
-      feed: "args"
-    });
-
-    // Mock _neutralize() functions
-    leaverFeedOpenRes1._neutralize = jest.fn();
-    leaverFeedOpenRes2._neutralize = jest.fn();
-    stayerFeedOpenRes._neutralize = jest.fn();
-
-    // Emit
-    const newState = harn.getServerState();
-    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
-
-    // Check that neutralize functions are called/not
-    expect(leaverFeedOpenRes1._neutralize.mock.calls.length).toBe(1);
-    expect(leaverFeedOpenRes1._neutralize.mock.calls[0].length).toBe(0);
-    expect(leaverFeedOpenRes2._neutralize.mock.calls.length).toBe(1);
-    expect(leaverFeedOpenRes2._neutralize.mock.calls[0].length).toBe(0);
-    expect(stayerFeedOpenRes._neutralize.mock.calls.length).toBe(0);
-
-    // Check state
-    delete newState._clientIds.tcid_leaver;
-    delete newState._transportClientIds[leaverCid];
-    delete newState._handshakeStatus[leaverCid];
-    delete newState._clientFeedStates[leaverCid];
-    delete newState._feedClientStates[
-      feedSerializer.serialize("some_feed", { feed: "args" })
-    ][leaverCid];
-    delete newState._feedClientStates[
-      feedSerializer.serialize("other_feed", { feed: "args" })
-    ];
-    delete newState._feedOpenResponses[leaverCid];
-    delete newState._feedOpenResponseStates[leaverCid];
-    expect(harn.server).toHaveState(newState);
-  });
-
-  it("should update state and neutralize appropriately - FeedCloseResponse", () => {
-    // Two clients, leaver with two feeds closing, stayer with one
-    const harn = harness();
-    harn.makeServerStarted();
-
-    // Leaver
-    const leaverCid = harn.makeClient("tcid_leaver");
-    const leaverFeedCloseRes1 = harn.makeFeedClosing(
-      "tcid_leaver",
-      "some_feed",
-      { feed: "args" }
-    );
-    const leaverFeedCloseRes2 = harn.makeFeedClosing(
-      "tcid_leaver",
-      "other_feed",
-      { feed: "args" }
-    );
-
-    // Stayer
-    harn.makeClient("tcid_stayer");
-    const stayerFeedCloseRes = harn.makeFeedClosing(
-      "tcid_stayer",
-      "some_feed",
-      {
-        feed: "args"
-      }
-    );
-
-    // Mock _neutralize() functions
-    leaverFeedCloseRes1._neutralize = jest.fn();
-    leaverFeedCloseRes2._neutralize = jest.fn();
-    stayerFeedCloseRes._neutralize = jest.fn();
-
-    // Emit
-    const newState = harn.getServerState();
-    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
-
-    // Check that neutralize functions are called/not
-    expect(leaverFeedCloseRes1._neutralize.mock.calls.length).toBe(1);
-    expect(leaverFeedCloseRes1._neutralize.mock.calls[0].length).toBe(0);
-    expect(leaverFeedCloseRes2._neutralize.mock.calls.length).toBe(1);
-    expect(leaverFeedCloseRes2._neutralize.mock.calls[0].length).toBe(0);
-    expect(stayerFeedCloseRes._neutralize.mock.calls.length).toBe(0);
-
-    // Check state
-    delete newState._clientIds.tcid_leaver;
-    delete newState._transportClientIds[leaverCid];
-    delete newState._handshakeStatus[leaverCid];
-    delete newState._clientFeedStates[leaverCid];
-    delete newState._feedClientStates[
-      feedSerializer.serialize("some_feed", { feed: "args" })
-    ][leaverCid];
-    delete newState._feedClientStates[
-      feedSerializer.serialize("other_feed", { feed: "args" })
-    ];
-    delete newState._feedCloseResponses[leaverCid];
-    delete newState._feedCloseResponseStates[leaverCid];
-    expect(harn.server).toHaveState(newState);
-  });
-
-  it("should update state appropriately - feeds open", () => {
-    // Two client, leaver with two feeds open, stayer with one
-    const harn = harness();
-    harn.makeServerStarted();
-
-    // Leaver
-    const leaverCid = harn.makeClient("tcid_leaver");
-    harn.makeFeedOpen(
-      "tcid_leaver",
-      "some_feed",
-      { feed: "args" },
-      { feed: "data" }
-    );
-    harn.makeFeedOpen(
-      "tcid_leaver",
-      "other_feed",
-      { feed: "args" },
-      { feed: "data" }
-    );
-
-    // Stayer
-    harn.makeClient("tcid_stayer");
-    harn.makeFeedOpen(
-      "tcid_stayer",
-      "some_feed",
-      { feed: "args" },
-      { feed: "data" }
-    );
-
-    // Emit
-    const newState = harn.getServerState();
-    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
-
-    // Check state
-    delete newState._clientIds.tcid_leaver;
-    delete newState._transportClientIds[leaverCid];
-    delete newState._handshakeStatus[leaverCid];
-    delete newState._clientFeedStates[leaverCid];
-    delete newState._feedClientStates[
-      feedSerializer.serialize("some_feed", { feed: "args" })
-    ][leaverCid];
-    delete newState._feedClientStates[
-      feedSerializer.serialize("other_feed", { feed: "args" })
-    ];
-    expect(harn.server).toHaveState(newState);
-  });
-
-  it("should update state appropriately - feeds terminated", () => {
-    // Two client, leaver with two feeds open, stayer with one
-    const harn = harness();
-    harn.makeServerStarted();
-
-    // Leaver
-    const leaverCid = harn.makeClient("tcid_leaver");
-    harn.makeFeedTerminated("tcid_leaver", "some_feed", { feed: "args" });
-    harn.makeFeedTerminated("tcid_leaver", "other_feed", { feed: "args" });
-
-    // Stayer
-    harn.makeClient("tcid_stayer");
-    harn.makeFeedTerminated("tcid_stayer", "some_feed", { feed: "args" });
-
-    // Emit
-    const newState = harn.getServerState();
-    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
-
-    // Check state
-    delete newState._clientIds.tcid_leaver;
-    delete newState._transportClientIds[leaverCid];
-    delete newState._handshakeStatus[leaverCid];
-    delete newState._clientFeedStates[leaverCid];
-    delete newState._feedClientStates[
-      feedSerializer.serialize("some_feed", { feed: "args" })
-    ][leaverCid];
-    delete newState._feedClientStates[
-      feedSerializer.serialize("other_feed", { feed: "args" })
-    ];
-    delete newState._terminationTimers[leaverCid];
-    expect(harn.server).toHaveState(newState);
-  });
-
-  it("should clear handshake timeouts appropriately - check on transport", () => {
-    // Two clients, both awaiting Handshake messages
-    const harn = harness({ handshakeMs: 1 });
-    harn.makeServerStarted();
-
-    harn.transport.emit("connect", "tcid_leaver");
-    harn.transport.emit("connect", "tcid_stayer");
-
-    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
-
-    harn.transport.mockClear();
-
-    jest.runAllTimers();
-
-    expect(harn.transport.start.mock.calls.length).toBe(0);
-    expect(harn.transport.stop.mock.calls.length).toBe(0);
-    expect(harn.transport.send.mock.calls.length).toBe(0);
-    expect(harn.transport.disconnect.mock.calls.length).toBe(1);
-    expect(harn.transport.disconnect.mock.calls[0].length).toBe(2);
-    expect(harn.transport.disconnect.mock.calls[0][0]).toBe("tcid_stayer");
-    expect(harn.transport.disconnect.mock.calls[0][1]).toBeInstanceOf(Error);
-    expect(harn.transport.disconnect.mock.calls[0][1].message).toBe(
-      "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time."
-    );
-  });
-
-  it("should clear termination timeouts appropriately - check state", () => {
-    // There's no way to check that the timer doesn't run
-    // When you disconnect, the leaver's state goes empty, and the
-    // termination timer would just re-empty it (i.e. no effects)
-    // Would need to create a named function for the timeout
-    // But verified it doesn't run using console.log
-  });
-
-  // Transport calls
-
-  it("should do nothing on the transport", () => {
-    const harn = harness();
-    harn.makeServerStarted();
-
-    harn.transport.emit("connect", "tcid_leaver");
-    harn.transport.emit("connect", "tcid_stayer");
-
-    harn.transport.mockClear();
-    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
-
-    expect(harn.transport.start.mock.calls.length).toBe(0);
-    expect(harn.transport.stop.mock.calls.length).toBe(0);
-    expect(harn.transport.send.mock.calls.length).toBe(0);
-    expect(harn.transport.disconnect.mock.calls.length).toBe(0);
-  });
-
-  // Outbound callbacks - N/A
-
-  // Inbound callbacks (events, state, transport, outer callbacks) - N/A
-
-  // Return value - N/A
-});
-
 describe("The server._processMessage() function", () => {
   describe("it may receive an invalid message", () => {
     // Events
@@ -4331,6 +3876,7 @@ describe("The server._processHandshake() function", () => {
 
     it("should emit nothing", () => {
       const harn = harness();
+      harn.makeServerStarted();
       harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
@@ -7157,6 +6703,521 @@ describe("The server._processFeedClose() function", () => {
 
     // Return value - N/A
   });
+});
+
+describe("The server._processDisconnect() function", () => {
+  // Events
+
+  it("should emit disconnect - no error", () => {
+    const harn = harness();
+    harn.makeServerStarted();
+    const cid = harn.makeClient("some_tcid");
+
+    harn.server.disconnect(cid);
+    const serverListener = harn.createServerListener();
+    harn.transport.emit("disconnect", "some_tcid");
+
+    expect(serverListener.starting.mock.calls.length).toBe(0);
+    expect(serverListener.start.mock.calls.length).toBe(0);
+    expect(serverListener.stopping.mock.calls.length).toBe(0);
+    expect(serverListener.stop.mock.calls.length).toBe(0);
+    expect(serverListener.connect.mock.calls.length).toBe(0);
+    expect(serverListener.handshake.mock.calls.length).toBe(0);
+    expect(serverListener.action.mock.calls.length).toBe(0);
+    expect(serverListener.feedOpen.mock.calls.length).toBe(0);
+    expect(serverListener.feedClose.mock.calls.length).toBe(0);
+    expect(serverListener.disconnect.mock.calls.length).toBe(1);
+    expect(serverListener.disconnect.mock.calls[0].length).toBe(1);
+    expect(serverListener.disconnect.mock.calls[0][0]).toBe(cid);
+    expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
+    expect(serverListener.transportError.mock.calls.length).toBe(0);
+  });
+
+  it("should emit disconnect - with error", () => {
+    const harn = harness();
+    harn.makeServerStarted();
+    const cid = harn.makeClient("some_tcid");
+
+    const serverListener = harn.createServerListener();
+    harn.transport.emit("disconnect", "some_tcid", new Error("FAILURE: ..."));
+
+    expect(serverListener.starting.mock.calls.length).toBe(0);
+    expect(serverListener.start.mock.calls.length).toBe(0);
+    expect(serverListener.stopping.mock.calls.length).toBe(0);
+    expect(serverListener.stop.mock.calls.length).toBe(0);
+    expect(serverListener.connect.mock.calls.length).toBe(0);
+    expect(serverListener.handshake.mock.calls.length).toBe(0);
+    expect(serverListener.action.mock.calls.length).toBe(0);
+    expect(serverListener.feedOpen.mock.calls.length).toBe(0);
+    expect(serverListener.feedClose.mock.calls.length).toBe(0);
+    expect(serverListener.disconnect.mock.calls.length).toBe(1);
+    expect(serverListener.disconnect.mock.calls[0].length).toBe(2);
+    expect(serverListener.disconnect.mock.calls[0][0]).toBe(cid);
+    expect(serverListener.disconnect.mock.calls[0][1]).toBeInstanceOf(Error);
+    expect(serverListener.disconnect.mock.calls[0][1].message).toBe(
+      "FAILURE: ..."
+    );
+    expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
+    expect(serverListener.transportError.mock.calls.length).toBe(0);
+  });
+
+  // State
+
+  it("should update state and neutralize appropriately - HandshakeResponse", () => {
+    // Two clients, leaver and stayer, both with handshakes processing
+    const harn = harness();
+    harn.makeServerStarted();
+
+    // Leaver
+    harn.transport.emit("connect", "tcid_leaver");
+    let leaverCid;
+    let leaverHandshakeRes;
+    harn.server.once("handshake", (hsreq, hsres) => {
+      leaverCid = hsreq.clientId;
+      leaverHandshakeRes = hsres;
+      // Sit on it
+    });
+    harn.transport.emit(
+      "message",
+      "tcid_leaver",
+      JSON.stringify({
+        MessageType: "Handshake",
+        Versions: ["0.1"]
+      })
+    );
+
+    // Stayer
+    harn.transport.emit("connect", "tcid_stayer");
+    let stayerHandshakeRes;
+    harn.server.once("handshake", (hreq, hres) => {
+      stayerHandshakeRes = hres;
+      // Sit on it
+    });
+    harn.transport.emit(
+      "message",
+      "tcid_stayer",
+      JSON.stringify({
+        MessageType: "Handshake",
+        Versions: ["0.1"]
+      })
+    );
+
+    // Mock _neutralize() functions
+    leaverHandshakeRes._neutralize = jest.fn();
+    stayerHandshakeRes._neutralize = jest.fn();
+
+    // Emit
+    const newState = harn.getServerState();
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
+
+    // Check that neutralize functions are called/not
+    expect(leaverHandshakeRes._neutralize.mock.calls.length).toBe(1);
+    expect(leaverHandshakeRes._neutralize.mock.calls[0].length).toBe(0);
+    expect(stayerHandshakeRes._neutralize.mock.calls.length).toBe(0);
+
+    // Check state
+    delete newState._clientIds.tcid_leaver;
+    delete newState._transportClientIds[leaverCid];
+    delete newState._handshakeTimers[leaverCid];
+    delete newState._handshakeStatus[leaverCid];
+    delete newState._handshakeResponses[leaverCid];
+    delete newState._handshakeResponseStates[leaverCid];
+    expect(harn.server).toHaveState(newState);
+  });
+
+  it("should update state and neutralize appropriately - ActionResponse", () => {
+    // Two clients, leaver with two actions processing, stayer with one
+    const harn = harness();
+    harn.makeServerStarted();
+
+    // Leaver
+    const leaverCid = harn.makeClient("tcid_leaver");
+    let leaverActionRes1;
+    harn.server.once("action", (areq, ares) => {
+      leaverActionRes1 = ares;
+      // Sit on it
+    });
+    harn.transport.emit(
+      "message",
+      "tcid_leaver",
+      JSON.stringify({
+        MessageType: "Action",
+        ActionName: "SomeAction",
+        ActionArgs: { action: "args" },
+        CallbackId: "123"
+      })
+    );
+    let leaverActionRes2;
+    harn.server.once("action", (areq, ares) => {
+      leaverActionRes2 = ares;
+      // Sit on it
+    });
+    harn.transport.emit(
+      "message",
+      "tcid_leaver",
+      JSON.stringify({
+        MessageType: "Action",
+        ActionName: "SomeAction",
+        ActionArgs: { action: "args" },
+        CallbackId: "456"
+      })
+    );
+
+    // Stayer
+    harn.makeClient("tcid_stayer");
+    let stayerActionRes;
+    harn.server.once("action", (areq, ares) => {
+      stayerActionRes = ares;
+      // Sit on it
+    });
+    harn.transport.emit(
+      "message",
+      "tcid_stayer",
+      JSON.stringify({
+        MessageType: "Action",
+        ActionName: "SomeAction",
+        ActionArgs: { action: "args" },
+        CallbackId: "123"
+      })
+    );
+
+    // Mock _neutralize() functions
+    leaverActionRes1._neutralize = jest.fn();
+    leaverActionRes2._neutralize = jest.fn();
+    stayerActionRes._neutralize = jest.fn();
+
+    // Emit
+    const newState = harn.getServerState();
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
+
+    // Check that neutralize functions are called/not
+    expect(leaverActionRes1._neutralize.mock.calls.length).toBe(1);
+    expect(leaverActionRes1._neutralize.mock.calls[0].length).toBe(0);
+    expect(leaverActionRes2._neutralize.mock.calls.length).toBe(1);
+    expect(leaverActionRes2._neutralize.mock.calls[0].length).toBe(0);
+    expect(stayerActionRes._neutralize.mock.calls.length).toBe(0);
+
+    // Check state
+    delete newState._clientIds.tcid_leaver;
+    delete newState._transportClientIds[leaverCid];
+    delete newState._handshakeStatus[leaverCid];
+    delete newState._actionResponses[leaverCid];
+    delete newState._actionResponseStates[leaverCid];
+    expect(harn.server).toHaveState(newState);
+  });
+
+  it("should update state and neutralize appropriately - FeedOpenResponse", () => {
+    // Two clients, leaver with two feeds opening, stayer with one
+    const harn = harness();
+    harn.makeServerStarted();
+
+    // Leaver
+    const leaverCid = harn.makeClient("tcid_leaver");
+    const leaverFeedOpenRes1 = harn.makeFeedOpening(
+      "tcid_leaver",
+      "some_feed",
+      { feed: "args" }
+    );
+    const leaverFeedOpenRes2 = harn.makeFeedOpening(
+      "tcid_leaver",
+      "other_feed",
+      { feed: "args" }
+    );
+
+    // Stayer
+    harn.makeClient("tcid_stayer");
+    const stayerFeedOpenRes = harn.makeFeedOpening("tcid_stayer", "some_feed", {
+      feed: "args"
+    });
+
+    // Mock _neutralize() functions
+    leaverFeedOpenRes1._neutralize = jest.fn();
+    leaverFeedOpenRes2._neutralize = jest.fn();
+    stayerFeedOpenRes._neutralize = jest.fn();
+
+    // Emit
+    const newState = harn.getServerState();
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
+
+    // Check that neutralize functions are called/not
+    expect(leaverFeedOpenRes1._neutralize.mock.calls.length).toBe(1);
+    expect(leaverFeedOpenRes1._neutralize.mock.calls[0].length).toBe(0);
+    expect(leaverFeedOpenRes2._neutralize.mock.calls.length).toBe(1);
+    expect(leaverFeedOpenRes2._neutralize.mock.calls[0].length).toBe(0);
+    expect(stayerFeedOpenRes._neutralize.mock.calls.length).toBe(0);
+
+    // Check state
+    delete newState._clientIds.tcid_leaver;
+    delete newState._transportClientIds[leaverCid];
+    delete newState._handshakeStatus[leaverCid];
+    delete newState._clientFeedStates[leaverCid];
+    delete newState._feedClientStates[
+      feedSerializer.serialize("some_feed", { feed: "args" })
+    ][leaverCid];
+    delete newState._feedClientStates[
+      feedSerializer.serialize("other_feed", { feed: "args" })
+    ];
+    delete newState._feedOpenResponses[leaverCid];
+    delete newState._feedOpenResponseStates[leaverCid];
+    expect(harn.server).toHaveState(newState);
+  });
+
+  it("should update state and neutralize appropriately - FeedCloseResponse", () => {
+    // Two clients, leaver with two feeds closing, stayer with one
+    const harn = harness();
+    harn.makeServerStarted();
+
+    // Leaver
+    const leaverCid = harn.makeClient("tcid_leaver");
+    const leaverFeedCloseRes1 = harn.makeFeedClosing(
+      "tcid_leaver",
+      "some_feed",
+      { feed: "args" }
+    );
+    const leaverFeedCloseRes2 = harn.makeFeedClosing(
+      "tcid_leaver",
+      "other_feed",
+      { feed: "args" }
+    );
+
+    // Stayer
+    harn.makeClient("tcid_stayer");
+    const stayerFeedCloseRes = harn.makeFeedClosing(
+      "tcid_stayer",
+      "some_feed",
+      {
+        feed: "args"
+      }
+    );
+
+    // Mock _neutralize() functions
+    leaverFeedCloseRes1._neutralize = jest.fn();
+    leaverFeedCloseRes2._neutralize = jest.fn();
+    stayerFeedCloseRes._neutralize = jest.fn();
+
+    // Emit
+    const newState = harn.getServerState();
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
+
+    // Check that neutralize functions are called/not
+    expect(leaverFeedCloseRes1._neutralize.mock.calls.length).toBe(1);
+    expect(leaverFeedCloseRes1._neutralize.mock.calls[0].length).toBe(0);
+    expect(leaverFeedCloseRes2._neutralize.mock.calls.length).toBe(1);
+    expect(leaverFeedCloseRes2._neutralize.mock.calls[0].length).toBe(0);
+    expect(stayerFeedCloseRes._neutralize.mock.calls.length).toBe(0);
+
+    // Check state
+    delete newState._clientIds.tcid_leaver;
+    delete newState._transportClientIds[leaverCid];
+    delete newState._handshakeStatus[leaverCid];
+    delete newState._clientFeedStates[leaverCid];
+    delete newState._feedClientStates[
+      feedSerializer.serialize("some_feed", { feed: "args" })
+    ][leaverCid];
+    delete newState._feedClientStates[
+      feedSerializer.serialize("other_feed", { feed: "args" })
+    ];
+    delete newState._feedCloseResponses[leaverCid];
+    delete newState._feedCloseResponseStates[leaverCid];
+    expect(harn.server).toHaveState(newState);
+  });
+
+  it("should update state appropriately - feeds open", () => {
+    // Two client, leaver with two feeds open, stayer with one
+    const harn = harness();
+    harn.makeServerStarted();
+
+    // Leaver
+    const leaverCid = harn.makeClient("tcid_leaver");
+    harn.makeFeedOpen(
+      "tcid_leaver",
+      "some_feed",
+      { feed: "args" },
+      { feed: "data" }
+    );
+    harn.makeFeedOpen(
+      "tcid_leaver",
+      "other_feed",
+      { feed: "args" },
+      { feed: "data" }
+    );
+
+    // Stayer
+    harn.makeClient("tcid_stayer");
+    harn.makeFeedOpen(
+      "tcid_stayer",
+      "some_feed",
+      { feed: "args" },
+      { feed: "data" }
+    );
+
+    // Emit
+    const newState = harn.getServerState();
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
+
+    // Check state
+    delete newState._clientIds.tcid_leaver;
+    delete newState._transportClientIds[leaverCid];
+    delete newState._handshakeStatus[leaverCid];
+    delete newState._clientFeedStates[leaverCid];
+    delete newState._feedClientStates[
+      feedSerializer.serialize("some_feed", { feed: "args" })
+    ][leaverCid];
+    delete newState._feedClientStates[
+      feedSerializer.serialize("other_feed", { feed: "args" })
+    ];
+    expect(harn.server).toHaveState(newState);
+  });
+
+  it("should update state appropriately - feeds terminated", () => {
+    // Two client, leaver with two feeds open, stayer with one
+    const harn = harness();
+    harn.makeServerStarted();
+
+    // Leaver
+    const leaverCid = harn.makeClient("tcid_leaver");
+    harn.makeFeedTerminated("tcid_leaver", "some_feed", { feed: "args" });
+    harn.makeFeedTerminated("tcid_leaver", "other_feed", { feed: "args" });
+
+    // Stayer
+    harn.makeClient("tcid_stayer");
+    harn.makeFeedTerminated("tcid_stayer", "some_feed", { feed: "args" });
+
+    // Emit
+    const newState = harn.getServerState();
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
+
+    // Check state
+    delete newState._clientIds.tcid_leaver;
+    delete newState._transportClientIds[leaverCid];
+    delete newState._handshakeStatus[leaverCid];
+    delete newState._clientFeedStates[leaverCid];
+    delete newState._feedClientStates[
+      feedSerializer.serialize("some_feed", { feed: "args" })
+    ][leaverCid];
+    delete newState._feedClientStates[
+      feedSerializer.serialize("other_feed", { feed: "args" })
+    ];
+    delete newState._terminationTimers[leaverCid];
+    expect(harn.server).toHaveState(newState);
+  });
+
+  it("should clear handshake timeouts appropriately - check on transport", () => {
+    // Two clients, both awaiting Handshake messages
+    const harn = harness({ handshakeMs: 1 });
+    harn.makeServerStarted();
+
+    harn.transport.emit("connect", "tcid_leaver");
+    harn.transport.emit("connect", "tcid_stayer");
+
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
+
+    harn.transport.mockClear();
+
+    jest.runAllTimers();
+
+    expect(harn.transport.start.mock.calls.length).toBe(0);
+    expect(harn.transport.stop.mock.calls.length).toBe(0);
+    expect(harn.transport.send.mock.calls.length).toBe(0);
+    expect(harn.transport.disconnect.mock.calls.length).toBe(1);
+    expect(harn.transport.disconnect.mock.calls[0].length).toBe(2);
+    expect(harn.transport.disconnect.mock.calls[0][0]).toBe("tcid_stayer");
+    expect(harn.transport.disconnect.mock.calls[0][1]).toBeInstanceOf(Error);
+    expect(harn.transport.disconnect.mock.calls[0][1].message).toBe(
+      "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time."
+    );
+  });
+
+  it("should clear termination timeouts appropriately - check state", () => {
+    // There's no way to check that the timer doesn't run
+    // When you disconnect, the leaver's state goes empty, and the
+    // termination timer would just re-empty it (i.e. no effects)
+    // Would need to create a named function for the timeout
+    // But verified it doesn't run using console.log
+  });
+
+  // Transport calls
+
+  it("should do nothing on the transport", () => {
+    const harn = harness();
+    harn.makeServerStarted();
+
+    harn.transport.emit("connect", "tcid_leaver");
+    harn.transport.emit("connect", "tcid_stayer");
+
+    harn.transport.mockClear();
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
+
+    expect(harn.transport.start.mock.calls.length).toBe(0);
+    expect(harn.transport.stop.mock.calls.length).toBe(0);
+    expect(harn.transport.send.mock.calls.length).toBe(0);
+    expect(harn.transport.disconnect.mock.calls.length).toBe(0);
+  });
+
+  // Outbound callbacks - N/A
+
+  // Inbound callbacks (events, state, transport, outer callbacks) - N/A
+
+  // Return value - N/A
+});
+
+describe("The server._processTransportError() function", () => {
+  // Events
+
+  it("should emit transportError", () => {
+    const harn = harness();
+
+    const serverListener = harn.createServerListener();
+    harn.transport.emit("disconnect");
+
+    expect(serverListener.starting.mock.calls.length).toBe(0);
+    expect(serverListener.start.mock.calls.length).toBe(0);
+    expect(serverListener.stopping.mock.calls.length).toBe(0);
+    expect(serverListener.stop.mock.calls.length).toBe(0);
+    expect(serverListener.connect.mock.calls.length).toBe(0);
+    expect(serverListener.handshake.mock.calls.length).toBe(0);
+    expect(serverListener.action.mock.calls.length).toBe(0);
+    expect(serverListener.feedOpen.mock.calls.length).toBe(0);
+    expect(serverListener.feedClose.mock.calls.length).toBe(0);
+    expect(serverListener.disconnect.mock.calls.length).toBe(0);
+    expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
+    expect(serverListener.transportError.mock.calls.length).toBe(1);
+    expect(serverListener.transportError.mock.calls[0].length).toBe(1);
+    expect(serverListener.transportError.mock.calls[0][0]).toBeInstanceOf(
+      Error
+    );
+  });
+
+  // State
+
+  it("should not change the state", () => {
+    const harn = harness();
+
+    const newState = harn.getServerState();
+    harn.transport.emit("disconnect");
+
+    expect(harn.server).toHaveState(newState);
+  });
+
+  // Transport calls
+
+  it("should do nothing on the transport", () => {
+    const harn = harness();
+
+    harn.transport.mockClear();
+    harn.transport.emit("disconnect");
+
+    expect(harn.transport.start.mock.calls.length).toBe(0);
+    expect(harn.transport.stop.mock.calls.length).toBe(0);
+    expect(harn.transport.send.mock.calls.length).toBe(0);
+    expect(harn.transport.disconnect.mock.calls.length).toBe(0);
+  });
+
+  // Outbound callbacks - N/A
+
+  // Inbound callbacks (events, state, transport, outer callbacks) - N/A
+
+  // Return value - N/A
 });
 
 // Testing: internal state modifiers
