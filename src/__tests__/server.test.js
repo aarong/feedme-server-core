@@ -102,15 +102,20 @@ State: Server members
       ._processDisconnect()
       ._processTransportError()
     Internal
-      ._set()
-      ._delete()
+      ._terminateOpeningFeed()
+      ._terminateOpenFeed()
 
 2. State-getting functionality
     App-triggered
       .state()
+
+3. Stateless functionality
     Internal
+      ._set()
+      ._delete()
       ._get()
       ._exists()
+
 
 */
 
@@ -118,7 +123,7 @@ expect.extend({
   toHaveState: harness.toHaveState
 });
 
-// Testing: app-triggered state modifiers
+// Testing: app-triggered state modifying functionality
 
 describe("The server() factory function", () => {
   describe("can return failure", () => {
@@ -2251,7 +2256,7 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
   });
 });
 
-// Testing: transport-triggered state modifiers
+// Testing: transport-triggered state modifying functionality
 
 describe("The server._processStarting() function", () => {
   // Events
@@ -4028,7 +4033,19 @@ describe("The server._processHandshake() function", () => {
 
     it("should emit nothing", () => {
       // Can't create a serverListener, since that registers a handshake event listener
-      expect(1).toBe(1);
+      // So mock the emit function to make sure nothing is emitted
+      const harn = harness({ handshakeMs: 0 });
+      harn.makeServerStarted();
+      harn.transport.emit("connect", "some_tcid");
+      const msg = JSON.stringify({
+        MessageType: "Handshake",
+        Versions: ["0.1"]
+      });
+
+      harn.server.emit = jest.fn();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(harn.server.emit.mock.calls.length).toBe(0);
     });
 
     // State
@@ -4235,7 +4252,19 @@ describe("The server._processHandshake() function", () => {
 
     it("should emit nothing", () => {
       // Can't create a serverListener, since that registers a handshake event listener
-      expect(1).toBe(1);
+      // So mock the emit function to make sure nothing is emitted
+      const harn = harness({ handshakeMs: 1 });
+      harn.makeServerStarted();
+      harn.transport.emit("connect", "some_tcid");
+      const msg = JSON.stringify({
+        MessageType: "Handshake",
+        Versions: ["0.1"]
+      });
+
+      harn.server.emit = jest.fn();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(harn.server.emit.mock.calls.length).toBe(0);
     });
 
     // State
@@ -4816,7 +4845,21 @@ describe("The server._processAction() function", () => {
 
     it("should emit nothing", () => {
       // Can't check, since subscribing a listener changes the behavior
-      expect(1).toBe(1);
+      // So mock the emit function to make sure nothing is emitted
+      const harn = harness();
+      harn.makeServerStarted();
+      harn.makeClient("some_tcid");
+      const msg = JSON.stringify({
+        MessageType: "Action",
+        ActionName: "some_action",
+        ActionArgs: { action: "args" },
+        CallbackId: "123"
+      });
+
+      harn.server.emit = jest.fn();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(harn.server.emit.mock.calls.length).toBe(0);
     });
 
     // State
@@ -5547,7 +5590,20 @@ describe("The server._processFeedOpen() function", () => {
 
     it("should emit nothing", () => {
       // Can't test, since attaching a listener changes the behavior
-      expect(1).toBe(1);
+      // So mock the emit function to make sure nothing is emitted
+      const harn = harness();
+      harn.makeServerStarted();
+      harn.makeClient("some_tcid");
+      const msg = JSON.stringify({
+        MessageType: "FeedOpen",
+        FeedName: "some_feed",
+        FeedArgs: { feed: "args" }
+      });
+
+      harn.server.emit = jest.fn();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(harn.server.emit.mock.calls.length).toBe(0);
     });
 
     // State
@@ -5629,7 +5685,21 @@ describe("The server._processFeedOpen() function", () => {
 
     it("should emit nothing", () => {
       // Can't test, since attaching a listener changes the behavior
-      expect(1).toBe(1);
+      // So mock the emit function to make sure nothing is emitted
+      const harn = harness();
+      harn.makeServerStarted();
+      harn.makeClient("some_tcid");
+      harn.makeFeedTerminated("some_tcid", "some_feed", { feed: "args" });
+      const msg = JSON.stringify({
+        MessageType: "FeedOpen",
+        FeedName: "some_feed",
+        FeedArgs: { feed: "args" }
+      });
+
+      harn.server.emit = jest.fn();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(harn.server.emit.mock.calls.length).toBe(0);
     });
 
     // State
@@ -7622,7 +7692,7 @@ describe("The server._processTransportError() function", () => {
   // Return value - N/A
 });
 
-// Testing: internal state modifiers
+// Testing: internal state modifying functionality
 
 describe("The server._terminateOpeningFeed() function", () => {
   // Events
@@ -7912,6 +7982,63 @@ describe("The server._terminateOpenFeed() function", () => {
   // Return value - N/A
 });
 
+// Testing: state-getting functionality
+
+describe("The server.state() function", () => {
+  it("should return the state indicated by the transport", () => {
+    const harn = harness();
+    harn.makeServerStarted();
+    harn.server.stop();
+    harn.transport.state.mockReturnValue("stopping");
+    harn.transport.emit("stopping");
+    expect(harn.server.state()).toBe("stopping");
+  });
+});
+
+// Testing: stateless functionality
+
+describe("The server._get() function", () => {
+  it("should work as expected", () => {
+    const harn = harness();
+
+    let obj = {};
+    expect(harn.server._get(obj, "key1", "key1", "missing")).toBe("missing");
+
+    obj = { key1: {} };
+    expect(harn.server._get(obj, "key1", "key2", "missing")).toBe("missing");
+
+    obj = { key1: { key2: "present" } };
+    expect(harn.server._get(obj, "key1", "key2", "missing")).toBe("present");
+
+    obj = { key1: { key2: "present" } };
+    expect(harn.server._get(obj, "key1", "key3", "missing")).toBe("missing");
+
+    obj = { key1: { key2: "present" } };
+    expect(harn.server._get(obj, "key3", "key2", "missing")).toBe("missing");
+  });
+});
+
+describe("The server._exists() function", () => {
+  it("should work as expected", () => {
+    const harn = harness();
+
+    let obj = {};
+    expect(harn.server._exists(obj, "key1", "key1", "missing")).toBe(false);
+
+    obj = { key1: {} };
+    expect(harn.server._exists(obj, "key1", "key2", "missing")).toBe(false);
+
+    obj = { key1: { key2: "present" } };
+    expect(harn.server._exists(obj, "key1", "key2", "missing")).toBe(true);
+
+    obj = { key1: { key2: "present" } };
+    expect(harn.server._exists(obj, "key1", "key3", "missing")).toBe(false);
+
+    obj = { key1: { key2: "present" } };
+    expect(harn.server._exists(obj, "key3", "key2", "missing")).toBe(false);
+  });
+});
+
 describe("The server._set() function", () => {
   it("should work as expected", () => {
     const harn = harness();
@@ -7984,62 +8111,5 @@ describe("The server._delete() function", () => {
     };
     harn.server._delete(obj, "key1", "key2");
     expect(obj).toEqual({ key1: { key3: "value3" }, key4: { key5: "value5" } });
-  });
-});
-
-// Testing: app-triggered state-getting functionality
-
-describe("The server.state() function", () => {
-  it("should return the state indicated by the transport", () => {
-    const harn = harness();
-    harn.makeServerStarted();
-    harn.server.stop();
-    harn.transport.state.mockReturnValue("stopping");
-    harn.transport.emit("stopping");
-    expect(harn.server.state()).toBe("stopping");
-  });
-});
-
-// Testing: internal state-getting functionality
-
-describe("The server._get() function", () => {
-  it("should work as expected", () => {
-    const harn = harness();
-
-    let obj = {};
-    expect(harn.server._get(obj, "key1", "key1", "missing")).toBe("missing");
-
-    obj = { key1: {} };
-    expect(harn.server._get(obj, "key1", "key2", "missing")).toBe("missing");
-
-    obj = { key1: { key2: "present" } };
-    expect(harn.server._get(obj, "key1", "key2", "missing")).toBe("present");
-
-    obj = { key1: { key2: "present" } };
-    expect(harn.server._get(obj, "key1", "key3", "missing")).toBe("missing");
-
-    obj = { key1: { key2: "present" } };
-    expect(harn.server._get(obj, "key3", "key2", "missing")).toBe("missing");
-  });
-});
-
-describe("The server._exists() function", () => {
-  it("should work as expected", () => {
-    const harn = harness();
-
-    let obj = {};
-    expect(harn.server._exists(obj, "key1", "key1", "missing")).toBe(false);
-
-    obj = { key1: {} };
-    expect(harn.server._exists(obj, "key1", "key2", "missing")).toBe(false);
-
-    obj = { key1: { key2: "present" } };
-    expect(harn.server._exists(obj, "key1", "key2", "missing")).toBe(true);
-
-    obj = { key1: { key2: "present" } };
-    expect(harn.server._exists(obj, "key1", "key3", "missing")).toBe(false);
-
-    obj = { key1: { key2: "present" } };
-    expect(harn.server._exists(obj, "key3", "key2", "missing")).toBe(false);
   });
 });
