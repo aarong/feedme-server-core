@@ -841,54 +841,6 @@ proto._processStopping = function _processStopping(err) {
   // each previously-connected client -- no need to neutralize response
   // objects, clear timers, or reset state
 
-  // Delete all of this
-
-  // // Neutralize all response objects
-  // _.each(this._handshakeResponses, hsres => {
-  //   hsres._neutralize();
-  // });
-  // _.each(this._actionResponses, client => {
-  //   _.each(client, ares => {
-  //     ares._neutralize();
-  //   });
-  // });
-  // _.each(this._feedOpenResponses, client => {
-  //   _.each(client, fores => {
-  //     fores._neutralize();
-  //   });
-  // });
-  // _.each(this._feedCloseResponses, client => {
-  //   _.each(client, fcres => {
-  //     fcres._neutralize();
-  //   });
-  // });
-
-  // // Clear all handshake timers
-  // // eslint-disable-next-line
-  // _.each(this._handshakeTimers, timerId => {
-  //   // clearTimeout(timerId);
-  // });
-
-  // // Clear all termination timers
-  // _.each(this._terminationTimers, clientTimers => {
-  //   _.each(clientTimers, timerId => {
-  //     clearTimeout(timerId);
-  //   });
-  // });
-
-  // // Reset internal state
-  // this._clientIds = {};
-  // this._transportClientIds = {};
-  // this._handshakeTimers = {};
-  // this._handshakeStatus = {};
-  // this._handshakeResponses = {};
-  // this._actionResponses = {};
-  // this._clientFeedStates = {};
-  // this._feedClientStates = {};
-  // this._terminationTimers = {};
-  // this._feedOpenResponses = {};
-  // this._feedCloseResponses = {};
-
   // Emit the event
   if (err) {
     this.emit("stopping", err);

@@ -27,12 +27,13 @@ verifying no change (errors, events, state, transport calls, return values).
         Check server events (no extra)
         Check server internal state
         Check transport calls (no extra)
-        Check outbound callbacks are called (none)
+        Check mock function calls (internal functions and set/clearTimeout)
+        Check outbound callbacks are called
         Check inbound callbacks from transport and timers
           Check server events
           Check server internal state
           Check transport calls
-          Check outbound callbacks are called (none)
+          Check outbound callbacks are called
         Check return value
 
 2. Test state-getting functionality. Outside-facing and internal.
@@ -260,7 +261,9 @@ describe("The server() factory function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks)
 
@@ -333,7 +336,9 @@ describe("The server.start() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -407,7 +412,9 @@ describe("The server.stop() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -875,7 +882,9 @@ describe("The server.actionRevelation() function", () => {
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
 
-      // Outbound callbacks - N/A
+      // Function calls - N/A
+
+      // Outbound callback - N/A
 
       // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -984,7 +993,9 @@ describe("The server.actionRevelation() function", () => {
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
 
-      // Outbound callbacks - N/A
+      // Function calls - N/A
+
+      // Outbound callback - N/A
 
       // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -1106,7 +1117,9 @@ describe("The server.disconnect() function", () => {
       expect(harn.transport.disconnect.mock.calls[0][0]).toBe("some_tcid");
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -1229,7 +1242,9 @@ describe("The server._appHandshakeSuccess() function - via handshakeResponse.suc
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -1387,7 +1402,9 @@ describe("The server._appActionSuccess() function - via actionResponse.success()
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -1546,7 +1563,9 @@ describe("The server._appActionFailure() function - via actionResponse.failure()
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -1756,7 +1775,9 @@ describe("The server._appFeedOpenSuccess() function - via feedOpenResponse.succe
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -1967,7 +1988,9 @@ describe("The server._appFeedOpenFailure() function - via feedOpenResponse.failu
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -2218,7 +2241,9 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -2284,7 +2309,9 @@ describe("The server._processStarting() function", () => {
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
-  // Outbound callbacks - N/A
+  // Function calls - N/A
+
+  // Outbound callback - N/A
 
   // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -2353,7 +2380,9 @@ describe("The server._processStart() function", () => {
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
-  // Outbound callbacks - N/A
+  // Function calls - N/A
+
+  // Outbound callback - N/A
 
   // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -2445,7 +2474,9 @@ describe("The server._processStopping() function", () => {
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
-  // Outbound callbacks - N/A
+  // Function calls - N/A
+
+  // Outbound callback - N/A
 
   // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -2544,7 +2575,9 @@ describe("The server._processStop() function", () => {
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
-  // Outbound callbacks - N/A
+  // Function calls - N/A
+
+  // Outbound callback - N/A
 
   // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -2631,7 +2664,32 @@ describe("The server._processConnect() function", () => {
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
-  // Outbound callbacks - N/A
+  // Function calls
+
+  it("should set a handshake timer if so configured", () => {
+    const harn = harness({ handshakeMs: 1 });
+    harn.makeServerStarted();
+
+    setTimeout.mockClear();
+    harn.transport.emit("connect", "some_tcid");
+
+    expect(setTimeout.mock.calls.length).toBe(1);
+    expect(setTimeout.mock.calls[0].length).toBe(2);
+    expect(setTimeout.mock.calls[0][0]).toBeInstanceOf(Function);
+    expect(setTimeout.mock.calls[0][1]).toBe(1);
+  });
+
+  it("should not set a handshake timer if so configured", () => {
+    const harn = harness({ handshakeMs: 0 });
+    harn.makeServerStarted();
+
+    setTimeout.mockClear();
+    harn.transport.emit("connect", "some_tcid");
+
+    expect(setTimeout.mock.calls.length).toBe(0);
+  });
+
+  // Outbound callback - N/A
 
   // Inbound callbacks (events, state, transport, outer callbacks)
 
@@ -2838,7 +2896,9 @@ describe("The server._processMessage() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -2931,7 +2991,9 @@ describe("The server._processMessage() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -3024,7 +3086,9 @@ describe("The server._processMessage() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -3117,7 +3181,9 @@ describe("The server._processMessage() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -3210,7 +3276,9 @@ describe("The server._processMessage() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -3322,7 +3390,7 @@ describe("The server._processMessage() function", () => {
       );
     });
 
-    // Outbound callbacks - N/A
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -3438,7 +3506,7 @@ describe("The server._processMessage() function", () => {
       );
     });
 
-    // Outbound callbacks - N/A
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -3550,7 +3618,7 @@ describe("The server._processMessage() function", () => {
       );
     });
 
-    // Outbound callbacks - N/A
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -3662,7 +3730,7 @@ describe("The server._processMessage() function", () => {
       );
     });
 
-    // Outbound callbacks - N/A
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -3772,7 +3840,9 @@ describe("The server._processHandshake() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -3864,7 +3934,9 @@ describe("The server._processHandshake() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -3942,7 +4014,9 @@ describe("The server._processHandshake() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -4011,7 +4085,24 @@ describe("The server._processHandshake() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls
+
+    it("should not clear a handshake timeout", () => {
+      const harn = harness({ handshakeMs: 0 });
+      harn.makeServerStarted();
+      harn.transport.emit("connect", "some_tcid");
+      const msg = JSON.stringify({
+        MessageType: "Handshake",
+        Versions: ["0.1"]
+      });
+
+      clearTimeout.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(clearTimeout.mock.calls.length).toBe(0);
+    });
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -4112,7 +4203,27 @@ describe("The server._processHandshake() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls
+
+    it("should not clear a handshake timeout", () => {
+      const harn = harness({ handshakeMs: 0 });
+      harn.makeServerStarted();
+      harn.transport.emit("connect", "some_tcid");
+      const msg = JSON.stringify({
+        MessageType: "Handshake",
+        Versions: ["0.1"]
+      });
+      harn.server.on("handshake", () => {
+        // Sit on it
+      });
+
+      clearTimeout.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(clearTimeout.mock.calls.length).toBe(0);
+    });
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -4182,27 +4293,34 @@ describe("The server._processHandshake() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
-
-    // Inbound callbacks (events, state, transport, outer callbacks)
+    // Function calls
 
     it("should clear the handshake timeout", () => {
       const harn = harness({ handshakeMs: 1 });
+      harn.makeServerStarted();
+      let hsCid;
+      harn.server.once("connect", cid => {
+        hsCid = cid;
+      });
       harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
         Versions: ["0.1"]
       });
 
-      harn.transport.emit("message", "some_tcid", msg);
-      harn.transport.mockClear();
-      jest.runAllTimers();
+      const timerId = harn.server._handshakeTimers[hsCid];
 
-      expect(harn.transport.start.mock.calls.length).toBe(0);
-      expect(harn.transport.stop.mock.calls.length).toBe(0);
-      expect(harn.transport.send.mock.calls.length).toBe(0);
-      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
+      clearTimeout.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(clearTimeout.mock.calls.length).toBe(1);
+      expect(clearTimeout.mock.calls[0].length).toBe(1);
+      expect(clearTimeout.mock.calls[0][0]).toBe(timerId);
     });
+
+    // Outbound callback - N/A
+
+    // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
     // Return value - N/A
   });
@@ -4302,12 +4420,15 @@ describe("The server._processHandshake() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
-
-    // Inbound callbacks (events, state, transport, outer callbacks)
+    // Function calls
 
     it("should clear the handshake timeout", () => {
       const harn = harness({ handshakeMs: 1 });
+      harn.makeServerStarted();
+      let hsCid;
+      harn.server.once("connect", cid => {
+        hsCid = cid;
+      });
       harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
@@ -4317,15 +4438,19 @@ describe("The server._processHandshake() function", () => {
         // Sit on it
       });
 
-      harn.transport.emit("message", "some_tcid", msg);
-      harn.transport.mockClear();
-      jest.runAllTimers();
+      const timerId = harn.server._handshakeTimers[hsCid];
 
-      expect(harn.transport.start.mock.calls.length).toBe(0);
-      expect(harn.transport.stop.mock.calls.length).toBe(0);
-      expect(harn.transport.send.mock.calls.length).toBe(0);
-      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
+      clearTimeout.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(clearTimeout.mock.calls.length).toBe(1);
+      expect(clearTimeout.mock.calls[0].length).toBe(1);
+      expect(clearTimeout.mock.calls[0][0]).toBe(timerId);
     });
+
+    // Outbound callback - N/A
+
+    // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
     // Return value - N/A
   });
@@ -4428,7 +4553,9 @@ describe("The server._processAction() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -4562,7 +4689,9 @@ describe("The server._processAction() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -4673,7 +4802,9 @@ describe("The server._processAction() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -4738,7 +4869,9 @@ describe("The server._processAction() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -4845,7 +4978,9 @@ describe("The server._processAction() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -4947,7 +5082,9 @@ describe("The server._processFeedOpen() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -5078,7 +5215,9 @@ describe("The server._processFeedOpen() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -5177,7 +5316,9 @@ describe("The server._processFeedOpen() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -5291,7 +5432,9 @@ describe("The server._processFeedOpen() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -5390,7 +5533,9 @@ describe("The server._processFeedOpen() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -5454,7 +5599,25 @@ describe("The server._processFeedOpen() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls
+
+    it("should not clear a termination timer", () => {
+      const harn = harness({ terminationMs: 1 });
+      harn.makeServerStarted();
+      harn.makeClient("some_tcid");
+      const msg = JSON.stringify({
+        MessageType: "FeedOpen",
+        FeedName: "some_feed",
+        FeedArgs: { feed: "args" }
+      });
+
+      clearTimeout.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(clearTimeout.mock.calls.length).toBe(0);
+    });
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -5526,16 +5689,35 @@ describe("The server._processFeedOpen() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls
 
-    // Inbound callbacks (events, state, transport, outer callbacks)
+    it("should clear the termination timer", () => {
+      const harn = harness({ terminationMs: 1 });
+      harn.makeServerStarted();
+      const cid = harn.makeClient("some_tcid");
+      harn.makeFeedTerminated("some_tcid", "some_feed", { feed: "args" });
+      const msg = JSON.stringify({
+        MessageType: "FeedOpen",
+        FeedName: "some_feed",
+        FeedArgs: { feed: "args" }
+      });
 
-    it("should clear the termination timeout", () => {
-      // There's no way to check whether the termination timer is cleared or
-      // not, because if it wasn't cleared there would be no impact on the
-      // state and it would not emit or perform any actions on the transport
-      // Verified using console.log
+      const feedSerial = feedSerializer.serialize("some_feed", {
+        feed: "args"
+      });
+      const timerId = harn.server._terminationTimers[cid][feedSerial];
+
+      clearTimeout.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(clearTimeout.mock.calls.length).toBe(1);
+      expect(clearTimeout.mock.calls[0].length).toBe(1);
+      expect(clearTimeout.mock.calls[0][0]).toBe(timerId);
     });
+
+    // Outbound callback - N/A
+
+    // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
     // Return value - N/A
   });
@@ -5654,7 +5836,28 @@ describe("The server._processFeedOpen() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls
+
+    it("should not clear a termination timer", () => {
+      const harn = harness({ terminationMs: 1 });
+      harn.makeServerStarted();
+      harn.makeClient("some_tcid");
+      const msg = JSON.stringify({
+        MessageType: "FeedOpen",
+        FeedName: "some_feed",
+        FeedArgs: { feed: "args" }
+      });
+      harn.server.on("feedOpen", () => {
+        // Sit on it
+      });
+
+      clearTimeout.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(clearTimeout.mock.calls.length).toBe(0);
+    });
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -5779,16 +5982,38 @@ describe("The server._processFeedOpen() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls
 
-    // Inbound callbacks (events, state, transport, outer callbacks)
+    it("should clear the termination timer", () => {
+      const harn = harness({ terminationMs: 1 });
+      harn.makeServerStarted();
+      const cid = harn.makeClient("some_tcid");
+      harn.makeFeedTerminated("some_tcid", "some_feed", { feed: "args" });
+      const msg = JSON.stringify({
+        MessageType: "FeedOpen",
+        FeedName: "some_feed",
+        FeedArgs: { feed: "args" }
+      });
+      harn.server.on("feedOpen", () => {
+        // Sit on it
+      });
 
-    it("should clear the termination timeout", () => {
-      // There's no way to check whether the termination timer is cleared or
-      // not, because if it wasn't cleared there would be no impact on the
-      // state and it would not emit or perform any actions on the transport
-      // Verified using console.log
+      const feedSerial = feedSerializer.serialize("some_feed", {
+        feed: "args"
+      });
+      const timerId = harn.server._terminationTimers[cid][feedSerial];
+
+      clearTimeout.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(clearTimeout.mock.calls.length).toBe(1);
+      expect(clearTimeout.mock.calls[0].length).toBe(1);
+      expect(clearTimeout.mock.calls[0][0]).toBe(timerId);
     });
+
+    // Outbound callback - N/A
+
+    // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
     // Return value - N/A
   });
@@ -5888,7 +6113,9 @@ describe("The server._processFeedClose() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -6019,7 +6246,9 @@ describe("The server._processFeedClose() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -6115,7 +6344,9 @@ describe("The server._processFeedClose() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -6214,7 +6445,9 @@ describe("The server._processFeedClose() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -6313,7 +6546,9 @@ describe("The server._processFeedClose() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls - N/A
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -6390,7 +6625,31 @@ describe("The server._processFeedClose() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls
+
+    it("should not clear a termination timer", () => {
+      const harn = harness({ terminationMs: 1 });
+      harn.makeServerStarted();
+      harn.makeClient("some_tcid");
+      harn.makeFeedOpen(
+        "some_tcid",
+        "some_feed",
+        { feed: "args" },
+        { feed: "data" }
+      );
+      const msg = JSON.stringify({
+        MessageType: "FeedClose",
+        FeedName: "some_feed",
+        FeedArgs: { feed: "args" }
+      });
+
+      clearTimeout.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(clearTimeout.mock.calls.length).toBe(0);
+    });
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -6458,16 +6717,35 @@ describe("The server._processFeedClose() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls
 
-    // Inbound callbacks (events, state, transport, outer callbacks)
+    it("should clear the termination timer", () => {
+      const harn = harness({ terminationMs: 1 });
+      harn.makeServerStarted();
+      const cid = harn.makeClient("some_tcid");
+      harn.makeFeedTerminated("some_tcid", "some_feed", { feed: "args" });
+      const msg = JSON.stringify({
+        MessageType: "FeedClose",
+        FeedName: "some_feed",
+        FeedArgs: { feed: "args" }
+      });
 
-    it("should clear the termination timeout", () => {
-      // There's no way to check whether the termination timer is cleared or
-      // not, because if it wasn't cleared there would be no impact on the
-      // state and it would not emit or perform any actions on the transport
-      // Verified using console.log
+      const feedSerial = feedSerializer.serialize("some_feed", {
+        feed: "args"
+      });
+      const timerId = harn.server._terminationTimers[cid][feedSerial];
+
+      clearTimeout.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(clearTimeout.mock.calls.length).toBe(1);
+      expect(clearTimeout.mock.calls[0].length).toBe(1);
+      expect(clearTimeout.mock.calls[0][0]).toBe(timerId);
     });
+
+    // Outbound callback - N/A
+
+    // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
     // Return value - N/A
   });
@@ -6592,7 +6870,34 @@ describe("The server._processFeedClose() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls
+
+    it("should not clear a termination timer", () => {
+      const harn = harness({ terminationMs: 1 });
+      harn.makeServerStarted();
+      harn.makeClient("some_tcid");
+      harn.makeFeedOpen(
+        "some_tcid",
+        "some_feed",
+        { feed: "args" },
+        { feed: "data" }
+      );
+      harn.server.on("feedClose", () => {
+        // Sit on it
+      });
+      const msg = JSON.stringify({
+        MessageType: "FeedClose",
+        FeedName: "some_feed",
+        FeedArgs: { feed: "args" }
+      });
+
+      clearTimeout.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(clearTimeout.mock.calls.length).toBe(0);
+    });
+
+    // Outbound callback - N/A
 
     // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -6690,16 +6995,38 @@ describe("The server._processFeedClose() function", () => {
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
 
-    // Outbound callbacks - N/A
+    // Function calls
 
-    // Inbound callbacks (events, state, transport, outer callbacks)
+    it("should clear the termination timer", () => {
+      const harn = harness({ terminationMs: 1 });
+      harn.makeServerStarted();
+      const cid = harn.makeClient("some_tcid");
+      harn.makeFeedTerminated("some_tcid", "some_feed", { feed: "args" });
+      harn.server.on("feedClose", () => {
+        // Sit on it
+      });
+      const msg = JSON.stringify({
+        MessageType: "FeedClose",
+        FeedName: "some_feed",
+        FeedArgs: { feed: "args" }
+      });
 
-    it("should clear the termination timeout", () => {
-      // There's no way to check whether the termination timer is cleared or
-      // not, because if it wasn't cleared there would be no impact on the
-      // state and it would not emit or perform any actions on the transport
-      // Verified using console.log
+      const feedSerial = feedSerializer.serialize("some_feed", {
+        feed: "args"
+      });
+      const timerId = harn.server._terminationTimers[cid][feedSerial];
+
+      clearTimeout.mockClear();
+      harn.transport.emit("message", "some_tcid", msg);
+
+      expect(clearTimeout.mock.calls.length).toBe(1);
+      expect(clearTimeout.mock.calls[0].length).toBe(1);
+      expect(clearTimeout.mock.calls[0][0]).toBe(timerId);
     });
+
+    // Outbound callback - N/A
+
+    // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
     // Return value - N/A
   });
@@ -7102,40 +7429,6 @@ describe("The server._processDisconnect() function", () => {
     expect(harn.server).toHaveState(newState);
   });
 
-  it("should clear handshake timeouts appropriately - check on transport", () => {
-    // Two clients, both awaiting Handshake messages
-    const harn = harness({ handshakeMs: 1 });
-    harn.makeServerStarted();
-
-    harn.transport.emit("connect", "tcid_leaver");
-    harn.transport.emit("connect", "tcid_stayer");
-
-    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
-
-    harn.transport.mockClear();
-
-    jest.runAllTimers();
-
-    expect(harn.transport.start.mock.calls.length).toBe(0);
-    expect(harn.transport.stop.mock.calls.length).toBe(0);
-    expect(harn.transport.send.mock.calls.length).toBe(0);
-    expect(harn.transport.disconnect.mock.calls.length).toBe(1);
-    expect(harn.transport.disconnect.mock.calls[0].length).toBe(2);
-    expect(harn.transport.disconnect.mock.calls[0][0]).toBe("tcid_stayer");
-    expect(harn.transport.disconnect.mock.calls[0][1]).toBeInstanceOf(Error);
-    expect(harn.transport.disconnect.mock.calls[0][1].message).toBe(
-      "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time."
-    );
-  });
-
-  it("should clear termination timeouts appropriately - check state", () => {
-    // There's no way to check that the timer doesn't run
-    // When you disconnect, the leaver's state goes empty, and the
-    // termination timer would just re-empty it (i.e. no effects)
-    // Would need to create a named function for the timeout
-    // But verified it doesn't run using console.log
-  });
-
   // Transport calls
 
   it("should do nothing on the transport", () => {
@@ -7154,7 +7447,114 @@ describe("The server._processDisconnect() function", () => {
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
-  // Outbound callbacks - N/A
+  // Function calls
+
+  it("should clear handshake timeouts if present", () => {
+    // Two clients, both awaiting Handshake messages
+    const harn = harness({ handshakeMs: 1 });
+    harn.makeServerStarted();
+    let leaverCid;
+    harn.server.once("connect", cid => {
+      leaverCid = cid;
+    });
+    harn.transport.emit("connect", "tcid_leaver");
+    harn.transport.emit("connect", "tcid_stayer");
+    const clearTimeoutId = harn.server._handshakeTimers[leaverCid];
+
+    clearTimeout.mockClear();
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
+
+    expect(clearTimeout.mock.calls.length).toBe(1);
+    expect(clearTimeout.mock.calls[0].length).toBe(1);
+    expect(clearTimeout.mock.calls[0][0]).toBe(clearTimeoutId);
+  });
+
+  it("should not clear handshake timeouts if not present", () => {
+    // Two clients, both awaiting Handshake messages
+    const harn = harness({ handshakeMs: 0 });
+    harn.makeServerStarted();
+    harn.transport.emit("connect", "tcid_leaver");
+    harn.transport.emit("connect", "tcid_stayer");
+
+    clearTimeout.mockClear();
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
+
+    expect(clearTimeout.mock.calls.length).toBe(0);
+  });
+
+  it("should clear termination timeouts if present", () => {
+    // Two client, leaver with two feeds terminated, stayer with one
+    const harn = harness({ terminationMs: 1 });
+    harn.makeServerStarted();
+
+    // Leaver
+    const leaverCid = harn.makeClient("tcid_leaver");
+    harn.makeFeedTerminated("tcid_leaver", "some_feed", { feed: "args" });
+    harn.makeFeedTerminated("tcid_leaver", "other_feed", { feed: "args" });
+
+    // Stayer
+    harn.makeClient("tcid_stayer");
+    harn.makeFeedTerminated("tcid_stayer", "some_feed", { feed: "args" });
+
+    const feedSerial1 = feedSerializer.serialize("some_feed", { feed: "args" });
+    const feedSerial2 = feedSerializer.serialize("other_feed", {
+      feed: "args"
+    });
+    const clearTimeoutId1 =
+      harn.server._terminationTimers[leaverCid][feedSerial1];
+    const clearTimeoutId2 =
+      harn.server._terminationTimers[leaverCid][feedSerial2];
+
+    clearTimeout.mockClear();
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
+
+    expect(clearTimeout.mock.calls.length).toBe(2);
+    expect(clearTimeout.mock.calls[0].length).toBe(1);
+    expect(clearTimeout.mock.calls[1].length).toBe(1);
+    expect(
+      (clearTimeout.mock.calls[0][0] === clearTimeoutId1 &&
+        clearTimeout.mock.calls[1][0] === clearTimeoutId2) ||
+        (clearTimeout.mock.calls[0][0] === clearTimeoutId2 &&
+          clearTimeout.mock.calls[1][0] === clearTimeoutId1)
+    ).toBe(true);
+  });
+
+  it("should not clear termination timeouts if not present", () => {
+    // Two client, leaver with two feeds open, stayer with one
+    const harn = harness({ terminationMs: 1 });
+    harn.makeServerStarted();
+
+    // Leaver
+    harn.makeClient("tcid_leaver");
+    harn.makeFeedOpen(
+      "tcid_leaver",
+      "some_feed",
+      { feed: "args" },
+      { feed: "data" }
+    );
+    harn.makeFeedOpen(
+      "tcid_leaver",
+      "other_feed",
+      { feed: "args" },
+      { feed: "data" }
+    );
+
+    // Stayer
+    harn.makeClient("tcid_stayer");
+    harn.makeFeedOpen(
+      "tcid_stayer",
+      "some_feed",
+      { feed: "args" },
+      { feed: "data" }
+    );
+
+    clearTimeout.mockClear();
+    harn.transport.emit("disconnect", "tcid_leaver", new Error("FAILURE: ..."));
+
+    expect(clearTimeout.mock.calls.length).toBe(0);
+  });
+
+  // Outbound callback - N/A
 
   // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -7213,7 +7613,9 @@ describe("The server._processTransportError() function", () => {
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
-  // Outbound callbacks - N/A
+  // Function calls - N/A
+
+  // Outbound callback - N/A
 
   // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -7312,7 +7714,9 @@ describe("The server._terminateOpeningFeed() function", () => {
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
-  // Outbound callbacks - N/A
+  // Function calls - N/A
+
+  // Outbound callback - N/A
 
   // Inbound callbacks (events, state, transport, outer callbacks) - N/A
 
@@ -7450,11 +7854,9 @@ describe("The server._terminateOpenFeed() function", () => {
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
 
-  // Outbound callbacks - N/A
+  // Function calls
 
-  // Inbound callbacks (events, state, transport, outer callbacks) - N/A
-
-  it("should update state when termination timer fires (if configured", () => {
+  it("should set a termination timer if so configured", () => {
     const harn = harness({ terminationMs: 1 });
     harn.makeServerStarted();
     const cid = harn.makeClient("some_tcid");
@@ -7465,6 +7867,7 @@ describe("The server._terminateOpenFeed() function", () => {
       { feed: "data" }
     );
 
+    setTimeout.mockClear();
     harn.server._terminateOpenFeed(
       cid,
       "some_feed",
@@ -7473,15 +7876,38 @@ describe("The server._terminateOpenFeed() function", () => {
       { error: "data" }
     );
 
-    const newState = harn.getServerState();
-    jest.runAllTimers();
-
-    const feedSerial = feedSerializer.serialize("some_feed", { feed: "args" });
-    delete newState._clientFeedStates[cid];
-    delete newState._feedClientStates[feedSerial];
-    delete newState._terminationTimers[cid];
-    expect(harn.server).toHaveState(newState);
+    expect(setTimeout.mock.calls.length).toBe(1);
+    expect(setTimeout.mock.calls[0].length).toBe(2);
+    expect(setTimeout.mock.calls[0][0]).toBeInstanceOf(Function);
+    expect(setTimeout.mock.calls[0][1]).toBe(1);
   });
+
+  it("should not set a termination timer if so configured", () => {
+    const harn = harness({ terminationMs: 0 });
+    harn.makeServerStarted();
+    const cid = harn.makeClient("some_tcid");
+    harn.makeFeedOpen(
+      "some_tcid",
+      "some_feed",
+      { feed: "args" },
+      { feed: "data" }
+    );
+
+    setTimeout.mockClear();
+    harn.server._terminateOpenFeed(
+      cid,
+      "some_feed",
+      { feed: "args" },
+      "SOME_ERROR",
+      { error: "data" }
+    );
+
+    expect(setTimeout.mock.calls.length).toBe(0);
+  });
+
+  // Outbound callback - N/A
+
+  // Inbound callbacks (events, state, transport, outer callbacks)
 
   // Return value - N/A
 });

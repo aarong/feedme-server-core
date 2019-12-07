@@ -70,6 +70,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
 
+          // Function calls - N/A
+
           // Outbound callbacks - N/A
 
           // Inbound callbacks (events, state, transport, outer callbacks) - N/A
@@ -139,6 +141,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.send.mock.calls.length).toBe(0);
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
+
+          // Function calls - N/A
 
           // Outbound callbacks - N/A
 
@@ -212,6 +216,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.send.mock.calls.length).toBe(0);
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
+
+          // Function calls - N/A
 
           // Outbound callbacks - N/A
 
@@ -291,6 +297,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
 
+          // Function calls - N/A
+
           // Outbound callbacks - N/A
 
           // Inbound callbacks (events, state, transport, outer callbacks) - N/A
@@ -363,6 +371,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.send.mock.calls.length).toBe(0);
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
+
+          // Function calls - N/A
 
           // Outbound callbacks - N/A
 
@@ -437,6 +447,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
 
+          // Function calls - N/A
+
           // Outbound callbacks - N/A
 
           // Inbound callbacks (events, state, transport, outer callbacks) - N/A
@@ -509,6 +521,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.send.mock.calls.length).toBe(0);
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
+
+          // Function calls - N/A
 
           // Outbound callbacks - N/A
 
@@ -588,6 +602,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
 
+          // Function calls - N/A
+
           // Outbound callbacks - N/A
 
           // Inbound callbacks (events, state, transport, outer callbacks) - N/A
@@ -661,6 +677,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
 
+          // Function calls - N/A
+
           // Outbound callbacks - N/A
 
           // Inbound callbacks (events, state, transport, outer callbacks) - N/A
@@ -733,6 +751,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.send.mock.calls.length).toBe(0);
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
+
+          // Function calls - N/A
 
           // Outbound callbacks - N/A
 
@@ -889,6 +909,8 @@ describe("The server.feedTermination() function", () => {
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
+
+          // Function calls - N/A
 
           // Outbound callbacks - N/A
 
@@ -1114,6 +1136,8 @@ describe("The server.feedTermination() function", () => {
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
+
+          // Function calls - N/A
 
           // Outbound callbacks - N/A
 
@@ -1365,6 +1389,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
 
+          // Function calls - N/A
+
           // Outbound callbacks - N/A
 
           // Inbound callbacks (events, state, transport, outer callbacks)
@@ -1590,6 +1616,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
 
+          // Function calls - N/A
+
           // Outbound callbacks - N/A
 
           // Inbound callbacks (events, state, transport, outer callbacks)
@@ -1812,6 +1840,8 @@ describe("The server.feedTermination() function", () => {
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
+
+          // Function calls - N/A
 
           // Outbound callbacks - N/A
 
@@ -2042,6 +2072,8 @@ describe("The server.feedTermination() function", () => {
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
+
+          // Function calls - N/A
 
           // Outbound callbacks - N/A
 
@@ -2293,6 +2325,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
 
+          // Function calls - N/A
+
           // Outbound callbacks - N/A
 
           // Inbound callbacks (events, state, transport, outer callbacks)
@@ -2518,6 +2552,8 @@ describe("The server.feedTermination() function", () => {
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
 
+          // Function calls - N/A
+
           // Outbound callbacks - N/A
 
           // Inbound callbacks (events, state, transport, outer callbacks)
@@ -2740,6 +2776,8 @@ describe("The server.feedTermination() function", () => {
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
           });
+
+          // Function calls - N/A
 
           // Outbound callbacks - N/A
 
