@@ -508,8 +508,9 @@ Behavior depends on the state of the client feed(s) being terminated:
   will return successfully.
 
 - When terminating a client feed that is `open`, the client is immediately sent
-  a `FeedTermination` message. The library will respond to any subsequent
-  `FeedClose` message as configured by `options.terminationMs`.
+  a `FeedTermination` message. The library will return success to any subsequent
+  `FeedClose` message as configured by `options.terminationMs` and will not emit
+  a `feedClose` event.
 
 - When terminating a client feed that is `closing` (i.e. the library has stopped
   revealing actions on the client feed and has emitted a `feedClose` event but
