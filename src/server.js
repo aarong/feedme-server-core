@@ -1485,6 +1485,7 @@ proto._appHandshakeSuccess = function _appHandshakeSuccess(clientId) {
 /**
  * Handle a successful app call to actionResponse.success()
  * The server has not stopped and client has not disconnected.
+ * Assume valid arguments - checked by response object.
  * @memberof Server
  * @instance
  * @private
@@ -1520,6 +1521,7 @@ proto._appActionSuccess = function _appActionSuccess(
 /**
  * Handle a successful app call to actionResponse.failure()
  * The server has not stopped and client has not disconnected.
+ * Assume valid arguments - checked by response object.
  * @memberof Server
  * @instance
  * @private
@@ -1558,6 +1560,7 @@ proto._appActionFailure = function _appActionFailure(
 /**
  * Handle a successful app call to feedOpenResponse.success()
  * The server has not stopped and client has not disconnected.
+ * Assume valid arguments - checked by response object.
  * @memberof Server
  * @instance
  * @private
@@ -1599,6 +1602,7 @@ proto._appFeedOpenSuccess = function _appFeedOpenSuccess(
 /**
  * Handle a successful app call to feedOpenResponse.failure()
  * The server has not stopped and client has not disconnected.
+ * Assume valid arguments - checked by response object.
  * @memberof Server
  * @instance
  * @private

@@ -12,7 +12,7 @@ import transportWrapper from "./transportwrapper";
  * The options parameter is identical to that taken by the server, but a
  * transport property is taken rather than a transportWrapper.
  */
-export default function feedmeServer(options) {
+export default function feedmeServerCore(options) {
   // Check options
   if (!check.object(options)) {
     throw new Error("INVALID_ARGUMENT: Invalid options argument.");
