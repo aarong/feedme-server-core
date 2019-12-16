@@ -1,5 +1,5 @@
 import emitter from "component-emitter";
-import feedmeServer from "../build";
+import feedmeServerCore from "../build";
 
 const harnessProto = {};
 
@@ -9,7 +9,6 @@ export default function harnessFactory(options = {}) {
   // Create mock transport (stopped)
   const t = {};
   emitter(t);
-  t.on = jest.fn();
   t.state = jest.fn();
   t.state.mockReturnValue("stopped");
   t.start = jest.fn();
@@ -29,7 +28,7 @@ export default function harnessFactory(options = {}) {
 
   // Create the server
   options.transport = t; // eslint-disable-line no-param-reassign
-  harness.server = feedmeServer(options);
+  harness.server = feedmeServerCore(options);
 
   return harness;
 }
@@ -40,6 +39,7 @@ harnessProto.createServerListener = function createServerListener() {
     start: jest.fn(),
     stopping: jest.fn(),
     stop: jest.fn(),
+    connect: jest.fn(),
     handshake: jest.fn(),
     action: jest.fn(),
     feedOpen: jest.fn(),
@@ -53,6 +53,7 @@ harnessProto.createServerListener = function createServerListener() {
     l.start.mockClear();
     l.stopping.mockClear();
     l.stop.mockClear();
+    l.connect.mockClear();
     l.handshake.mockClear();
     l.action.mockClear();
     l.feedOpen.mockClear();
@@ -65,6 +66,7 @@ harnessProto.createServerListener = function createServerListener() {
   this.server.on("start", l.start);
   this.server.on("stopping", l.stopping);
   this.server.on("stop", l.stop);
+  this.server.on("connect", l.connect);
   this.server.on("handshake", l.handshake);
   this.server.on("action", l.action);
   this.server.on("feedOpen", l.feedOpen);

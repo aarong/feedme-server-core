@@ -1,22 +1,21 @@
 import emitter from "component-emitter";
 import check from "check-types";
+import debug from "debug";
+
+const dbg = debug("feedme-server-core:transport-wrapper");
 
 /**
- * Pass-through to the outside-provided transport object that verifies that
- * the transport is acting as required (outside code). Also required valid
- * transport invocations from the server, providing two-way protection.
+ * Verifies that the app-provided transport object behaves as required by the
+ * documentation. Also ensures that the server operates on the transport as
+ * promised.
  *
- * - The transport API is verified on intialization.
- *
- * - Transport function return values and errors are verified.
- *
- * - Transport events are verified.
- *
- * - Inbound function sequencing is checked, but inbound function arguments are not.
+ * - The transport API is verified on intialization
+ * - Transport function return values and errors are validated
+ * - Transport events are validated
+ * - Function invocation sequence is validated (but arguments are not)
  *
  * After initialization, any problems with the transport are reported using
  * the `transportError` event.
- *
  * @typedef {Object} TransportWrapper
  * @extends emitter
  */
@@ -31,6 +30,8 @@ emitter(proto);
  * @throws {Error} "INVALID_ARGUMENT: ..."
  */
 export default function transportWrapperFactory(transport) {
+  dbg("Initializing TransportWrapper object");
+
   // Check that the transport is an object
   if (!check.object(transport)) {
     throw new Error(
@@ -89,27 +90,34 @@ export default function transportWrapperFactory(transport) {
   transportWrapper._clientIds = [];
 
   // Listen for transport events
-  transportWrapper._transport.on("starting", (...args) => {
-    transportWrapper._processTransportStarting(...args);
-  });
-  transportWrapper._transport.on("start", (...args) => {
-    transportWrapper._processTransportStart(...args);
-  });
-  transportWrapper._transport.on("stopping", (...args) => {
-    transportWrapper._processTransportStopping(...args);
-  });
-  transportWrapper._transport.on("stop", (...args) => {
-    transportWrapper._processTransportStop(...args);
-  });
-  transportWrapper._transport.on("connect", (...args) => {
-    transportWrapper._processTransportConnect(...args);
-  });
-  transportWrapper._transport.on("message", (...args) => {
-    transportWrapper._processTransportMessage(...args);
-  });
-  transportWrapper._transport.on("disconnect", (...args) => {
-    transportWrapper._processTransportDisconnect(...args);
-  });
+  transportWrapper._transport.on(
+    "starting",
+    transportWrapper._processTransportStarting.bind(transportWrapper)
+  );
+  transportWrapper._transport.on(
+    "start",
+    transportWrapper._processTransportStart.bind(transportWrapper)
+  );
+  transportWrapper._transport.on(
+    "stopping",
+    transportWrapper._processTransportStopping.bind(transportWrapper)
+  );
+  transportWrapper._transport.on(
+    "stop",
+    transportWrapper._processTransportStop.bind(transportWrapper)
+  );
+  transportWrapper._transport.on(
+    "connect",
+    transportWrapper._processTransportConnect.bind(transportWrapper)
+  );
+  transportWrapper._transport.on(
+    "message",
+    transportWrapper._processTransportMessage.bind(transportWrapper)
+  );
+  transportWrapper._transport.on(
+    "disconnect",
+    transportWrapper._processTransportDisconnect.bind(transportWrapper)
+  );
 
   return transportWrapper;
 }
@@ -135,7 +143,7 @@ export default function transportWrapperFactory(transport) {
  * @event stopping
  * @memberof TransportWrapper
  * @instance
- * @param {?Error} err Passed by the transport.
+ * @param {?Error} err
  */
 
 /**
@@ -143,7 +151,7 @@ export default function transportWrapperFactory(transport) {
  * @event stop
  * @memberof TransportWrapper
  * @instance
- * @param {?Error} err Passed by the transport.
+ * @param {?Error} err
  */
 
 /**
@@ -151,7 +159,7 @@ export default function transportWrapperFactory(transport) {
  * @event connect
  * @memberof TransportWrapper
  * @instance
- * @param {string} clientId Passed by the transport.
+ * @param {string} clientId
  */
 
 /**
@@ -159,8 +167,8 @@ export default function transportWrapperFactory(transport) {
  * @event message
  * @memberof TransportWrapper
  * @instance
- * @param {string} clientId Passed by the transport.
- * @param {string} msg Passed by the transport.
+ * @param {string} clientId
+ * @param {string} msg
  */
 
 /**
@@ -168,7 +176,8 @@ export default function transportWrapperFactory(transport) {
  * @event disconnect
  * @memberof TransportWrapper
  * @instance
- * @param {string} clientId Passed by the transport.
+ * @param {string} clientId
+ * @param {?Error} err
  */
 
 /**
@@ -176,9 +185,9 @@ export default function transportWrapperFactory(transport) {
  * @event transportError
  * @memberof TransportWrapper
  * @instance
- * @param {Error} err "INVALID_RESULT: ..." Transport function returned unexpected return value or error.
- *                    "UNEXPECTED_EVENT: ..." Event not valid for current transport state.
- *                    "BAD_EVENT_ARGUMENT: ..." Event emitted with invalid argument signature.
+ * @param {Error} err "INVALID_RESULT: ..."     Transport returned unexpected return value or error
+ *                    "UNEXPECTED_EVENT: ..."   Event not valid for current transport state
+ *                    "BAD_EVENT_ARGUMENT: ..." Event emitted with invalid argument signature
  */
 
 // Public functions
@@ -186,9 +195,11 @@ export default function transportWrapperFactory(transport) {
 /**
  * @memberof TransportWrapper
  * @instance
- * @throws {Error} Transport errors and "TRANSPORT_ERROR: ..."
+ * @throws {Error} "TRANSPORT_ERROR: ..."
  */
 proto.state = function state() {
+  dbg("State requested");
+
   // Try to get the state
   let st;
   let transportErr;
@@ -235,9 +246,12 @@ proto.state = function state() {
 /**
  * @memberof TransportWrapper
  * @instance
- * @throws {Error} Transport errors and "TRANSPORT_ERROR: ..." and "INVALID_CALL: ..."
+ * @throws {Error} "TRANSPORT_ERROR: ..."
+ * @throws {Error} "INVALID_CALL: ..."
  */
 proto.start = function start() {
+  dbg("Start requested");
+
   // Was this a valid call from the server?
   if (this._lastStateEmission !== "stop") {
     throw new Error(
@@ -264,9 +278,12 @@ proto.start = function start() {
 /**
  * @memberof TransportWrapper
  * @instance
- * @throws {Error} Transport errors and "TRANSPORT_ERROR: ..." and "INVALID_CALL: ..."
+ * @throws {Error} "TRANSPORT_ERROR: ..."
+ * @throws {Error} "INVALID_CALL: ..."
  */
 proto.stop = function stop() {
+  dbg("Stop requested");
+
   // Was this a valid call from the server?
   if (this._lastStateEmission !== "start") {
     throw new Error(
@@ -295,9 +312,12 @@ proto.stop = function stop() {
  * @instance
  * @param {string} clientId
  * @param {string} msg
- * @throws {Error} Transport errors and "TRANSPORT_ERROR: ..." and "INVALID_CALL: ..."
+ * @throws {Error} "TRANSPORT_ERROR: ..."
+ * @throws {Error} "INVALID_CALL: ..."
  */
 proto.send = function send(clientId, msg) {
+  dbg("Send requested");
+
   // Was this a valid call from the server? Check server state
   if (this._lastStateEmission !== "start") {
     throw new Error(
@@ -346,9 +366,12 @@ proto.send = function send(clientId, msg) {
  * @instance
  * @param {string} clientId
  * @param {?Error} err
- * @throws {Error} Transport errors and "TRANSPORT_ERROR: ..." and "INVALID_CALL: ..."
+ * @throws {Error} "TRANSPORT_ERROR: ..."
+ * @throws {Error} "INVALID_CALL: ..."
  */
 proto.disconnect = function disconnect(clientId, inErr) {
+  dbg("Disconnect requested");
+
   // Was this a valid call from the server? Check server state
   if (this._lastStateEmission !== "start") {
     throw new Error(
@@ -405,6 +428,8 @@ proto.disconnect = function disconnect(clientId, inErr) {
  * @param {Array} args
  */
 proto._processTransportStarting = function _processTransportStarting(...args) {
+  dbg("Observed transport starting event");
+
   // The transport messed up if the previous state was not stopped
   if (this._lastStateEmission !== "stop") {
     this.emit(
@@ -439,6 +464,8 @@ proto._processTransportStarting = function _processTransportStarting(...args) {
  * @param {Array} args
  */
 proto._processTransportStart = function _processTransportStart(...args) {
+  dbg("Observed transport start event");
+
   // The transport messed up if the previous state was not starting
   if (this._lastStateEmission !== "starting") {
     this.emit(
@@ -473,6 +500,8 @@ proto._processTransportStart = function _processTransportStart(...args) {
  * @param {Array} args
  */
 proto._processTransportStopping = function _processTransportStopping(...args) {
+  dbg("Observed transport stopping event");
+
   // The transport messed up if the previous state was not starting or started
   if (
     this._lastStateEmission !== "starting" &&
@@ -529,6 +558,8 @@ proto._processTransportStopping = function _processTransportStopping(...args) {
  * @param {Array} args
  */
 proto._processTransportStop = function _processTransportStop(...args) {
+  dbg("Observed transport stop event");
+
   // The transport messed up if the previous state was not stopping
   if (this._lastStateEmission !== "stopping") {
     this.emit(
@@ -582,6 +613,8 @@ proto._processTransportStop = function _processTransportStop(...args) {
  * @param {Array} args
  */
 proto._processTransportConnect = function _processTransportConnect(...args) {
+  dbg("Observed transport connect event");
+
   // The transport messed up if the last state emission wasn't start
   if (this._lastStateEmission !== "start") {
     this.emit(
@@ -641,6 +674,8 @@ proto._processTransportConnect = function _processTransportConnect(...args) {
  * @param {Array} args
  */
 proto._processTransportMessage = function _processTransportMessage(...args) {
+  dbg("Observed transport message event");
+
   // The transport messed up if the last state emission wasn't start
   if (this._lastStateEmission !== "start") {
     this.emit(
@@ -709,6 +744,8 @@ proto._processTransportMessage = function _processTransportMessage(...args) {
 proto._processTransportDisconnect = function _processTransportDisconnect(
   ...args
 ) {
+  dbg("Observed transport disconnect event");
+
   // The transport messed up if the last state emission wasn't start
   if (this._lastStateEmission !== "start") {
     this.emit(
@@ -758,7 +795,8 @@ proto._processTransportDisconnect = function _processTransportDisconnect(
     args.length === 2 &&
     (!check.instance(args[1], Error) ||
       (args[1].message.substr(0, 8) !== "FAILURE:" &&
-        args[1].message.substr(0, 9) !== "STOPPING:"))
+        args[1].message.substr(0, 9) !== "STOPPING:" &&
+        args[1].message.substr(0, 18) !== "HANDSHAKE_TIMEOUT:"))
   ) {
     this.emit(
       "transportError",

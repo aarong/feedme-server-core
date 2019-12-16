@@ -52,7 +52,7 @@ const feedmeVersion = "0.1";
  */
 
 export default function serverFactory(options) {
-  dbg("Initializing server object");
+  dbg("Initializing Server object");
 
   // Check options
   if (!check.object(options)) {
@@ -1209,14 +1209,19 @@ proto._processFeedOpen = function _processFeedOpen(clientId, msg, msgString) {
     return; // Stop
   }
 
-  // If the feed was terminated then kill the termination timer and set closed
+  // If the feed was terminated then set closed
   // The feed open could still fail if there is no feedOpen listener, but the client
   // submitted a valid request and the feed should no longer be considered terminated
   if (feedState === "terminated") {
-    clearTimeout(this._terminationTimers[clientId][feedSerial]);
-    this._delete(this._terminationTimers, clientId, feedSerial);
     this._delete(this._clientFeedStates, clientId, feedSerial);
     this._delete(this._feedClientStates, feedSerial, clientId);
+  }
+
+  // If a termination timer exists then kill it
+  // May not exist even if feed state is terminated (if terminationMs is 0)
+  if (this._exists(this._terminationTimers, clientId, feedSerial)) {
+    clearTimeout(this._terminationTimers[clientId][feedSerial]);
+    this._delete(this._terminationTimers, clientId, feedSerial);
   }
 
   // If there is no feedOpen listener then return an error to the client
@@ -1328,8 +1333,9 @@ proto._processFeedClose = function _processFeedClose(clientId, msg, msgString) {
 
   dbg("Successful FeedClose message");
 
-  // If the feed state was terminated then kill the termination timer
-  if (feedState === "terminated") {
+  // If a termination timer exists then kill it
+  // May not exist even if feed state is terminated (if terminationMs is 0)
+  if (this._exists(this._terminationTimers, clientId, feedSerial)) {
     clearTimeout(this._terminationTimers[clientId][feedSerial]);
     this._delete(this._terminationTimers, clientId, feedSerial);
   }
@@ -1676,8 +1682,7 @@ proto._appFeedCloseSuccess = function _appFeedCloseSuccess(
     JSON.stringify({
       MessageType: "FeedCloseResponse",
       FeedName: feedName,
-      FeedArgs: feedArgs,
-      Success: true
+      FeedArgs: feedArgs
     })
   );
 };

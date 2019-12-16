@@ -2239,7 +2239,6 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
       expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
       expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "FeedCloseResponse",
-        Success: true,
         FeedName: "some_feed",
         FeedArgs: { feed: "args" }
       });

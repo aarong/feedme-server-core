@@ -105,7 +105,7 @@ var server = feedmeServerCore({
 });
 ```
 
-Once a server has been initialized the application can listen for events and
+Once a server has been initialized, the application can listen for events and
 start the server.
 
 ## API
@@ -118,8 +118,8 @@ To initialize a server:
 var server = feedmeServerCore(options);
 ```
 
-The server is initialized in the `stopped` state and will remain `stopped` until
-it receives a call to `server.start()`.
+The server is initialized in the `stopped` state and remains `stopped` until
+there is a call to `server.start()`.
 
 The `options` argument is an object with the following properties:
 
@@ -140,7 +140,9 @@ The `options` argument is an object with the following properties:
 
   If greater than 0, then the server will wait `handshakeMs` for a
   newly-connected client to transmit a successful `Handshake` message before
-  disconnecting the client.
+  disconnecting the client. When a client handshake times out, the server will
+  emit a `disconnect` event referencing the client and passing an error of the
+  form `err.message = "HANDSHAKE_TIMEOUT: ..."`.
 
   If set to 0, then the server will wait indefinitely for a newly-connected
   client to transmit a successful `Handshake` message.
@@ -160,12 +162,11 @@ The `options` argument is an object with the following properties:
   received any time after terminating a client feed.
 
   In both cases, the server will return success only to the first `FeedClose`
-  message referencing the terminated feed. It will return failure to subsequent
-  `FeedClose` messages referencing that feed, as the client has violated the
-  Feedme specification.
+  message referencing the terminated feed nad will return failure to subsequent
+  `FeedClose` messages referencing that feed.
 
   If the client submits a `FeedOpen` message referencing a terminated feed
-  within the specified window, then the message is processed as usual.
+  within the specified window (or after) then the message is processed as usual.
 
 Errors thrown:
 
@@ -178,7 +179,7 @@ Errors thrown:
 The server is always in one of four states:
 
 - `stopped` - The server has no client connections and is not attempting to
-  listen for new connections.
+  begin listening for new connections.
 
 - `starting` - The server has no client connections but is attempting to start
   listening for new connections.
@@ -216,8 +217,8 @@ passed an `Error` object of the form `err.message = "FAILURE: ..."`.
 
 When the server transitions to `stopping`, any outstanding `HandshakeResponse`,
 `ActionResponse`, `FeedOpenResponse`, and `FeedCloseResponse` objects are
-neutralized. Their success/failure methods will run successfully but will do
-nothing.
+neutralized. Their `success()` and `failure()` methods will run successfully but
+will do nothing.
 
 Before the server transitions to `stopping`, a series of `disconnect` events are
 emitted referencing each previously-connected client. These events are emitted
@@ -235,18 +236,18 @@ passed an `Error` object of the form `err.message = "FAILURE: ..."`.
 
 #### connect
 
-Emitted when a client connects on the transport, before any messages have been
-exchanged.
+Emitted when a client connects on the transport and before any messages have
+been exchanged.
 
 Arguments passed to the listeners:
 
 1. `clientId` (string) is the identifier assigned by the server to the client
    The client will be made aware of this identifier once it has submitted an
-   acceptable `Handshake` message.
+   library-compatible `Handshake` message.
 
 #### handshake
 
-Emitted when a client's submits a valid and library-compatible `Handshake`
+Emitted when a client submits a valid and library-compatible `Handshake`
 message, but before the server has returned a `HandshakeResponse` message
 indicating success. Applications can use this event to perform any processing
 that is required before a Feedme conversation is initiated with a client.
@@ -318,7 +319,7 @@ processing that is required on feed closure.
 
 If no listeners are attached to the `feedClose` event, then the library returns
 a `FeedCloseResponse` immediately when a valid `FeedClose` message is received
-from the client.
+from the client. (test for both terminated and open)
 
 If the feed has already been terminated and the client submits a `FeedClose`
 message within `options.terminationMs` then no `feedClose` event is emitted and
@@ -370,6 +371,11 @@ Arguments passed to the listeners:
 
 Emitted when a client violates the Feedme specification.
 
+The client is sent a `ViolationResponse` message. The `Diagnostics` property of
+the message contains `Diagnostics.Message` (string), which is the client message
+that generated the error, and `Diagnostics.Problem` (string), which describes
+the nature of the violation.
+
 Arguments passed to the listeners:
 
 1. `clientId` (string) is the Feedme client identifier that the library has
@@ -390,8 +396,7 @@ The following errors are possible:
 
 - `err.message === "UNEXPECTED_MESSAGE: ..."`
 
-  The client transmitted a message that was invalid given the state of the
-  conversation.
+  The client transmitted a message that was sequentially invalid.
 
   - `err.clientMessage` (string) contains the client message.
 
@@ -402,7 +407,16 @@ documentation.
 
 Listeners are passed an `Error` object indicating the nature of the violation.
 
+INVALID_RESULT, UNEXPECTED_EVENT, BAD_EVENT_ARGUMENT
+
 ### Methods
+
+---
+
+Note that most of these methods can throw TRANSPORT_ERROR from the wrapper,
+which may come with transportError property
+
+---
 
 #### server.state()
 
@@ -468,12 +482,12 @@ The `params` (Object) argument must contain the following members:
 
 - `params.feedData` (optional Object) A reference to the feed data with the
   deltas applied. The library will generate a spec-compliant hash of the feed
-  data and distribute it with the action revelation. Note that the library does
-  _not_ check whether previously-passed feed data, with deltas applied, is
-  consistent with the feed data specified here -- it is up to the application to
-  ensure validity. If this parameter is present, then `params.feedMd5` must not
-  be present; if neither parameter is present, then clients will not be sent a
-  hash for feed data integrity verification.
+  data and distribute it with the action revelation. The library does not check
+  whether previously-passed feed data, with deltas applied, is consistent with
+  the feed data specified here. It is up to the application to ensure validity.
+  If this parameter is present, then `params.feedMd5` must not be present; if
+  neither parameter is present, then clients will not be sent a hash for feed
+  data integrity verification.
 
 Errors thrown:
 

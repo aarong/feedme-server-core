@@ -332,7 +332,8 @@ client.
   passed to the listeners.
 
   The server must emit a `disconnect` event referencing each
-  previously-connected client before emitting the `stopping` event.
+  previously-connected client before emitting the `stopping` event and must pass
+  the same error (or not).
 
 - `stop([err])`
 
@@ -341,6 +342,9 @@ client.
 
   The transport must pass the same `err` object (or not) that was passed with
   the previous `stopping` event.
+
+  The transport state must remain `stopped` until the library calls
+  `transport.start()`.
 
 - `connect(clientId)`
 

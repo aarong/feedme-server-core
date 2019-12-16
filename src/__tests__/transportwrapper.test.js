@@ -2849,4 +2849,56 @@ describe("the transport 'disconnect' event", () => {
     // Check wrapper._clientIds
     expect(wrapper._clientIds).toEqual(["client2"]);
   });
+
+  it("if the last state emission was 'start' and arguments were valid with a HANDSHAKE_TIMEOUT error, it should emit the event", () => {
+    // Set up the transport
+    const transport = emitter({
+      on: () => {},
+      state: () => "stopped",
+      start: () => {},
+      stop: () => {},
+      send: () => {},
+      disconnect: () => {}
+    });
+    const wrapper = transportWrapper(transport);
+
+    // Get the transport into starting state
+    wrapper.start();
+    transport.state = () => "starting";
+    transport.emit("starting");
+
+    // Get the transport into started
+    transport.state = () => "started";
+    transport.emit("start");
+
+    // Connect the client
+    transport.emit("connect", "client1");
+    transport.emit("connect", "client2");
+
+    // Set up listeners
+    const transportErrorListener = jest.fn();
+    wrapper.on("transportError", transportErrorListener);
+    const disconnectListener = jest.fn();
+    wrapper.on("disconnect", disconnectListener);
+
+    // Emit
+    transport.emit(
+      "disconnect",
+      "client1",
+      new Error("HANDSHAKE_TIMEOUT: ...")
+    );
+
+    // Check the listeners
+    expect(transportErrorListener.mock.calls.length).toBe(0);
+    expect(disconnectListener.mock.calls.length).toBe(1);
+    expect(disconnectListener.mock.calls[0].length).toBe(2);
+    expect(disconnectListener.mock.calls[0][0]).toBe("client1");
+    expect(disconnectListener.mock.calls[0][1]).toBeInstanceOf(Error);
+    expect(disconnectListener.mock.calls[0][1].message).toBe(
+      "HANDSHAKE_TIMEOUT: ..."
+    );
+
+    // Check wrapper._clientIds
+    expect(wrapper._clientIds).toEqual(["client2"]);
+  });
 });
