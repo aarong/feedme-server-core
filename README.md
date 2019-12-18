@@ -56,13 +56,12 @@ Library contributors and transport developers should see the
     - [Action Objects](#action-objects)
       - [ActionRequest](#actionrequest)
       - [ActionResponse](#actionresponse)
-    - [Feed Open Objects](#feed-open-objects)
+    - [FeedOpen Objects](#feedopen-objects)
       - [FeedOpenRequest](#feedopenrequest)
       - [FeedOpenResponse](#feedopenresponse)
-    - [Feed Close Objects](#feed-close-objects)
+    - [FeedClose Objects](#feedclose-objects)
       - [FeedCloseRequest](#feedcloserequest)
       - [FeedCloseResponse](#feedcloseresponse)
-- [Sample Code](#sample-code)
 
 <!-- /TOC -->
 
@@ -86,10 +85,10 @@ npm install feedme-transport-socketio
 To initialize a server using the WebSocket transport:
 
 ```javascript
-var feedmeServerCore = require("feedme-server-core");
-var wsTransport = require("feedme-transport-websocket/server");
+const feedmeServerCore = require("feedme-server-core");
+const wsTransport = require("feedme-transport-websocket/server");
 
-var server = feedmeServerCore({
+const server = feedmeServerCore({
   transport: wsTransport({ url: "https://some.url/api/websocket" })
 });
 ```
@@ -97,10 +96,10 @@ var server = feedmeServerCore({
 To initialize a server using the Socket.io transport:
 
 ```javascript
-var feedmeServerCore = require("feedme-server-core");
-var ioTransport = require("feedme-transport-socketio/server");
+const feedmeServerCore = require("feedme-server-core");
+const ioTransport = require("feedme-transport-socketio/server");
 
-var server = feedmeServerCore({
+const server = feedmeServerCore({
   transport: ioTransport({ url: "https://some.url/api/socketio" })
 });
 ```
@@ -115,17 +114,17 @@ start the server.
 To initialize a server:
 
 ```javascript
-var server = feedmeServerCore(options);
+const server = feedmeServerCore(options);
 ```
 
-The server is initialized in the `stopped` state and remains `stopped` until
+The server is initialized in the `stopped` state and will remain `stopped` until
 there is a call to `server.start()`.
 
 The `options` argument is an object with the following properties:
 
 - `options.transport` - Required Object.
 
-  A transport object used to listen for and interact with clients. The object
+  A transport object used to listen for and interact with clients. The transport
   must satisfy the requirements laid out in the developer documentation.
 
   The application must not operate on the transport object directly and must not
@@ -140,33 +139,32 @@ The `options` argument is an object with the following properties:
 
   If greater than 0, then the server will wait `handshakeMs` for a
   newly-connected client to transmit a successful `Handshake` message before
-  disconnecting the client. When a client handshake times out, the server will
-  emit a `disconnect` event referencing the client and passing an error of the
-  form `err.message = "HANDSHAKE_TIMEOUT: ..."`.
+  forcefully disconnecting the client.
 
   If set to 0, then the server will wait indefinitely for a newly-connected
   client to transmit a successful `Handshake` message.
 
 - `options.terminationMs` - Optional non-negative integer. Defaults to 30000.
 
-  The Feedme specification requires that, for a period of time after sending a
-  `FeedTermination` message referencing a given client feed, the server return
-  success to a subsequent `FeedClose` message referencing that feed. The
-  duration of this window is configured using `terminationMs` and should be set
-  appropriately for the latency of the transport.
+  Specifies the duration of feed termination windows. If greater than zero, then
+  termination windows last `terminationMs`. If set to zero, then termination
+  windows last for the duration of a client's connection.
 
-  If set greater than 0, then the server will return success to a `FeedClose`
-  message received within `terminationMs` of terminating a client feed.
+  A termination window begins after a `FeedTermination` message has been
+  transmitted to a client. During the termination window, the server will accept
+  either a `FeedOpen` or `FeedClose` message referencing the feed. This behavior
+  accounts for transport latency, which can cause a client to transmit a
+  `FeedClose` message while a `FeedTermination` message is in transit from the
+  server.
 
-  If set to 0, then the server will return success to a `FeedClose` message
-  received any time after terminating a client feed.
+  If the server receives a `FeedClose` message referencing a feed during its
+  termination window, it will respond with a `FeedCloseResponse` indicating
+  success and will not emit a `feedClose` event. The server will expect the next
+  client message referencing the feed to be a `FeedOpen` and will respond with a
+  `ViolationResponse` if it receives another `FeedClose`.
 
-  In both cases, the server will return success only to the first `FeedClose`
-  message referencing the terminated feed nad will return failure to subsequent
-  `FeedClose` messages referencing that feed.
-
-  If the client submits a `FeedOpen` message referencing a terminated feed
-  within the specified window (or after) then the message is processed as usual.
+  If the server receives a `FeedOpen` message referencing a feed during its
+  termination window, it will emit a `feedOpen` event as usual.
 
 Errors thrown:
 
@@ -176,19 +174,19 @@ Errors thrown:
 
 ### States
 
-The server is always in one of four states:
+A server can be in one of four states:
 
-- `stopped` - The server has no client connections and is not attempting to
-  begin listening for new connections.
+- `stopped` - The server is not listening for client connections and is not
+  attempting to start, but is ready to be started.
 
-- `starting` - The server has no client connections but is attempting to start
-  listening for new connections.
+- `starting` - The server is attempting to begin listening for client
+  connections.
 
-- `started` - The server is listening for new client connections and may have
+- `started` - The server is listening for client connections and may have
   existing connections.
 
-- `stopping` - The server has no client connections but is not ready to begin
-  trying to listen for new client connections.
+- `stopping` - The server has closed all existing client connections and has
+  stopped listenening for new connections, but is not ready to be restarted.
 
 ### Events
 
@@ -209,30 +207,27 @@ Arguments: None
 Emitted when the server state changes from `starting` or `started` to
 `stopping`.
 
-If the stoppage resulted from a call to `server.stop()` then listeners are
-invoked with no arguments.
+If the server is transitioning from `started` to `stopping`, then a `disconnect`
+event is emitted for each previously-connected client before the `stopping`
+event is emitted.
 
-If the stoppage resulted from a transport error condition then listeners are
-passed an `Error` object of the form `err.message = "FAILURE: ..."`.
+Arguments passed to the listeners:
 
-When the server transitions to `stopping`, any outstanding `HandshakeResponse`,
-`ActionResponse`, `FeedOpenResponse`, and `FeedCloseResponse` objects are
-neutralized. Their `success()` and `failure()` methods will run successfully but
-will do nothing.
-
-Before the server transitions to `stopping`, a series of `disconnect` events are
-emitted referencing each previously-connected client. These events are emitted
-with the same error argument (or lack thereof) as the `stopping` event.
+1. `err` (Optional Error) indicates the reason for the stoppage. If the stoppage
+   resulted from a call to `server.stop()`, then the argument is omitted. If the
+   stoppage resulted from a transport error, then `err` takes the form
+   `err.message === "FAILURE: ..."`.
 
 #### stop
 
 Emitted when the server state changes from `stopping` to `stopped`.
 
-If the stoppage resulted from a call to `server.stop()` then listeners are
-invoked with no arguments.
+Arguments passed to the listeners:
 
-If the stoppage resulted from a transport error condition then listeners are
-passed an `Error` object of the form `err.message = "FAILURE: ..."`.
+1. `err` (Optional Error) indicates the reason for the stoppage. If the stoppage
+   resulted from a call to `server.stop()`, then the argument is omitted. If the
+   stoppage resulted from a transport error, then `err` takes the form
+   `err.message === "FAILURE: ..."`.
 
 #### connect
 
@@ -241,145 +236,128 @@ been exchanged.
 
 Arguments passed to the listeners:
 
-1. `clientId` (string) is the identifier assigned by the server to the client
-   The client will be made aware of this identifier once it has submitted an
+1. `clientId` (string) is the identifier assigned by the library to the client.
+   The client will be made aware of this identifier once it has transmitted a
    library-compatible `Handshake` message.
 
 #### handshake
 
-Emitted when a client submits a valid and library-compatible `Handshake`
-message, but before the server has returned a `HandshakeResponse` message
-indicating success. Applications can use this event to perform any processing
-that is required before a Feedme conversation is initiated with a client.
+Emitted when the server receives a valid and library-compatible `Handshake`
+message.
 
-If a client `Handshake` message is invalid or specifies a Feedme version not
-supported by the library, then the `handshake` event is not emitted and a
-`HandshakeResponse` indicating failure is returned to the client immediately.
+If there is a listener attached to the `handshake` event, then the application
+must call `hres.success()` to return a `HandshakeResponse` message to the
+client.
 
-If no listeners are attached to the `handshake` event, then the event is not
-emitted and the server returns a `HandshakeResponse` indicating success as soon
-as a valid `Handshake` message is received from the client.
+If there is no listener attached to the `handshake` event, then the server
+immediataly returns a `HandshakeResponse` message indicating success when a
+valid and library-compatible `Handshake` message is received.
+
+If a `Handshake` message specifies a Feedme version not supported by the
+library, then a `handshake` event is not emitted and the client is sent a
+`HandshakeResponse` message indicating failure.
 
 Arguments passed to the listeners:
 
-1. `handshakeRequest` (Object) is a `HandshakeRequest` object describing the
-   client request.
+1. `hreq` (Object) is a `HandshakeRequest` object describing the client request.
 
-2. `handshakeResponse` (Object) is a `HandshakeResponse` object enabling the
-   application to respond to the request.
-
-The application must eventually call `handshakeResponse.success()`, which
-returns a `HandshakeResponse` message indicating success to the client and sets
-the client state to `ready`.
+2. `hres` (Object) is a `HandshakeResponse` object enabling the application to
+   respond to the request.
 
 #### action
 
-Emitted when a client transmits a valid `Action` message
+Emitted when the server receives a valid `Action` message.
 
-If no listeners are attached to the `action` event, then the server returns
-failure to all action requests with error code `"INTERNAL_ERROR"`.
+If there is no listener attached to the `action` event, then the server
+immediately returns an `ActionResponse` message indicating failure (error code
+`"INTERNAL_ERROR"`) when a valid `Action` message is received.
 
 Arguments passed to the listeners:
 
-1. `actionRequest` (Object) is an `ActionRequest` object describing the action
-   request.
+1. `areq` (Object) is an `ActionRequest` object describing the action request.
 
-2. `actionResponse` (Object) is an `ActionResponse` object enabling the server
-   to respond to the request.
-
-The application must eventually call `actionResponse.success()` or
-`actionResponse.failure()` to return an `ActionResponse` message to the client.
+2. `ares` (Object) is an `ActionResponse` object enabling the server to respond
+   to the request.
 
 #### feedOpen
 
-Emitted when a client transmits a valid `FeedOpen` message.
+Emitted when the server receives a valid `FeedOpen` message.
 
-If no listeners are attached to the `feedOpen` event, then the library returns
-failure to all feed open requests with error code `"INTERNAL_ERROR"`.
+If there is no listener attached to the `feedOpen` event, then the server
+immediately returns a `FeedOpenResponse` message indicating failure (error code
+`"INTERNAL_ERROR"`) when a valid `FeedOpen` message is received.
 
 Arguments passed to the listeners:
 
-1. `feedOpenRequest` (Object) is a `FeedOpenRequest` object describing the
-   client request.
+1. `foreq` (Object) is a `FeedOpenRequest` object describing the client request.
 
-2. `feedOpenResponse` (Object) is a `FeedOpenResponse` object enabling the
-   application to respond to the request.
-
-The application must eventually call `feedOpenResponse.success()` or
-`feedOpenResponse.failure()` to return a `FeedOpenResponse` message to the
-client.
+2. `fores` (Object) is a `FeedOpenResponse` object enabling the application to
+   respond to the request.
 
 #### feedClose
 
-Emitted when a client transmits a valid `FeedClose` message and after the
-library has stopped sending the client `ActionRevelation` messages associated
-with the feed, but before the library has returned a `FeedCloseResponse` message
-indicating success. Applications can listen to this event to perform any
-processing that is required on feed closure.
+Emitted when the server receives a valid `FeedClose` message.
 
-If no listeners are attached to the `feedClose` event, then the library returns
-a `FeedCloseResponse` immediately when a valid `FeedClose` message is received
-from the client. (test for both terminated and open)
+If there is a listener attached to the `feedClose` event, then the application
+must call `fcres.success()` to return a `FeedCloseResponse` message to the
+client.
 
-If the feed has already been terminated and the client submits a `FeedClose`
-message within `options.terminationMs` then no `feedClose` event is emitted and
-success is returned immediately to the client.
+If there is no listener attached to the `feedClose` event, then the server
+immediatally returns a `FeedCloseResponse` message indicating success when a
+valid `FeedClose` message is received.
+
+In both cases, the server stops transmitting `ActionRevelation` messages
+referencing the feed as soon as the `FeedClose` message is received.
+
+The server does not emit a `feedClose` event for `FeedClose` messages that
+arrive during a termination window.
 
 Arguments passed to the listeners:
 
-1. `feedCloseRequest` (Object) is a `FeedCloseRequest` object describing the
-   client request.
+1. `fcreq` (Object) is a `FeedCloseRequest` object describing the client
+   request.
 
-2. `feedCloseResponse` (Object) is a `FeedCloseResponse` object enabling the
-   application to respond to the request.
-
-The application must eventually call `feedCloseResponse.success()` to return a
-`FeedOpenResponse` message to the client. As per the Feedme specification, the
-server is not permitted to reject feed closure requests.
+2. `fcres` (Object) is a `FeedCloseResponse` object enabling the application to
+   respond to the request.
 
 #### disconnect
 
-Emitted when a client's state transitions from `awaiting_handshake`,
-`processing_handshake`, or `ready` to `not_connected`.
-
-If there were `handshake`, `action`, `feedOpen`, or `feedClose` events
-associated with the client that have not yet been responded to, then subsequent
-`xres.success()` and `xres.failure()` calls will succeed but do nothing.
+Emitted when a client connection ends.
 
 Arguments passed to the listeners:
 
-1. `clientId` (string) is the Feedme client identifier that the library has
-   assigned to the client.
+1. `clientId` (string) is the identifier that the library assigned to the
+   client.
 
-2. `err` (optional Error) indicates the error condition, if any.
+2. `err` (Optional Error) indicates the reason for the disconnect. If the
+   disconnect resulted from a call to `server.disconnect()` then the argument is
+   omitted.
 
-- If the client was intentionally disconnected by a call to
-  `server.disconnect()` then `err` is omitted.
+The following errors are possible:
 
-- If the client did not submit a valid and compatible `Handshake` message within
-  `options.handshakeMs` (if enabled), then `err` is an `Error` object with
-  `err.message === "HANDSHAKE_TIMEOUT: ..."`.
+- `err.message === "HANDSHAKE_TIMEOUT: ..."`
 
-- If the connection was severed intentionally by the client or there was a
-  transport connectivity problem, then `err` is an `Error` object with
-  `err.message === "FAILURE: ..."`.
+  The client did not transmit a valid and library-compatible `Handshake` message
+  within the windows specified by `options.handshakeMs`.
 
-- If the transport state became `stopping` then `err` is an `Error` object with
-  `err.message === "STOPPING: ..."`.
+- `err.message === "FAILURE: ..."`
+
+  There was a transport connectivity problem or the connection was severed
+  intentionally by the client.
+
+- `err.message === "STOPPING: ..."`
+
+  The server is stopping.
 
 #### badClientMessage
 
-Emitted when a client violates the Feedme specification.
-
-The client is sent a `ViolationResponse` message. The `Diagnostics` property of
-the message contains `Diagnostics.Message` (string), which is the client message
-that generated the error, and `Diagnostics.Problem` (string), which describes
-the nature of the violation.
+Emitted when a client violates the Feedme specification. The server transmits a
+`ViolationResponse` message to the client before this event is emitted.
 
 Arguments passed to the listeners:
 
-1. `clientId` (string) is the Feedme client identifier that the library has
-   assigned to the client.
+1. `clientId` (string) is the client identifier that the library assigned to the
+   client.
 
 2. `err` (Error) describes the nature of the violation.
 
@@ -405,9 +383,23 @@ The following errors are possible:
 Emitted when the transport violates the requirements set out in the developer
 documentation.
 
-Listeners are passed an `Error` object indicating the nature of the violation.
+Arguments passed to the listeners:
 
-INVALID_RESULT, UNEXPECTED_EVENT, BAD_EVENT_ARGUMENT
+1. `err` (Error) indicates the nature of the violation.
+
+The following errors are possible:
+
+- `err.message === "INVALID_RESULT"`
+
+  A transport method returned an unexpected value or threw an unexpected error.
+
+- `err.message === "UNEXPECTED_EVENT"`
+
+  The transport emitted an out-of-sequence event.
+
+- `err.message === "BAD_EVENT_ARGUMENT"`
+
+  The transport emitted an event with one or more invalid arguments.
 
 ### Methods
 
@@ -615,6 +607,14 @@ Errors thrown:
 
 Applications interact with clients using the following types of objects.
 
+Put in each section: When the server transitions to `stopping`, any outstanding
+`HandshakeResponse`, `ActionResponse`, `FeedOpenResponse`, and
+`FeedCloseResponse` objects are neutralized. Their `success()` and `failure()`
+methods will run successfully but will do nothing. If the server had previously
+emitted `handshake`, `action`, `feedOpen`, or `feedClose` events associated with
+the client, then the response objects passed with those events are neutralized
+that `success()` and `failure()` calls succeed but do nothing.
+
 #### Handshake Objects
 
 When the `handshake` event is fired, listeners receive two parameters: a
@@ -712,7 +712,7 @@ When the `action` event is fired, listeners receive two parameters: an
     There has already been a call to `actionResponse.success()` or
     `actionResponse.failure()`.
 
-#### Feed Open Objects
+#### FeedOpen Objects
 
 When the `feedOpen` event is fired, listeners receive two parameters: a
 `FeedOpenRequest` object and a `FeedOpenResponse` object.
@@ -783,7 +783,7 @@ When the `feedOpen` event is fired, listeners receive two parameters: a
     There has already been a call to `feedOpenResponse.success()` or
     `feedOpenResponse.failure()`.
 
-#### Feed Close Objects
+#### FeedClose Objects
 
 When the `feedClose` event is fired, listeners receive two parameters: a
 `FeedCloseRequest` object and a `FeedCloseResponse` object.
@@ -816,5 +816,3 @@ When the `feedClose` event is fired, listeners receive two parameters: a
   - `err.message === "ALREADY_RESPONDED: ..."`
 
     There has already been a call to `feedCloseResponse.success()`.
-
-## Sample Code

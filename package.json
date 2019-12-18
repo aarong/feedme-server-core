@@ -10,7 +10,7 @@
     "lint-src": "eslint src/**",
     "lint-build-tests": "eslint tests/**",
     "build": "npm run test-src && gulp build && npm run test-build",
-    "test-build": "jest /tests",
+    "test-build": "npm run lint-build-tests && jest /tests",
     "coverage": "jest --coverage",
     "coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls"
   },
