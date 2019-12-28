@@ -1,10 +1,10 @@
 /**
- * Represents a client feed close request.
+ * Represents a FeedClose message.
  * @typedef {Object} FeedCloseRequest
  */
 
 /**
- * Factory function. Assumes valid args.
+ * Factory function.
  * @param {String} clientId
  * @param {String} feedName
  * @param {Object} feedArgs

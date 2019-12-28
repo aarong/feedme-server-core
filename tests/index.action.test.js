@@ -228,7 +228,7 @@ describe("When the transport emits a valid Action message", () => {
             ares.success({ action: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             )
           );
         });
@@ -399,7 +399,7 @@ describe("When the transport emits a valid Action message", () => {
             ares.failure("SOME_ERROR", { error: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             )
           );
         });
@@ -571,7 +571,7 @@ describe("When the transport emits a valid Action message", () => {
             ares.success({ action: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             )
           );
         });
@@ -743,7 +743,7 @@ describe("When the transport emits a valid Action message", () => {
             ares.failure("SOME_ERROR", { error: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             )
           );
         });
@@ -926,7 +926,7 @@ describe("When the transport emits a valid Action message", () => {
             ares.success({ action: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             )
           );
         });
@@ -1107,7 +1107,7 @@ describe("When the transport emits a valid Action message", () => {
             ares.failure("SOME_ERROR", { error: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             )
           );
         });
@@ -1288,7 +1288,7 @@ describe("When the transport emits a valid Action message", () => {
             ares.success({ action: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             )
           );
         });
@@ -1469,7 +1469,7 @@ describe("When the transport emits a valid Action message", () => {
             ares.failure("SOME_ERROR", { error: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             )
           );
         });
@@ -1658,7 +1658,7 @@ describe("When the transport emits a valid Action message", () => {
             ares.success({ action: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             )
           );
         });
@@ -1844,7 +1844,7 @@ describe("When the transport emits a valid Action message", () => {
             ares.failure("SOME_ERROR", { error: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             )
           );
         });
@@ -2029,7 +2029,7 @@ describe("When the transport emits a valid Action message", () => {
             ares.success({ action: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             )
           );
         });
@@ -2214,7 +2214,7 @@ describe("When the transport emits a valid Action message", () => {
             ares.failure("SOME_ERROR", { error: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             )
           );
         });

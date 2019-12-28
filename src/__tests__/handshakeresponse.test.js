@@ -60,7 +60,7 @@ describe("The success() and _neutralize() functions", () => {
       hres.success();
     }).toThrow(
       new Error(
-        "ALREADY_RESPONDED: The handshakeResponse.success() method has already been called."
+        "ALREADY_RESPONDED: The success() method has already been called."
       )
     );
     expect(hres._server).toBe(null);
@@ -93,7 +93,7 @@ describe("The success() and _neutralize() functions", () => {
       hres._neutralize();
     }).toThrow(
       new Error(
-        "ALREADY_RESPONDED: The handshakeResponse.success() method has already been called."
+        "ALREADY_RESPONDED: The success() method has already been called."
       )
     );
     expect(hres._server).toBe(null);
@@ -132,7 +132,7 @@ describe("The success() and _neutralize() functions", () => {
       hres.success();
     }).toThrow(
       new Error(
-        "ALREADY_RESPONDED: The handshakeResponse.success() method has already been called."
+        "ALREADY_RESPONDED: The success() method has already been called."
       )
     );
     expect(hres._server).toBe(null);

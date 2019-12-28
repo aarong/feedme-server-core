@@ -1,10 +1,10 @@
 /**
- * Represents an a client Action request.
+ * Represents an Action message.
  * @typedef {Object} ActionRequest
  */
 
 /**
- * Factory function. Assumes valid args.
+ * Factory function.
  * @param {string} clientId
  * @param {string} actionCallbackId
  * @param {string} actionName

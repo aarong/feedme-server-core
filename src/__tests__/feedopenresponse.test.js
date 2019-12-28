@@ -103,7 +103,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores.success({ feed: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(fores._server).toBe(null);
@@ -121,7 +121,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(fores._server).toBe(null);
@@ -166,7 +166,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores.failure("SOME_ERROR", { error: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(fores._server).toBe(null);
@@ -184,7 +184,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(fores._server).toBe(null);
@@ -230,7 +230,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores.success({ feed: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(fores._server).toBe(null);
@@ -248,7 +248,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(fores._server).toBe(null);
@@ -294,7 +294,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores.failure("SOME_ERROR", { error: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(fores._server).toBe(null);
@@ -312,7 +312,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(fores._server).toBe(null);
@@ -363,7 +363,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores.success({ feed: "data " });
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(fores._server).toBe(null);
@@ -414,7 +414,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores.failure("SOME_ERROR", { error: "data" });
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(fores._server).toBe(null);

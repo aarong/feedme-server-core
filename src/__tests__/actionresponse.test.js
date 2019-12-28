@@ -119,7 +119,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares.success({ action: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(ares._server).toBe(null);
@@ -137,7 +137,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(ares._server).toBe(null);
@@ -186,7 +186,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares.failure("SOME_ERROR", { error: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(ares._server).toBe(null);
@@ -204,7 +204,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(ares._server).toBe(null);
@@ -254,7 +254,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares.success({ action: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(ares._server).toBe(null);
@@ -272,7 +272,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(ares._server).toBe(null);
@@ -322,7 +322,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares.failure("SOME_ERROR", { error: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(ares._server).toBe(null);
@@ -340,7 +340,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(ares._server).toBe(null);
@@ -396,7 +396,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares.success({ action: "data " });
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(ares._server).toBe(null);
@@ -452,7 +452,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares.failure("SOME_ERROR", { error: "data" });
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+          "ALREADY_RESPONDED: The success() or failure() method has already been called."
         )
       );
       expect(ares._server).toBe(null);

@@ -2,15 +2,14 @@ import check from "check-types";
 import jsonExpressible from "json-expressible";
 
 /**
- * Emitted with the action event, enabling the application to indicate how
- * the library should respond to an Action message.
+ * Represents an ActionResponse message.
  * @typedef {Object} ActionResponse
  */
 
 const proto = {};
 
 /**
- * Factory function. Assume valid args.
+ * Factory function.
  * @param {Server} server
  * @param {ActionRequest} areq
  * @returns {ActionResponse}
@@ -19,8 +18,8 @@ export default function actionResponseFactory(server, areq) {
   const actionResponse = Object.create(proto);
 
   /**
-   * Reference to the server. Null after a call to actionResponse.success(),
-   * actionResponse.failure(), or actionResponse._neutralize().
+   * Reference to the server. Null after a call to success(),
+   * failure(), or _neutralize().
    * @memberof ActionResponse
    * @instance
    * @private
@@ -84,16 +83,16 @@ proto.success = function success(actionData) {
   // Throw if the app already responded
   if (this._appResponded) {
     throw new Error(
-      "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+      "ALREADY_RESPONDED: The success() or failure() method has already been called."
     );
   }
 
-  // Update state to reflect app response (save server reference)
+  // Update state to reflect app response
   this._appResponded = true;
   const s = this._server;
   this._server = null;
 
-  // If not neutralized, call the server function and neutralize
+  // If not neutralized, call the server function
   if (!this._neutralized) {
     s._appActionSuccess(
       this._actionRequest.clientId,
@@ -104,7 +103,7 @@ proto.success = function success(actionData) {
 };
 
 /**
- * Called by the application to return a ActionResponse indicating failure.
+ * Called by the application to return an ActionResponse indicating failure.
  *
  * After being neutralized, the first call to success() or failure() will
  * still return successfully, but will do nothing. Subsequent calls will
@@ -135,16 +134,16 @@ proto.failure = function failure(errorCode, errorData) {
   // Throw if the app already responded
   if (this._appResponded) {
     throw new Error(
-      "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+      "ALREADY_RESPONDED: The success() or failure() method has already been called."
     );
   }
 
-  // Update state to reflect app response (save server reference)
+  // Update state to reflect app response
   this._appResponded = true;
   const s = this._server;
   this._server = null;
 
-  // If not neutralized, call the server function and neutralize
+  // If not neutralized, call the server function
   if (!this._neutralized) {
     s._appActionFailure(
       this._actionRequest.clientId,
@@ -175,7 +174,7 @@ proto._neutralize = function _neutralize() {
   // Throw if the app already responded - bad server behavior
   if (this._appResponded) {
     throw new Error(
-      "ALREADY_RESPONDED: The actionResponse.success() or actionResponse.failure() method has already been called."
+      "ALREADY_RESPONDED: The success() or failure() method has already been called."
     );
   }
 

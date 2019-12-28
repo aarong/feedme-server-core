@@ -1,13 +1,12 @@
 /**
- * Emitted with the feedClose event, enabling the application to indicate when
- * the library should respond to a FeedClose message.
+ * Represents a FeedCloseResponse message.
  * @typedef {Object} FeedCloseResponse
  */
 
 const proto = {};
 
 /**
- * Factory function. Assume valid args.
+ * Factory function.
  * @param {Server} server
  * @param {FeedCloseRequest} fcreq
  * @returns {FeedCloseResponse}
@@ -16,8 +15,8 @@ export default function feedCloseResponseFactory(server, fcreq) {
   const feedCloseResponse = Object.create(proto);
 
   /**
-   * Reference to the server. Null after a call to feedCloseResponse.success()
-   * or feedCloseResponse._neutralize().
+   * Reference to the server. Null after a call to success()
+   * or _neutralize().
    * @memberof FeedCloseResponse
    * @instance
    * @private
@@ -69,16 +68,16 @@ proto.success = function success() {
   // Throw if the app already responded
   if (this._appResponded) {
     throw new Error(
-      "ALREADY_RESPONDED: The feedCloseResponse.success() method has already been called."
+      "ALREADY_RESPONDED: The success() method has already been called."
     );
   }
 
-  // Update state to reflect app response (save server reference)
+  // Update state to reflect app response
   this._appResponded = true;
   const s = this._server;
   this._server = null;
 
-  // If not neutralized, call the server function and neutralize
+  // If not neutralized, call the server function
   if (!this._neutralized) {
     s._appFeedCloseSuccess(
       this._feedCloseRequest.clientId,
@@ -108,7 +107,7 @@ proto._neutralize = function _neutralize() {
   // Throw if the app already responded - bad server behavior
   if (this._appResponded) {
     throw new Error(
-      "ALREADY_RESPONDED: The feedCloseResponse.success() method has already been called."
+      "ALREADY_RESPONDED: The success() method has already been called."
     );
   }
 

@@ -1,10 +1,10 @@
 /**
- * Represents a client handshake request.
+ * Represents a Handshake message.
  * @typedef {Object} HandshakeRequest
  */
 
 /**
- * Factory function. Assumes valid args.
+ * Factory function.
  * @param {String} clientId
  * @param {String} feedName
  * @param {Object} feedArgs

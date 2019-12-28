@@ -46,7 +46,7 @@ describe("The success() and _neutralize() functions should work correctly on", (
       fcres.success();
     }).toThrow(
       new Error(
-        "ALREADY_RESPONDED: The feedCloseResponse.success() method has already been called."
+        "ALREADY_RESPONDED: The success() method has already been called."
       )
     );
     expect(fcres._server).toBe(null);
@@ -81,7 +81,7 @@ describe("The success() and _neutralize() functions should work correctly on", (
       fcres._neutralize();
     }).toThrow(
       new Error(
-        "ALREADY_RESPONDED: The feedCloseResponse.success() method has already been called."
+        "ALREADY_RESPONDED: The success() method has already been called."
       )
     );
     expect(fcres._server).toBe(null);
@@ -120,7 +120,7 @@ describe("The success() and _neutralize() functions should work correctly on", (
       fcres.success();
     }).toThrow(
       new Error(
-        "ALREADY_RESPONDED: The feedCloseResponse.success() method has already been called."
+        "ALREADY_RESPONDED: The success() method has already been called."
       )
     );
     expect(fcres._server).toBe(null);

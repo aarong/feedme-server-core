@@ -310,7 +310,7 @@ describe("When the transport emits a valid FeedClose message", () => {
             fcres.success();
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The feedCloseResponse.success() method has already been called."
+              "ALREADY_RESPONDED: The success() method has already been called."
             )
           );
         });
@@ -506,7 +506,7 @@ describe("When the transport emits a valid FeedClose message", () => {
             fcres.success();
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The feedCloseResponse.success() method has already been called."
+              "ALREADY_RESPONDED: The success() method has already been called."
             )
           );
         });
@@ -708,7 +708,7 @@ describe("When the transport emits a valid FeedClose message", () => {
             fcres.success();
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The feedCloseResponse.success() method has already been called."
+              "ALREADY_RESPONDED: The success() method has already been called."
             )
           );
         });

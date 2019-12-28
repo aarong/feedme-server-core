@@ -14,8 +14,6 @@ const dbg = debug("feedme-server-core:transport-wrapper");
  * - Transport events are validated
  * - Function invocation sequence is validated (but arguments are not)
  *
- * After initialization, any problems with the transport are reported using
- * the `transportError` event.
  * @typedef {Object} TransportWrapper
  * @extends emitter
  */

@@ -93,8 +93,7 @@ To enable debugging output set the `debug` environment variable to
 
 ## Source Modules
 
-Module source code is written in ES6 and is transpiled on build for Node and the
-browser.
+Module source code is written in ES6 and is transpiled for Node on build.
 
 Eslint enforces Airbnb style and applies Prettier (which takes precence over
 some Airbnb rules). A lint check is performed before unit tests.
@@ -168,9 +167,9 @@ between clients and the server. A transport object is injected into the server
 library at initialization.
 
 Transport objects must implement the following interface and behavior in order
-to function correctly with the library. The server object interacts with
+to function correctly with the library. The server library interacts with
 transports through a wrapper that aims to detect invalid behavior and emits a
-server `transportError` event if the transport does something unexpected.
+`transportError` event if the transport does something unexpected.
 
 ### Fundamentals
 
@@ -198,7 +197,7 @@ Transport objects must always be in one of four states:
 
 - `started` - The transport is listening for client connections and may have
   active connections. The transport may emit any event except `starting`,
-  `start`, and `stop` (it must first emit `stopping`).
+  `start`, and `stop` (as it must first emit `stopping`).
 
 - `stopping` - The transport is in the process of closing client connections and
   is stopping listening for new connections. The transport must emit only a
@@ -237,14 +236,14 @@ When a new connection is established by a client, the transport must:
 - Emit a `connect` event referencing the client.
 
 - Subsequently, if a message is received from the client, it must emit a
-  `message` event with referencing the client and passing along the message.
+  `message` event referencing the client and passing along the message.
 
 - When the connection with the client is severed, whether due to an internal
   transport failure, an intentional client disconnect, a call to
-  `transport.disconnect()`, or a call to `transport.stop()`, it must emit a
-  `disconnect` event referencing the client. It must emit no further `message`
-  or `disconnect` events referencing the client identifier (but it is free to
-  reuse the identifier in a future `connect` event).
+  `transport.disconnect()`, or a call to `transport.stop()`, the transport must
+  emit a `disconnect` event referencing the client. The transport must emit no
+  further `message` or `disconnect` events referencing the client identifier
+  (but it is free to reuse the identifier in a future `connect` event).
 
 ### Transport Methods
 
@@ -252,52 +251,55 @@ Transport objects must implement the following methods:
 
 - `transport.state()`
 
-  Allows the server to retrieve the current transport state.
+  Allows the library to retrieve the current transport state.
 
   Returns `"stopped"`, `"starting"`, `"started"`, or `"stopping"`.
 
 - `transport.start()`
 
-  Allows the server to tell the transport to begin listening for client
+  Allows the library to tell the transport to begin listening for client
   connections. Returns nothing.
 
-  The server will only call this method if the transport state is `stopped`.
+  The library will only call this method if the transport state is `stopped`.
 
-  The transport state must become `starting` and the `starting` event must be
-  emitted synchronously.
+  The transport state must asynchronously become `starting` and the `starting`
+  event must be emitted.
 
   If the transport starts successfully, the transport state must become
   `started` and the `start` event must be emitted.
 
   If the transport fails to start, the transport state must become `stopping`
-  and then eventually `stopped`. The `stopping` and eventually `stop` events
-  must be emitted.
+  and the `stopping` event must be emitted. The transport state must then
+  eventually become `stopped` and the `stop` event must be emitted.
 
 - `transport.stop()`
 
-  Allows the server to tell the transport to stop accepting new connections and
+  Allows the library to tell the transport to stop accepting new connections and
   terminate existing connections. Returns nothing.
 
-  The server will only call this method if the transport state is `started`.
+  The library will only call this method if the transport state is `started`.
 
-  The transport state must become `stopping` and eventually `stopped`. The
-  `stopping` and eventually `stopped` events must be emitted.
+  The transport state must asynchronously become `stopping` and the `stopping`
+  event must be emitted. The transport state must then eventually become
+  `stopped` and the `stop` event must be emitted.
 
 - `transport.send(clientId, msg)`
 
-  Allows the server to send a string message to a client. Returns nothing.
+  Allows the library to send a string message to a client. Returns nothing.
 
-  The server will only call this method if the transport state is `started` and
+  The library will only call this method if the transport state is `started` and
   will only reference a `clientId` that is `connected`.
 
 - `transport.disconnect(clientId, [err])`
 
-  Allows the server to forcibly terminate a client's transport connection.
-
+  Allows the library to forcibly terminate a client's transport connection.
   Returns nothing.
 
-  The server will only call this method if the transport state is `started` and
+  The library will only call this method if the transport state is `started` and
   will only reference a `clientId` that is `connected`.
+
+  If the library specifies `err`, it must be emitted with the `disconnect`
+  event.
 
 ### Transport Events
 
@@ -307,21 +309,21 @@ client.
 
 - `starting`
 
-  Informs the server that the transport state is now `starting`. This event must
-  only be emitted when the transport state was previously `stopped`.
+  Informs the library that the transport state is now `starting`. This event
+  must only be emitted when the transport state was previously `stopped`.
 
 - `start`
 
-  Informs the server that the transport state is now `started`. This event must
+  Informs the library that the transport state is now `started`. This event must
   only be emitted when the transport state was previously `starting`.
 
 - `stopping([err])`
 
-  Informs the server that the transport state is now `stopping`. This event must
-  only be emitted when the transport state was previously `starting` or
+  Informs the library that the transport state is now `stopping`. This event
+  must only be emitted when the transport state was previously `starting` or
   `started`.
 
-  If the stoppage resulted from an explicit server call to `transport.stop()`
+  If the stoppage resulted from an explicit library call to `transport.stop()`
   then the transport must not pass an error object to the listeners. The
   transport must not pass `null`, `undefined`, `false`, or any other value in
   place of the error object.
@@ -331,30 +333,30 @@ client.
   of the form `new Error("FAILURE: Descriptive error message.")` must be must be
   passed to the listeners.
 
-  The server must emit a `disconnect` event referencing each
+  The library must emit a `disconnect` event referencing each
   previously-connected client before emitting the `stopping` event and must pass
-  the same error (or not).
+  the same error (or no error) with that event.
 
 - `stop([err])`
 
-  Informs the server that the transport state is now `stopped`. This event must
+  Informs the library that the transport state is now `stopped`. This event must
   only be emitted when the transport state was previously `stopping`.
 
-  The transport must pass the same `err` object (or not) that was passed with
-  the previous `stopping` event.
+  The transport must pass the same `err` object (or no error) that was passed
+  with the previous `stopping` event.
 
   The transport state must remain `stopped` until the library calls
   `transport.start()`.
 
 - `connect(clientId)`
 
-  Informs the server that a new client has connected and that the client has
+  Informs the library that a new client has connected and that the client has
   been assigned the string identifier `clientId`. This event must only be
   emitted when the transport state is `started`.
 
 - `message(clientId, msg)`
 
-  Informs the server that a string message `msg` has been received from
+  Informs the library that a string message `msg` has been received from
   `clientId`.
 
   This event must only be emitted when the transport state is `started` and
@@ -362,7 +364,7 @@ client.
 
 - `disconnect(clientId, [err])`
 
-  Informs the server that `clientId` has disconnected.
+  Informs the library that `clientId` has disconnected.
 
   This event must only be emitted when the transport state is `started`. A
   previous `connect` event must have been emitted referencing the given
@@ -371,15 +373,15 @@ client.
   Once this event has been emitted, the transport must emit no further `message`
   or `disconnect` events referencing `clientId`.
 
-  If the disconnect resulted from a server call to `transport.disconnect()`...
+  If the disconnect resulted from a library call to `transport.disconnect()`...
 
   - If the `disconnect()` call received an `err` argument, then the transport
-    must pass it to the event listeners.
+    must pass it to the `disconnect` event listeners.
 
   - If the `disconnect()` call received no `err` argument, then the transport
-    must not pass an error object to the listeners. The transport must not pass
-    `null`, `undefined`, `false`, or any other value in place of the error
-    object.
+    must not pass an error object to the `disconnect` listeners. The transport
+    must not pass `null`, `undefined`, `false`, or any other value in place of
+    the error object.
 
   If the disconnect resulted from an explicit call to `transport.stop()` then
   the transport, then an error of the form
@@ -391,5 +393,5 @@ client.
   `new Error("FAILURE: Descriptive error message.")` must be must be passed to
   the listeners.
 
-  If the server is stopping, a `disconnect` event must be emitted for each
+  If the library is stopping, a `disconnect` event must be emitted for each
   previously-connected client before the `stopping` event is emitted.

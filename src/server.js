@@ -113,7 +113,7 @@ export default function serverFactory(options) {
    * Present for clients that are connected on the transport
    *
    * Added when a client connects to the transport - pre-specified
-   *   Feedme clientid not yet be communicated to the client by a HandshakeResponse
+   *   Feedme client id may not yet have been communicated to the client by a HandshakeResponse
    *
    * Removed when
    *   The client disconnects from the transport
@@ -134,7 +134,7 @@ export default function serverFactory(options) {
    * Present for clients that are connected on the transport
    *
    * Added when a client connects via the transport - pre-specified
-   *   Feedme clientid not yet be communicated to the client by a HandshakeResponse
+   *   Feedme client id may not yet have been communicated to the client by a HandshakeResponse
    *
    * Removed when
    *   The client disconnects from the transport
@@ -204,10 +204,10 @@ export default function serverFactory(options) {
    *
    * server._handshakeTimers[cid] = timerId (integer)
    *
-   * Added when a client connects to the transport (if configured)
+   * Added when a client connects to the transport (if so configured)
    *
    * Removed when
-   *   The client submits a version-compatible Handshake message
+   *   The client submits a library-compatible Handshake message
    *   The client disconnects from the transport
    *   The server stops
    *
@@ -247,7 +247,7 @@ export default function serverFactory(options) {
    *
    * Removed when
    *   A FeedCloseResponse is message sent
-   *   A FeedTermination message is sent (after terminationMs passes, if configured)
+   *   A FeedTermination message is sent (after terminationMs passes, if so configured)
    *   The client disconnects from the transport
    *   The server stops
    *
@@ -267,7 +267,7 @@ export default function serverFactory(options) {
    *
    * Removed when
    *   A FeedCloseResponse message is sent
-   *   A FeedTermination message is sent (after) terminationMs passes, if configured)
+   *   A FeedTermination message is sent (after terminationMs passes, if so configured)
    *   The client disconnects from the transport
    *   The server stops
    *
@@ -280,7 +280,7 @@ export default function serverFactory(options) {
 
   /**
    * Active FeedOpenResponse objects that have been emitted to the application.
-   * Always and only exists when feed state is opening.
+   * Always and only exist when feed state is opening.
    *
    * server._feedOpenResponses[cid][feedSerial] = FeedOpenResponse object
    *
@@ -302,7 +302,7 @@ export default function serverFactory(options) {
 
   /**
    * Active FeedCloseResponse objects that have been emitted to the application.
-   * Always and only exists when feed state is closing.
+   * Always and only exist when feed state is closing.
    *
    * server._feedCloseResponses[cid][feedSerial] = FeedCloseResponse object
    *
@@ -327,7 +327,7 @@ export default function serverFactory(options) {
    *
    * server._terminationTimers[cid][feedSerial] = timerId
    *
-   * Added when a FeedTermination message is sent (if configured)
+   * Added when a FeedTermination message is sent (if so configured)
    *
    * Removed when
    *   The terminationMs period elapses
@@ -434,7 +434,7 @@ export default function serverFactory(options) {
  * @memberof Server
  * @instance
  * @param {string} clientId
- * @param {?Error} err  "HANDSHAKE_TIMEOUT: ..." if client did not handshake
+ * @param {?Error} err  "HANDSHAKE_TIMEOUT: ..." if client did not handshake in time
  *                      "STOPPING: ..." if the due to a call to server.stop()
  *                      "FAILURE: ..." if the transport failed
  *                      Not present if due to call to server.disconnect()
@@ -1218,7 +1218,7 @@ proto._processFeedOpen = function _processFeedOpen(clientId, msg, msgString) {
   }
 
   // If a termination timer exists then kill it
-  // May not exist even if feed state is terminated (if terminationMs is 0)
+  // May not exist even if the feed state is terminated (if terminationMs is 0)
   if (this._exists(this._terminationTimers, clientId, feedSerial)) {
     clearTimeout(this._terminationTimers[clientId][feedSerial]);
     this._delete(this._terminationTimers, clientId, feedSerial);
@@ -1334,7 +1334,7 @@ proto._processFeedClose = function _processFeedClose(clientId, msg, msgString) {
   dbg("Successful FeedClose message");
 
   // If a termination timer exists then kill it
-  // May not exist even if feed state is terminated (if terminationMs is 0)
+  // May not exist even if the feed state is terminated (if terminationMs is 0)
   if (this._exists(this._terminationTimers, clientId, feedSerial)) {
     clearTimeout(this._terminationTimers[clientId][feedSerial]);
     this._delete(this._terminationTimers, clientId, feedSerial);
@@ -1794,7 +1794,8 @@ proto._terminateOpenFeed = function _terminateOpenFeed(
 
 /**
  * Set obj.key1.key2 equal to val and create the obj.key1 object if it
- * doesn't exist. If obj.key1 exists, it is assumed to be an object.
+ * doesn't exist.
+ * @memberof Server
  * @instance
  * @private
  * @param {Object} obj
@@ -1812,7 +1813,7 @@ proto._set = function _set(obj, key1, key2, val) {
 
 /**
  * Delete obj.key1.key2 and then delete obj.key1 if it is empty.
- * Assume that obj.key1 and obj.key1.key2 exist.
+ * @memberof Server
  * @instance
  * @private
  * @param {Object} obj
@@ -1829,7 +1830,7 @@ proto._delete = function _delete(obj, key1, key2) {
 
 /**
  * Return obj.key1.key2 if it exists, otherwise return specified value.
- * Assume that obj.key1 is an object if present.
+ * @memberof Server
  * @instance
  * @private
  * @param {Object} obj
@@ -1847,7 +1848,7 @@ proto._get = function _get(obj, key1, key2, missing) {
 
 /**
  * Return true if obj.key1.key2 exists and false if either key does not.
- * Assume that obj.key1 is an object if present.
+ * @memberof Server
  * @instance
  * @private
  * @param {Object} obj

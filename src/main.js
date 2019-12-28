@@ -16,7 +16,8 @@ if (process.env.NODE_ENV !== "test") {
 /**
  * Outward-facing server factory function.
  *
- * Takes a transport from outside, wraps it, and injects it into the server.
+ * Takes a transport from outside, wraps it, injects it into the server,
+ * and returns the server.
  *
  * The options parameter is identical to that taken by the server, but a
  * transport property is taken rather than a transportWrapper.

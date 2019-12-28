@@ -412,7 +412,7 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(() => {
             hres.success();
           }).toThrow(
-            "ALREADY_RESPONDED: The handshakeResponse.success() method has already been called."
+            "ALREADY_RESPONDED: The success() method has already been called."
           );
         });
       });
@@ -585,7 +585,7 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(() => {
             hres.success();
           }).toThrow(
-            "ALREADY_RESPONDED: The handshakeResponse.success() method has already been called."
+            "ALREADY_RESPONDED: The success() method has already been called."
           );
         });
       });
@@ -764,7 +764,7 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(() => {
             hres.success();
           }).toThrow(
-            "ALREADY_RESPONDED: The handshakeResponse.success() method has already been called."
+            "ALREADY_RESPONDED: The success() method has already been called."
           );
         });
       });
@@ -986,7 +986,7 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(() => {
             hres.success();
           }).toThrow(
-            "ALREADY_RESPONDED: The handshakeResponse.success() method has already been called."
+            "ALREADY_RESPONDED: The success() method has already been called."
           );
         });
       });

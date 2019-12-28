@@ -288,7 +288,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.success({ feed: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -455,7 +455,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.failure("SOME_ERROR", { error: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -625,7 +625,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.success({ feed: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -795,7 +795,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.failure("SOME_ERROR", { error: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -973,7 +973,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.success({ feed: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -1149,7 +1149,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.failure("SOME_ERROR", { error: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -1327,7 +1327,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.success({ feed: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -1505,7 +1505,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.failure("SOME_ERROR", { error: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -1689,7 +1689,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.success({ feed: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -1871,7 +1871,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.failure("SOME_ERROR", { error: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -2055,7 +2055,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.success({ feed: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -2239,7 +2239,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.failure("SOME_ERROR", { error: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -2413,7 +2413,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.success({ feed: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -2583,7 +2583,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.failure("SOME_ERROR", { error: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -2756,7 +2756,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.success({ feed: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -2929,7 +2929,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.failure("SOME_ERROR", { error: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -3110,7 +3110,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.success({ feed: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -3289,7 +3289,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.failure("SOME_ERROR", { error: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -3470,7 +3470,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.success({ feed: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -3651,7 +3651,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.failure("SOME_ERROR", { error: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -3838,7 +3838,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.success({ feed: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -4023,7 +4023,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.failure("SOME_ERROR", { error: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -4210,7 +4210,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.success({ feed: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
@@ -4397,7 +4397,7 @@ describe("When the transport emits a valid FeedOpen message", () => {
             expect(() => {
               fores.failure("SOME_ERROR", { error: "data" });
             }).toThrow(
-              "ALREADY_RESPONDED: The feedOpenResponse.success() or feedOpenResponse.failure() method has already been called."
+              "ALREADY_RESPONDED: The success() or failure() method has already been called."
             );
           });
         });
