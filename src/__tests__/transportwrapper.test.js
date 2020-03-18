@@ -656,51 +656,6 @@ describe("the send() function", () => {
     expect(listener.mock.calls[0][0].transportError.message).toBe("JUNK_ERROR");
   });
 
-  it("if the call was valid and the transport returns a value, it should throw TRANSPORT_ERROR and emit transportError", () => {
-    // Set up the transport
-    const transport = emitter({
-      on: () => {},
-      state: () => "stopped",
-      start: () => {},
-      stop: () => {},
-      send: () => {},
-      disconnect: () => {}
-    });
-    const wrapper = transportWrapper(transport);
-
-    // Get the transport into starting state
-    wrapper.start();
-    transport.state = () => "starting";
-    transport.emit("starting");
-
-    // Get the transport into started state
-    transport.state = () => "started";
-    transport.emit("start");
-
-    // Connect the client
-    transport.emit("connect", "client1");
-
-    // Set up listener
-    const listener = jest.fn();
-    wrapper.on("transportError", listener);
-
-    // Check the error
-    transport.send = () => false;
-    expect(() => {
-      wrapper.send("client1", "some message");
-    }).toThrow(
-      new Error("TRANSPORT_ERROR: Transport unexpectedly returned a value.")
-    );
-
-    // Check the listener
-    expect(listener.mock.calls.length).toBe(1);
-    expect(listener.mock.calls[0].length).toBe(1);
-    expect(listener.mock.calls[0][0]).toBeInstanceOf(Error);
-    expect(listener.mock.calls[0][0].message).toBe(
-      "INVALID_RESULT: Transport returned unexpected value on call to send()."
-    );
-  });
-
   it("if the call was valid and the transport returns nothing, it should return nothing and emit nothing", () => {
     // Set up the transport
     const transport = emitter({
@@ -852,51 +807,6 @@ describe("the disconnect() function", () => {
     );
     expect(listener.mock.calls[0][0].transportError).toBeInstanceOf(Error);
     expect(listener.mock.calls[0][0].transportError.message).toBe("JUNK_ERROR");
-  });
-
-  it("if the call was valid and the transport returns a value, it should throw TRANSPORT_ERROR and emit transportError", () => {
-    // Set up the transport
-    const transport = emitter({
-      on: () => {},
-      state: () => "stopped",
-      start: () => {},
-      stop: () => {},
-      send: () => {},
-      disconnect: () => {}
-    });
-    const wrapper = transportWrapper(transport);
-
-    // Get the transport into starting state
-    wrapper.start();
-    transport.state = () => "starting";
-    transport.emit("starting");
-
-    // Get the transport into started state
-    transport.state = () => "started";
-    transport.emit("start");
-
-    // Connect the client
-    transport.emit("connect", "client1");
-
-    // Set up listener
-    const listener = jest.fn();
-    wrapper.on("transportError", listener);
-
-    // Check the error
-    transport.disconnect = () => false;
-    expect(() => {
-      wrapper.disconnect("client1");
-    }).toThrow(
-      new Error("TRANSPORT_ERROR: Transport unexpectedly returned a value.")
-    );
-
-    // Check the listener
-    expect(listener.mock.calls.length).toBe(1);
-    expect(listener.mock.calls[0].length).toBe(1);
-    expect(listener.mock.calls[0][0]).toBeInstanceOf(Error);
-    expect(listener.mock.calls[0][0].message).toBe(
-      "INVALID_RESULT: Transport returned unexpected value on call to disconnect()."
-    );
   });
 
   it("if the call was valid and the transport returns nothing, it should return nothing and emit nothing", () => {

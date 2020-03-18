@@ -6,13 +6,12 @@ const dbg = debug("feedme-server-core:transport-wrapper");
 
 /**
  * Verifies that the app-provided transport object behaves as required by the
- * documentation. Also ensures that the server operates on the transport as
- * promised.
+ * documentation.
  *
  * - The transport API is verified on intialization
  * - Transport function return values and errors are validated
- * - Transport events are validated
- * - Function invocation sequence is validated (but arguments are not)
+ * - Transport event sequence is validated
+ * - Library invocation sequence is validated (but arguments are not)
  *
  * @typedef {Object} TransportWrapper
  * @extends emitter
@@ -250,7 +249,7 @@ proto.state = function state() {
 proto.start = function start() {
   dbg("Start requested");
 
-  // Was this a valid call from the server?
+  // Check invocation sequence (library behavior)
   if (this._lastStateEmission !== "stop") {
     throw new Error(
       "INVALID_CALL: Call to start() when the transport state was not 'stopped'."
@@ -269,8 +268,6 @@ proto.start = function start() {
     this.emit("transportError", emitErr);
     throw new Error(`TRANSPORT_ERROR: Transport unexpectedly threw an error.`);
   }
-
-  // Valid behavior on both sides - return
 };
 
 /**
@@ -282,7 +279,7 @@ proto.start = function start() {
 proto.stop = function stop() {
   dbg("Stop requested");
 
-  // Was this a valid call from the server?
+  // Check invocation sequence (library behavior)
   if (this._lastStateEmission !== "start") {
     throw new Error(
       "INVALID_CALL: Call to stop() when the transport state was not 'started'."
@@ -301,8 +298,6 @@ proto.stop = function stop() {
     this.emit("transportError", emitErr);
     throw new Error(`TRANSPORT_ERROR: Transport unexpectedly threw an error.`);
   }
-
-  // Valid behavior on both sides - return
 };
 
 /**
@@ -316,7 +311,7 @@ proto.stop = function stop() {
 proto.send = function send(clientId, msg) {
   dbg("Send requested");
 
-  // Was this a valid call from the server? Check server state
+  // Check invocation sequence (library behavior)
   if (this._lastStateEmission !== "start") {
     throw new Error(
       "INVALID_CALL: Call to send() when the transport state was not 'started'."
@@ -331,9 +326,8 @@ proto.send = function send(clientId, msg) {
   }
 
   // Try to send the message
-  let result;
   try {
-    result = this._transport.send(clientId, msg);
+    this._transport.send(clientId, msg);
   } catch (e) {
     // Invalid behavior from the transport
     const emitErr = new Error(
@@ -343,20 +337,6 @@ proto.send = function send(clientId, msg) {
     this.emit("transportError", emitErr);
     throw new Error(`TRANSPORT_ERROR: Transport unexpectedly threw an error.`);
   }
-
-  // Check the return value
-  if (!check.undefined(result)) {
-    // Invalid behavior from the transport
-    const err = new Error(
-      `INVALID_RESULT: Transport returned unexpected value on call to send().`
-    );
-    this.emit("transportError", err);
-    throw new Error(
-      "TRANSPORT_ERROR: Transport unexpectedly returned a value."
-    );
-  }
-
-  // Valid behavior on both sides - return
 };
 
 /**
@@ -370,7 +350,7 @@ proto.send = function send(clientId, msg) {
 proto.disconnect = function disconnect(clientId, inErr) {
   dbg("Disconnect requested");
 
-  // Was this a valid call from the server? Check server state
+  // // Check invocation sequence (library behavior)
   if (this._lastStateEmission !== "start") {
     throw new Error(
       "INVALID_CALL: Call to disconnect() when the transport state was not 'started'."
@@ -385,12 +365,11 @@ proto.disconnect = function disconnect(clientId, inErr) {
   }
 
   // Try to disconnect the client
-  let result;
   try {
     if (inErr) {
-      result = this._transport.disconnect(clientId, inErr);
+      this._transport.disconnect(clientId, inErr);
     } else {
-      result = this._transport.disconnect(clientId);
+      this._transport.disconnect(clientId);
     }
   } catch (e) {
     // Invalid behavior from the transport
@@ -401,20 +380,6 @@ proto.disconnect = function disconnect(clientId, inErr) {
     this.emit("transportError", emitErr);
     throw new Error(`TRANSPORT_ERROR: Transport unexpectedly threw an error.`);
   }
-
-  // Check the return value
-  if (!check.undefined(result)) {
-    // Invalid behavior from the transport
-    const err = new Error(
-      `INVALID_RESULT: Transport returned unexpected value on call to disconnect().`
-    );
-    this.emit("transportError", err);
-    throw new Error(
-      "TRANSPORT_ERROR: Transport unexpectedly returned a value."
-    );
-  }
-
-  // Valid behavior on both sides - return
 };
 
 // Transport event processors
