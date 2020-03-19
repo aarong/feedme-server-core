@@ -7,7 +7,6 @@ This documentation is for developers of the Feedme server core library itself.
 - [Getting Started](#getting-started)
 - [Directory Structure](#directory-structure)
 - [Source Modules](#source-modules)
-  - [Source Files](#source-files)
 - [Target Node and NPM Versions](#target-node-and-npm-versions)
 - [NPM Scripts](#npm-scripts)
 - [Development and Deployment Workflow](#development-and-deployment-workflow)
@@ -81,9 +80,11 @@ To enable debugging output set the `debug` environment variable to
 
   Module source code. Linted ES6.
 
-  - `src/main.js` Entrypoint for transpiling the module build.
+- `src/__tests__`
 
-  - `src/__tests__` Unit tests (Jest).
+  Unit tests
+
+  (Jest).
 
 - `tests/`
 
@@ -100,11 +101,6 @@ some Airbnb rules). A lint check is performed before unit tests.
 
 Errors are thrown, called back, and emitted in the form
 `new Error("ERROR_CODE: Some more descriptive text.")`.
-
-### Source Files
-
-- `main.js` is the common entrypoint for the module. It takes a transport object
-  from the outside, injects that into a server object, and returns the server.
 
 ## Target Node and NPM Versions
 
