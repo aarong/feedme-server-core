@@ -176,13 +176,13 @@ A server can be in one of four states:
 
 ### Events
 
+Library methods may cause certain events to be emitted synchronously, so the
+application should generally attach any event handlers immediately after
+initialization.
+
 #### starting
 
 Emitted when the server state changes from `stopped` to `starting`.
-
-The `starting` event is emitted synchronously when there is a call to
-`server.start()`, so the application should attach any event handlers before
-making such a call.
 
 Arguments: None
 
@@ -196,10 +196,6 @@ Arguments: None
 
 Emitted when the server state changes from `starting` or `started` to
 `stopping`.
-
-The `stopping` event is emitted synchronously when there is a call to
-`server.stop()`, so the application should attach any event handlers before
-making such a call.
 
 If the server is transitioning from `started` to `stopping`, then a `disconnect`
 event is emitted for each previously-connected client before the `stopping`
@@ -319,10 +315,6 @@ arrive during a termination window.
 #### disconnect
 
 Emitted when a client connection ends.
-
-The `disconnect` event is emitted synchronously when there is a call to
-`server.disconnect(..)`, so the application should attach any event handlers
-before making such a call.
 
 Arguments passed to the listeners:
 

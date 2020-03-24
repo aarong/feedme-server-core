@@ -259,11 +259,13 @@ Transport objects must implement the following methods:
   emitted synchronously.
 
   If the transport starts successfully, the transport state must become
-  `started` and the `start` event must be emitted.
+  `started` and the `start` event must be emitted, either synchronously or
+  asynchronously.
 
   If the transport fails to start, the transport state must become `stopping`
-  and the `stopping` event must be emitted. The transport state must then
-  eventually become `stopped` and the `stop` event must be emitted.
+  and the `stopping` event must be emitted, either synchronously or
+  asynchronously. The transport state must then eventually become `stopped` and
+  the `stop` event must be emitted, either synchronously or asynchronously.
 
   If a synchronous error condition occurs, the transport must emit `starting`,
   `stopping(err)`, and `stopped(err)`. It must not throw an error.
@@ -277,7 +279,8 @@ Transport objects must implement the following methods:
 
   The transport state must become `stopping` and the `stopping` event must be
   emitted synchronously. The transport state must then eventually become
-  `stopped` and the `stop` event must be emitted.
+  `stopped` and the `stop` event must be emitted, either synchronously or
+  asynchronously.
 
 - `transport.send(clientId, msg)`
 
