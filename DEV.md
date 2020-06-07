@@ -215,7 +215,8 @@ Transport objects must only change state in the following circumstances:
 
 6. When `stopping` and the transport has stopped listening for new connections,
    disconnected all previously-connected clients, and is ready to potentially
-   restart, the transport state must become `stopped`.
+   restart, the transport state must become `stopped`. The transport must not
+   automatically attempt to restart.
 
 ### Clients
 
