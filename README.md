@@ -85,7 +85,7 @@ const feedmeServerCore = require("feedme-server-core");
 const wsTransport = require("feedme-transport-ws/server");
 
 const server = feedmeServerCore({
-  transport: wsTransport({ url: "https://some.url/api/websocket" })
+  transport: wsTransport({ url: "https://some.url/api/websocket" }),
 });
 ```
 
@@ -219,6 +219,9 @@ Arguments passed to the listeners:
    stoppage resulted from a transport error, then `err` takes the form
    `err.message === "FAILURE: ..."` and matches the error emitted with the
    `stopping` event.
+
+The library will not automatically try to restart the server if the stoppage was
+unexpected. The application must call `start()` in order to restart the server.
 
 #### connect
 
