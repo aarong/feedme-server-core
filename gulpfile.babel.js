@@ -1,7 +1,6 @@
 import gulp from "gulp";
 import del from "del";
 import sourcemaps from "gulp-sourcemaps";
-import rename from "gulp-rename";
 import babel from "gulp-babel";
 import path from "path";
 
@@ -15,9 +14,9 @@ Works in any path. Gulp.src/dest are always relative to package root (Gulpfile).
 
 const nodeTranspile = () =>
   gulp
-    .src(["src/*.js", "!src/main.browser.js"]) // Don't transpile the browser entry-point
+    .src("src/*.js")
     .pipe(sourcemaps.init())
-    .pipe(babel({ plugins: ["add-module-exports"] })) // No feedmeClient.default({})
+    .pipe(babel({ plugins: ["add-module-exports"] })) // No .default({})
     .pipe(sourcemaps.mapSources(sourcePath => `../src/${sourcePath}`))
     .pipe(sourcemaps.write("."))
     .pipe(gulp.dest("build/"));
@@ -25,9 +24,5 @@ const nodeTranspile = () =>
 const copy = () =>
   gulp.src("./{package.json,LICENSE,README.md}").pipe(gulp.dest("build/"));
 
-export const build = gulp.series(
-  // eslint-disable-line import/prefer-default-export
-  clean,
-  nodeTranspile,
-  copy
-);
+// eslint-disable-next-line import/prefer-default-export
+export const build = gulp.series(clean, nodeTranspile, copy);

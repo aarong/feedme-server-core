@@ -43,7 +43,6 @@
     "gulp": "^4.0.0",
     "gulp-babel": "^8.0.0",
     "gulp-cli": "^2.0.1",
-    "gulp-rename": "^1.4.0",
     "gulp-sourcemaps": "^2.6.5",
     "jest": "^23.6.0",
     "jest-cli": "^23.6.0",
