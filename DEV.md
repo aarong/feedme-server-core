@@ -6,10 +6,11 @@ This documentation is for developers of the Feedme server core library itself.
 
 - [Getting Started](#getting-started)
 - [Directory Structure](#directory-structure)
-- [Source Modules](#source-modules)
+- [Source Code](#source-code)
 - [Target Node and NPM Versions](#target-node-and-npm-versions)
 - [NPM Scripts](#npm-scripts)
-- [Development and Deployment Workflow](#development-and-deployment-workflow)
+- [Committing and Deploying](#committing-and-deploying)
+- [Contributions](#contributions)
 - [Transport API](#transport-api)
   - [Fundamentals](#fundamentals)
   - [Transport States](#transport-states)
@@ -21,34 +22,18 @@ This documentation is for developers of the Feedme server core library itself.
 
 ## Getting Started
 
-To get started:
+Clone the repo, install dependencies, and build the package:
 
 ```shell
 git clone https://github.com/aarong/feedme-server-core
 cd feedme-server-core
 npm install
-```
-
-Edit the source code in the `src` folder and run linting and unit tests:
-
-```shell
-npm run test-src
-# or
-npm run test-src -- --watch
-```
-
-Build a publish-ready NPM package in the `build` folder:
-
-```shell
 npm run build
 ```
 
-When the build process has completed, functional tests are automatically run on
-the Node module in `build`. Those tests can also be run explicitly:
-
-```shell
-npm run test-build
-```
+The build procedure runs unit tests on the `src` folder, assembles a transpiled
+and publish-ready NPM package in the `build` folder, and runs functional tests
+on the built Node module.
 
 To enable debugging output set the `debug` environment variable to
 `feedme-server-core`.
@@ -78,7 +63,7 @@ To enable debugging output set the `debug` environment variable to
 
 - `src/`
 
-  Module source code. Linted ES6.
+  Module source code.
 
 - `src/__tests__`
 
@@ -92,9 +77,9 @@ To enable debugging output set the `debug` environment variable to
 
   (Jest)
 
-## Source Modules
+## Source Code
 
-Module source code is written in ES6 and is transpiled for Node on build.
+Source code is written in ES6 and is transpiled for Node on build.
 
 Eslint enforces Airbnb style and applies Prettier (which takes precence over
 some Airbnb rules). A lint check is performed before unit tests.
@@ -109,8 +94,7 @@ The intention is to support Node and NPM back as far as realistically possible.
 For a development install, the binding dependency constraint is that Eslint
 requires Node 6+, but package-lock.json is only supported by NPM 5+, which comes
 with Node 8+. Develop on Node 8+ and NPM 5+ to ensure that the repo has
-package-lock.json, and rely on Travis to test on Node 6. The Node 6 build is
-published to NPM, as it should be compatible with later versions of Node.
+package-lock.json, and rely on Travis to build and test on Node 6.
 
 Since production installs run code transpiled for Node 6, there is no guarantee
 that they will support earlier versions of Node even though there are far fewer
@@ -137,7 +121,13 @@ dependency-related version constraints.
 - `npm run test-build` Run functional tests against the module in the `build`
   folder. (Jest)
 
-## Development and Deployment Workflow
+## Committing and Deploying
+
+Commits to the master branch on Github are built and tested by Travis CI. If the
+NPM package version has been incremented, then Travis will deploy by publishing
+the build to NPM.
+
+## Contributions
 
 Contributors can fork the repo, make changes, and submit a pull request.
 
@@ -151,10 +141,6 @@ git commit -m "Added my new feature."
 git push origin my-new-feature
 # Submit a pull request
 ```
-
-Commits to the master branch are built and tested by Travis CI. If the NPM
-package version has been incremented, then Travis will deploy by publishing the
-build to NPM.
 
 ## Transport API
 
