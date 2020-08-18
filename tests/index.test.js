@@ -2,13 +2,14 @@ import _ from "lodash";
 import check from "check-types";
 import harness from "./index.harness";
 import feedmeServerCore from "../build";
+import config from "../src/config";
 
 /*
 Build integration/functional tests.
 
 Tests API promises in the user documentation, ensures that the server
 interacts appropriately with the transport, and ensures that messages
-send via the transport abide by the Feedme spec.
+sent via the transport abide by the Feedme spec.
 
 1. Do configuration options work as documented?
 
@@ -41,7 +42,7 @@ describe("The handshakeMs option", () => {
       serverListener.mockClear();
 
       // Run the clock
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -103,7 +104,7 @@ describe("The handshakeMs option", () => {
       serverListener.mockClear();
 
       // Run the clock
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -172,7 +173,7 @@ describe("The handshakeMs option", () => {
       serverListener.mockClear();
 
       // Run the clock
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -245,7 +246,7 @@ describe("The handshakeMs option", () => {
       serverListener.mockClear();
 
       // Run the clock
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -307,7 +308,7 @@ describe("The handshakeMs option", () => {
       serverListener.mockClear();
 
       // Run the clock
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -370,7 +371,7 @@ describe("The handshakeMs option", () => {
       serverListener.mockClear();
 
       // Run the clock
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -486,7 +487,7 @@ describe("The handshakeMs option", () => {
       serverListener.mockClear();
 
       // Run to the end of time
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -627,7 +628,7 @@ describe("The handshakeMs option", () => {
       serverListener.mockClear();
 
       // Run to the end of time
-      jest.runAllTimers();
+      jest.advanceTimersByTime(Math.MAX_SAFE_INTEGER);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -696,7 +697,7 @@ describe("The handshakeMs option", () => {
       serverListener.mockClear();
 
       // Run the clock
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -769,7 +770,7 @@ describe("The handshakeMs option", () => {
       serverListener.mockClear();
 
       // Run the clock
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -831,7 +832,7 @@ describe("The handshakeMs option", () => {
       serverListener.mockClear();
 
       // Run the clock
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -894,7 +895,7 @@ describe("The handshakeMs option", () => {
       serverListener.mockClear();
 
       // Run the clock
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -933,7 +934,7 @@ describe("The terminationMs option", () => {
       serverListener.mockClear();
 
       // Run the clock
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.terminationMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -1010,7 +1011,7 @@ describe("The terminationMs option", () => {
       serverListener.mockClear();
 
       // Run the clock
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.terminationMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -1394,7 +1395,7 @@ describe("The terminationMs option", () => {
       serverListener.mockClear();
 
       // Run the clock
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.terminationMs);
 
       // Check transport calls
       expect(harn.transport.start.mock.calls.length).toBe(0);

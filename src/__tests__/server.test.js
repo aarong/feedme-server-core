@@ -2705,7 +2705,7 @@ describe("The server._processConnect() function", () => {
       harn.transport.emit("connect", "some_tcid");
 
       harn.transport.mockClear();
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       expect(harn.transport.start.mock.calls.length).toBe(0);
       expect(harn.transport.stop.mock.calls.length).toBe(0);
@@ -2721,7 +2721,7 @@ describe("The server._processConnect() function", () => {
       harn.transport.emit("disconnect", "some_tcid");
 
       harn.transport.mockClear();
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       expect(harn.transport.start.mock.calls.length).toBe(0);
       expect(harn.transport.stop.mock.calls.length).toBe(0);
@@ -2744,7 +2744,7 @@ describe("The server._processConnect() function", () => {
       );
 
       harn.transport.mockClear();
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       expect(harn.transport.start.mock.calls.length).toBe(0);
       expect(harn.transport.stop.mock.calls.length).toBe(0);
@@ -2760,7 +2760,7 @@ describe("The server._processConnect() function", () => {
       harn.transport.emit("connect", "some_tcid");
 
       const serverListener = harn.createServerListener();
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       expect(serverListener.starting.mock.calls.length).toBe(0);
       expect(serverListener.start.mock.calls.length).toBe(0);
@@ -2784,7 +2784,7 @@ describe("The server._processConnect() function", () => {
       harn.transport.emit("connect", "some_tcid");
 
       const newState = harn.getServerState();
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       expect(harn.server).toHaveState(newState);
     });
@@ -2796,7 +2796,7 @@ describe("The server._processConnect() function", () => {
       harn.transport.mockClear();
       harn.transport.emit("connect", "some_tcid");
 
-      jest.runAllTimers();
+      jest.advanceTimersByTime(config.defaults.handshakeMs);
 
       expect(harn.transport.start.mock.calls.length).toBe(0);
       expect(harn.transport.stop.mock.calls.length).toBe(0);

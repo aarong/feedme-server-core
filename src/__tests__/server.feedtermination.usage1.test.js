@@ -740,7 +740,7 @@ describe("The server.feedTermination() function", () => {
 
                 const serverListener = harn.createServerListener();
 
-                jest.runAllTimers(); // Fire the termination timer
+                jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
                 expect(serverListener.starting.mock.calls.length).toBe(0);
                 expect(serverListener.start.mock.calls.length).toBe(0);
@@ -782,7 +782,7 @@ describe("The server.feedTermination() function", () => {
 
                 harn.transport.mockClear();
 
-                jest.runAllTimers(); // Fire the termination timer
+                jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
                 expect(harn.transport.start.mock.calls.length).toBe(0);
                 expect(harn.transport.stop.mock.calls.length).toBe(0);
@@ -1237,7 +1237,7 @@ describe("The server.feedTermination() function", () => {
 
                   const serverListener = harn.createServerListener();
 
-                  jest.runAllTimers(); // Fire the termination timer
+                  jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
                   expect(serverListener.starting.mock.calls.length).toBe(0);
                   expect(serverListener.start.mock.calls.length).toBe(0);
@@ -1281,7 +1281,7 @@ describe("The server.feedTermination() function", () => {
 
                   harn.transport.mockClear();
 
-                  jest.runAllTimers(); // Fire the termination timer
+                  jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
                   expect(harn.transport.start.mock.calls.length).toBe(0);
                   expect(harn.transport.stop.mock.calls.length).toBe(0);
@@ -1759,7 +1759,7 @@ describe("The server.feedTermination() function", () => {
 
                   const serverListener = harn.createServerListener();
 
-                  jest.runAllTimers(); // Fire the termination timer
+                  jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
                   expect(serverListener.starting.mock.calls.length).toBe(0);
                   expect(serverListener.start.mock.calls.length).toBe(0);
@@ -1803,7 +1803,7 @@ describe("The server.feedTermination() function", () => {
 
                   harn.transport.mockClear();
 
-                  jest.runAllTimers(); // Fire the termination timer
+                  jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
                   expect(harn.transport.start.mock.calls.length).toBe(0);
                   expect(harn.transport.stop.mock.calls.length).toBe(0);
@@ -2303,7 +2303,7 @@ describe("The server.feedTermination() function", () => {
 
                   const serverListener = harn.createServerListener();
 
-                  jest.runAllTimers(); // Fire the termination timer
+                  jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
                   expect(serverListener.starting.mock.calls.length).toBe(0);
                   expect(serverListener.start.mock.calls.length).toBe(0);
@@ -2347,7 +2347,7 @@ describe("The server.feedTermination() function", () => {
 
                   harn.transport.mockClear();
 
-                  jest.runAllTimers(); // Fire the termination timer
+                  jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
                   expect(harn.transport.start.mock.calls.length).toBe(0);
                   expect(harn.transport.stop.mock.calls.length).toBe(0);
@@ -2842,7 +2842,7 @@ describe("The server.feedTermination() function", () => {
 
                   const serverListener = harn.createServerListener();
 
-                  jest.runAllTimers(); // Fire the termination timer
+                  jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
                   expect(serverListener.starting.mock.calls.length).toBe(0);
                   expect(serverListener.start.mock.calls.length).toBe(0);
@@ -2886,7 +2886,7 @@ describe("The server.feedTermination() function", () => {
 
                   harn.transport.mockClear();
 
-                  jest.runAllTimers(); // Fire the termination timer
+                  jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
                   expect(harn.transport.start.mock.calls.length).toBe(0);
                   expect(harn.transport.stop.mock.calls.length).toBe(0);
@@ -3371,7 +3371,7 @@ describe("The server.feedTermination() function", () => {
 
                   const serverListener = harn.createServerListener();
 
-                  jest.runAllTimers(); // Fire the termination timer
+                  jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
                   expect(serverListener.starting.mock.calls.length).toBe(0);
                   expect(serverListener.start.mock.calls.length).toBe(0);
@@ -3417,7 +3417,7 @@ describe("The server.feedTermination() function", () => {
 
                   harn.transport.mockClear();
 
-                  jest.runAllTimers(); // Fire the termination timer
+                  jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
                   expect(harn.transport.start.mock.calls.length).toBe(0);
                   expect(harn.transport.stop.mock.calls.length).toBe(0);
@@ -3892,7 +3892,7 @@ describe("The server.feedTermination() function", () => {
 
               const serverListener = harn.createServerListener();
 
-              jest.runAllTimers(); // Fire the termination timer
+              jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
               expect(serverListener.starting.mock.calls.length).toBe(0);
               expect(serverListener.start.mock.calls.length).toBe(0);
@@ -3930,7 +3930,7 @@ describe("The server.feedTermination() function", () => {
 
               harn.transport.mockClear();
 
-              jest.runAllTimers(); // Fire the termination timer
+              jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
               expect(harn.transport.start.mock.calls.length).toBe(0);
               expect(harn.transport.stop.mock.calls.length).toBe(0);
@@ -4399,7 +4399,7 @@ describe("The server.feedTermination() function", () => {
 
               const serverListener = harn.createServerListener();
 
-              jest.runAllTimers(); // Fire the termination timer
+              jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
               expect(serverListener.starting.mock.calls.length).toBe(0);
               expect(serverListener.start.mock.calls.length).toBe(0);
@@ -4437,7 +4437,7 @@ describe("The server.feedTermination() function", () => {
 
               harn.transport.mockClear();
 
-              jest.runAllTimers(); // Fire the termination timer
+              jest.advanceTimersByTime(config.defaults.terminationMs); // Fire the termination timer
 
               expect(harn.transport.start.mock.calls.length).toBe(0);
               expect(harn.transport.stop.mock.calls.length).toBe(0);
