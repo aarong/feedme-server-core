@@ -153,6 +153,10 @@ to function correctly with the library. The server library interacts with
 transports through a wrapper that aims to detect invalid behavior and emits a
 server `transportError` event if the transport does something unexpected.
 
+See the
+[Feedme WebSocket Transport](https://github.com/aarong/feedme-transport-ws) for
+a working example.
+
 ### Fundamentals
 
 Transport objects must be able to listen for client connections and, once a
