@@ -1215,11 +1215,9 @@ describe("The server._appHandshakeSuccess() function - via handshakeResponse.suc
 
     it("should operate appropriately on the transport", () => {
       const harn = harness();
-      let cid;
       harn.makeServerStarted();
 
       harn.server.once("handshake", (hsreq, hsres) => {
-        cid = hsreq.clientId;
         harn.transport.mockClear();
         hsres.success();
       });
@@ -1241,8 +1239,7 @@ describe("The server._appHandshakeSuccess() function - via handshakeResponse.suc
       expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "HandshakeResponse",
         Success: true,
-        Version: "0.1",
-        ClientId: cid
+        Version: "0.1"
       });
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
@@ -4074,10 +4071,6 @@ describe("The server._processHandshake() function", () => {
     it("should transmit HandshakeResponse indicating success", () => {
       const harn = harness({ handshakeMs: 0 });
       harn.makeServerStarted();
-      let cid;
-      harn.server.once("connect", ecid => {
-        cid = ecid;
-      });
       harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
@@ -4095,8 +4088,7 @@ describe("The server._processHandshake() function", () => {
       expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "HandshakeResponse",
         Success: true,
-        Version: "0.1",
-        ClientId: cid
+        Version: "0.1"
       });
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
@@ -4294,10 +4286,6 @@ describe("The server._processHandshake() function", () => {
     it("should transmit HandshakeResponse indicating success", () => {
       const harn = harness({ handshakeMs: 1 });
       harn.makeServerStarted();
-      let cid;
-      harn.server.once("connect", ecid => {
-        cid = ecid;
-      });
       harn.transport.emit("connect", "some_tcid");
       const msg = JSON.stringify({
         MessageType: "Handshake",
@@ -4315,8 +4303,7 @@ describe("The server._processHandshake() function", () => {
       expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "HandshakeResponse",
         Success: true,
-        Version: "0.1",
-        ClientId: cid
+        Version: "0.1"
       });
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });

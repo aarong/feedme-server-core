@@ -1031,8 +1031,7 @@ proto._processHandshake = function _processHandshake(clientId, msg, msgString) {
       JSON.stringify({
         MessageType: "HandshakeResponse",
         Success: true,
-        Version: feedmeVersion,
-        ClientId: clientId
+        Version: feedmeVersion
       })
     );
   }
@@ -1482,8 +1481,7 @@ proto._appHandshakeSuccess = function _appHandshakeSuccess(clientId) {
     JSON.stringify({
       MessageType: "HandshakeResponse",
       Success: true,
-      Version: feedmeVersion,
-      ClientId: clientId
+      Version: feedmeVersion
     })
   );
 };
