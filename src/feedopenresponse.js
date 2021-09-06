@@ -117,8 +117,8 @@ proto.success = function success(feedData) {
  * @throws {Error} "ALREADY_RESPONDED: ..."
  */
 proto.failure = function failure(errorCode, errorData) {
-  // Check error code
-  if (!check.nonEmptyString(errorCode)) {
+  // Check error code - empty is spec-valid
+  if (!check.string(errorCode)) {
     throw new Error("INVALID_ARGUMENT: Invalid error code.");
   }
 

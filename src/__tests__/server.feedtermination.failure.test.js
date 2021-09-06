@@ -44,20 +44,6 @@ describe("The server.feedTermination() function", () => {
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid client id."));
       });
 
-      it("should throw if invalid params.clientId - empty string", () => {
-        const harn = harness();
-        harn.makeServerStarted();
-        expect(() => {
-          harn.server.feedTermination({
-            clientId: "",
-            feedName: "some_feed",
-            feedArgs: { feed: "arg" },
-            errorCode: "SOME_ERROR",
-            errorData: { error: "data" }
-          });
-        }).toThrow(new Error("INVALID_ARGUMENT: Invalid client id."));
-      });
-
       it("should throw if invalid params.feedName", () => {
         const harn = harness();
         harn.makeServerStarted();
@@ -110,20 +96,6 @@ describe("The server.feedTermination() function", () => {
             feedName: "some_feed",
             feedArgs: { feed: "arg" },
             errorCode: null,
-            errorData: { error: "data" }
-          });
-        }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
-      });
-
-      it("should throw if invalid params.errorCode - empty string", () => {
-        const harn = harness();
-        harn.makeServerStarted();
-        expect(() => {
-          harn.server.feedTermination({
-            clientId: "some_client",
-            feedName: "some_feed",
-            feedArgs: { feed: "arg" },
-            errorCode: "",
             errorData: { error: "data" }
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
@@ -184,18 +156,6 @@ describe("The server.feedTermination() function", () => {
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid client id."));
       });
 
-      it("should throw if invalid params.clientId - empty string", () => {
-        const harn = harness();
-        harn.makeServerStarted();
-        expect(() => {
-          harn.server.feedTermination({
-            clientId: "",
-            errorCode: "SOME_ERROR",
-            errorData: { error: "data" }
-          });
-        }).toThrow(new Error("INVALID_ARGUMENT: Invalid client id."));
-      });
-
       it("should throw if invalid params.errorCode - missing", () => {
         const harn = harness();
         harn.makeServerStarted();
@@ -214,18 +174,6 @@ describe("The server.feedTermination() function", () => {
           harn.server.feedTermination({
             clientId: "some_client",
             errorCode: true,
-            errorData: { error: "data" }
-          });
-        }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
-      });
-
-      it("should throw if invalid params.errorCode - empty string", () => {
-        const harn = harness();
-        harn.makeServerStarted();
-        expect(() => {
-          harn.server.feedTermination({
-            clientId: "some_client",
-            errorCode: "",
             errorData: { error: "data" }
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
@@ -316,19 +264,6 @@ describe("The server.feedTermination() function", () => {
             feedName: "some_feed",
             feedArgs: { feed: "arg" },
             errorCode: 123,
-            errorData: { error: "data" }
-          });
-        }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
-      });
-
-      it("should throw if invalid params.errorCode - empty string", () => {
-        const harn = harness();
-        harn.makeServerStarted();
-        expect(() => {
-          harn.server.feedTermination({
-            feedName: "some_feed",
-            feedArgs: { feed: "arg" },
-            errorCode: "",
             errorData: { error: "data" }
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));

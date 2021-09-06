@@ -50,11 +50,6 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       fores.failure(123);
     }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
 
-    // Failure - throw on invalid errorCode - empty
-    expect(() => {
-      fores.failure("");
-    }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
-
     // Failure - throw on invalid errorData type
     expect(() => {
       fores.failure("SOME_ERROR", 123);

@@ -533,8 +533,8 @@ proto.actionRevelation = function actionRevelation(params) {
     throw new Error("INVALID_ARGUMENT: Invalid params.");
   }
 
-  // Check action name
-  if (!check.nonEmptyString(params.actionName)) {
+  // Check action name - empty is spec-valid
+  if (!check.string(params.actionName)) {
     throw new Error("INVALID_ARGUMENT: Invalid action name.");
   }
 
@@ -655,7 +655,7 @@ proto.feedTermination = function feedTermination(params) {
   }
 
   // Check client id (if required by usage)
-  if (usage !== 3 && !check.nonEmptyString(params.clientId)) {
+  if (usage !== 3 && !check.string(params.clientId)) {
     throw new Error("INVALID_ARGUMENT: Invalid client id.");
   }
 
@@ -664,8 +664,8 @@ proto.feedTermination = function feedTermination(params) {
     feedValidator.validate(params.feedName, params.feedArgs);
   }
 
-  // Check error code (required for all usages)
-  if (!check.nonEmptyString(params.errorCode)) {
+  // Check error code (required for all usages) - empty is spec-valid
+  if (!check.string(params.errorCode)) {
     throw new Error("INVALID_ARGUMENT: Invalid error code.");
   }
 
@@ -786,7 +786,7 @@ proto.disconnect = function disconnect(clientId) {
   }
 
   // Check client id
-  if (!check.nonEmptyString(clientId)) {
+  if (!check.string(clientId)) {
     throw new Error("INVALID_ARGUMENT: Invalid client id.");
   }
 

@@ -466,20 +466,6 @@ describe("The server.actionRevelation() function", () => {
       }).toThrow("INVALID_ARGUMENT: Invalid action name.");
     });
 
-    it("should throw on invalid params.actionName - empty string", () => {
-      const harn = harness();
-      harn.makeServerStarted();
-      expect(() => {
-        harn.server.actionRevelation({
-          actionName: "",
-          actionData: { action: "data" },
-          feedName: "some_feed",
-          feedArgs: { feed: "args" },
-          feedDeltas: []
-        });
-      }).toThrow("INVALID_ARGUMENT: Invalid action name.");
-    });
-
     it("should throw on invalid params.actionData - bad type", () => {
       const harn = harness();
       harn.makeServerStarted();
