@@ -26,10 +26,6 @@ jobs:
         - nvm install 8
         - nvm use 8
         - npm run build # test-src, build, test-build
-        
-        - nvm install 6
-        - nvm use 6
-        - npm run build # test-src, build, test-build
 
         - npm run coveralls
       deploy: # Can't use npm provider because you need to publish the build folder
