@@ -1,4 +1,4 @@
-import feedSerializer from "feedme-util/feedserializer";
+import FeedNameArgs from "feedme-util/feednameargs";
 import config from "../config";
 import harness from "./server.harness";
 
@@ -547,9 +547,9 @@ describe("The server.feedTermination() function", () => {
           describe("target client has target feed opening", () => {
             let harn;
             let cidTarget;
-            const feedSerial = feedSerializer.serialize("some_feed", {
+            const feedSerial = FeedNameArgs("some_feed", {
               feed: "args"
-            });
+            }).serial();
             beforeEach(() => {
               harn = harness();
               harn.makeServerStarted();
@@ -643,9 +643,9 @@ describe("The server.feedTermination() function", () => {
           describe("target client has target feed open", () => {
             let harn;
             let cidTarget;
-            const feedSerial = feedSerializer.serialize("some_feed", {
+            const feedSerial = FeedNameArgs("some_feed", {
               feed: "args"
-            });
+            }).serial();
             beforeEach(() => {
               harn = harness();
               harn.makeServerStarted();
@@ -1029,9 +1029,9 @@ describe("The server.feedTermination() function", () => {
               let harn;
               let cidTarget;
               let cidNotTarget; // eslint-disable-line no-unused-vars
-              const feedSerial = feedSerializer.serialize("some_feed", {
+              const feedSerial = FeedNameArgs("some_feed", {
                 feed: "args"
-              });
+              }).serial();
               beforeEach(() => {
                 harn = harness();
                 harn.makeServerStarted();
@@ -1132,9 +1132,9 @@ describe("The server.feedTermination() function", () => {
               let harn;
               let cidTarget;
               let cidNotTarget; // eslint-disable-line no-unused-vars
-              const feedSerial = feedSerializer.serialize("some_feed", {
+              const feedSerial = FeedNameArgs("some_feed", {
                 feed: "args"
-              });
+              }).serial();
               beforeEach(() => {
                 harn = harness();
                 harn.makeServerStarted();
@@ -1545,9 +1545,9 @@ describe("The server.feedTermination() function", () => {
               let harn;
               let cidTarget;
               let cidNotTarget; // eslint-disable-line no-unused-vars
-              const feedSerial = feedSerializer.serialize("some_feed", {
+              const feedSerial = FeedNameArgs("some_feed", {
                 feed: "args"
-              });
+              }).serial();
               beforeEach(() => {
                 harn = harness();
                 harn.makeServerStarted();
@@ -1651,9 +1651,9 @@ describe("The server.feedTermination() function", () => {
               let harn;
               let cidTarget;
               let cidNotTarget; // eslint-disable-line no-unused-vars
-              const feedSerial = feedSerializer.serialize("some_feed", {
+              const feedSerial = FeedNameArgs("some_feed", {
                 feed: "args"
-              });
+              }).serial();
               beforeEach(() => {
                 harn = harness();
                 harn.makeServerStarted();
@@ -2079,9 +2079,9 @@ describe("The server.feedTermination() function", () => {
               let harn;
               let cidTarget;
               let cidNotTarget; // eslint-disable-line no-unused-vars
-              const feedSerial = feedSerializer.serialize("some_feed", {
+              const feedSerial = FeedNameArgs("some_feed", {
                 feed: "args"
-              });
+              }).serial();
               beforeEach(() => {
                 harn = harness();
                 harn.makeServerStarted();
@@ -2190,9 +2190,9 @@ describe("The server.feedTermination() function", () => {
               let harn;
               let cidTarget;
               let cidNotTarget; // eslint-disable-line no-unused-vars
-              const feedSerial = feedSerializer.serialize("some_feed", {
+              const feedSerial = FeedNameArgs("some_feed", {
                 feed: "args"
-              });
+              }).serial();
               beforeEach(() => {
                 harn = harness();
                 harn.makeServerStarted();
@@ -2628,9 +2628,9 @@ describe("The server.feedTermination() function", () => {
               let harn;
               let cidTarget;
               let cidNotTarget; // eslint-disable-line no-unused-vars
-              const feedSerial = feedSerializer.serialize("some_feed", {
+              const feedSerial = FeedNameArgs("some_feed", {
                 feed: "args"
-              });
+              }).serial();
               beforeEach(() => {
                 harn = harness();
                 harn.makeServerStarted();
@@ -2734,9 +2734,9 @@ describe("The server.feedTermination() function", () => {
               let harn;
               let cidTarget;
               let cidNotTarget; // eslint-disable-line no-unused-vars
-              const feedSerial = feedSerializer.serialize("some_feed", {
+              const feedSerial = FeedNameArgs("some_feed", {
                 feed: "args"
-              });
+              }).serial();
               beforeEach(() => {
                 harn = harness();
                 harn.makeServerStarted();
@@ -3157,9 +3157,9 @@ describe("The server.feedTermination() function", () => {
               let harn;
               let cidTarget;
               let cidNotTarget; // eslint-disable-line no-unused-vars
-              const feedSerial = feedSerializer.serialize("some_feed", {
+              const feedSerial = FeedNameArgs("some_feed", {
                 feed: "args"
-              });
+              }).serial();
               beforeEach(() => {
                 harn = harness();
                 harn.makeServerStarted();
@@ -3263,9 +3263,9 @@ describe("The server.feedTermination() function", () => {
               let harn;
               let cidTarget;
               let cidNotTarget; // eslint-disable-line no-unused-vars
-              const feedSerial = feedSerializer.serialize("some_feed", {
+              const feedSerial = FeedNameArgs("some_feed", {
                 feed: "args"
-              });
+              }).serial();
               beforeEach(() => {
                 harn = harness();
                 harn.makeServerStarted();
@@ -3687,9 +3687,9 @@ describe("The server.feedTermination() function", () => {
         describe("target client has target feed opening", () => {
           let harn;
           let cidTarget;
-          const feedSerial = feedSerializer.serialize("some_feed", {
+          const feedSerial = FeedNameArgs("some_feed", {
             feed: "args"
-          });
+          }).serial();
           beforeEach(() => {
             harn = harness();
             harn.makeServerStarted();
@@ -3789,9 +3789,9 @@ describe("The server.feedTermination() function", () => {
         describe("target client has target feed open", () => {
           let harn;
           let cidTarget;
-          const feedSerial = feedSerializer.serialize("some_feed", {
+          const feedSerial = FeedNameArgs("some_feed", {
             feed: "args"
-          });
+          }).serial();
           beforeEach(() => {
             harn = harness();
             harn.makeServerStarted();
@@ -4194,9 +4194,9 @@ describe("The server.feedTermination() function", () => {
         describe("target client has target feed opening", () => {
           let harn;
           let cidTarget;
-          const feedSerial = feedSerializer.serialize("some_feed", {
+          const feedSerial = FeedNameArgs("some_feed", {
             feed: "args"
-          });
+          }).serial();
           beforeEach(() => {
             harn = harness();
             harn.makeServerStarted();
@@ -4296,9 +4296,9 @@ describe("The server.feedTermination() function", () => {
         describe("target client has target feed open", () => {
           let harn;
           let cidTarget;
-          const feedSerial = feedSerializer.serialize("some_feed", {
+          const feedSerial = FeedNameArgs("some_feed", {
             feed: "args"
-          });
+          }).serial();
           beforeEach(() => {
             harn = harness();
             harn.makeServerStarted();

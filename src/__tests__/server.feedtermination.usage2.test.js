@@ -1,4 +1,4 @@
-import feedSerializer from "feedme-util/feedserializer";
+import FeedNameArgs from "feedme-util/feednameargs";
 import _ from "lodash";
 import config from "../config";
 import harness from "./server.harness";
@@ -889,12 +889,12 @@ describe("The server.feedTermination() function", () => {
 
             go();
 
-            const wasOpeningSerial = feedSerializer.serialize("opening_feed", {
+            const wasOpeningSerial = FeedNameArgs("opening_feed", {
               feed: "args"
-            });
-            const wasOpenSerial = feedSerializer.serialize("open_feed", {
+            }).serial();
+            const wasOpenSerial = FeedNameArgs("open_feed", {
               feed: "args"
-            });
+            }).serial();
 
             newState._clientFeedStates[cidTarget][wasOpenSerial] = "terminated";
             delete newState._clientFeedStates[cidTarget][wasOpeningSerial];
@@ -1002,15 +1002,12 @@ describe("The server.feedTermination() function", () => {
 
               jest.advanceTimersByTime(epsilon); // Fire the termination timer
 
-              const openSerial = feedSerializer.serialize("open_feed", {
+              const openSerial = FeedNameArgs("open_feed", {
                 feed: "args"
-              });
-              const terminatedSerial = feedSerializer.serialize(
-                "terminated_feed",
-                {
-                  feed: "args"
-                }
-              );
+              }).serial();
+              const terminatedSerial = FeedNameArgs("terminated_feed", {
+                feed: "args"
+              }).serial();
 
               delete newState._clientFeedStates[cidTarget][openSerial];
               delete newState._clientFeedStates[cidTarget][terminatedSerial];
@@ -1110,15 +1107,12 @@ describe("The server.feedTermination() function", () => {
 
               go();
 
-              const wasOpeningSerial = feedSerializer.serialize(
-                "opening_feed",
-                {
-                  feed: "args"
-                }
-              );
-              const wasOpenSerial = feedSerializer.serialize("open_feed", {
+              const wasOpeningSerial = FeedNameArgs("opening_feed", {
                 feed: "args"
-              });
+              }).serial();
+              const wasOpenSerial = FeedNameArgs("open_feed", {
+                feed: "args"
+              }).serial();
 
               newState._clientFeedStates[cidTarget][wasOpenSerial] =
                 "terminated";
@@ -1232,15 +1226,12 @@ describe("The server.feedTermination() function", () => {
 
                 jest.advanceTimersByTime(epsilon); // Fire the termination timer
 
-                const openSerial = feedSerializer.serialize("open_feed", {
+                const openSerial = FeedNameArgs("open_feed", {
                   feed: "args"
-                });
-                const terminatedSerial = feedSerializer.serialize(
-                  "terminated_feed",
-                  {
-                    feed: "args"
-                  }
-                );
+                }).serial();
+                const terminatedSerial = FeedNameArgs("terminated_feed", {
+                  feed: "args"
+                }).serial();
 
                 delete newState._clientFeedStates[cidTarget][openSerial];
                 delete newState._clientFeedStates[cidTarget][terminatedSerial];
@@ -1342,15 +1333,12 @@ describe("The server.feedTermination() function", () => {
 
               go();
 
-              const wasOpeningSerial = feedSerializer.serialize(
-                "opening_feed",
-                {
-                  feed: "args"
-                }
-              );
-              const wasOpenSerial = feedSerializer.serialize("open_feed", {
+              const wasOpeningSerial = FeedNameArgs("opening_feed", {
                 feed: "args"
-              });
+              }).serial();
+              const wasOpenSerial = FeedNameArgs("open_feed", {
+                feed: "args"
+              }).serial();
 
               newState._clientFeedStates[cidTarget][wasOpenSerial] =
                 "terminated";
@@ -1465,15 +1453,12 @@ describe("The server.feedTermination() function", () => {
 
                 jest.advanceTimersByTime(epsilon); // Fire the termination timer
 
-                const openSerial = feedSerializer.serialize("open_feed", {
+                const openSerial = FeedNameArgs("open_feed", {
                   feed: "args"
-                });
-                const terminatedSerial = feedSerializer.serialize(
-                  "terminated_feed",
-                  {
-                    feed: "args"
-                  }
-                );
+                }).serial();
+                const terminatedSerial = FeedNameArgs("terminated_feed", {
+                  feed: "args"
+                }).serial();
 
                 delete newState._clientFeedStates[cidTarget][openSerial];
                 delete newState._clientFeedStates[cidTarget][terminatedSerial];
@@ -1580,15 +1565,12 @@ describe("The server.feedTermination() function", () => {
 
               go();
 
-              const wasOpeningSerial = feedSerializer.serialize(
-                "opening_feed",
-                {
-                  feed: "args"
-                }
-              );
-              const wasOpenSerial = feedSerializer.serialize("open_feed", {
+              const wasOpeningSerial = FeedNameArgs("opening_feed", {
                 feed: "args"
-              });
+              }).serial();
+              const wasOpenSerial = FeedNameArgs("open_feed", {
+                feed: "args"
+              }).serial();
 
               newState._clientFeedStates[cidTarget][wasOpenSerial] =
                 "terminated";
@@ -1702,15 +1684,12 @@ describe("The server.feedTermination() function", () => {
 
                 jest.advanceTimersByTime(epsilon); // Fire the termination timer
 
-                const openSerial = feedSerializer.serialize("open_feed", {
+                const openSerial = FeedNameArgs("open_feed", {
                   feed: "args"
-                });
-                const terminatedSerial = feedSerializer.serialize(
-                  "terminated_feed",
-                  {
-                    feed: "args"
-                  }
-                );
+                }).serial();
+                const terminatedSerial = FeedNameArgs("terminated_feed", {
+                  feed: "args"
+                }).serial();
 
                 delete newState._clientFeedStates[cidTarget][openSerial];
                 delete newState._clientFeedStates[cidTarget][terminatedSerial];
@@ -1817,15 +1796,12 @@ describe("The server.feedTermination() function", () => {
 
               go();
 
-              const wasOpeningSerial = feedSerializer.serialize(
-                "opening_feed",
-                {
-                  feed: "args"
-                }
-              );
-              const wasOpenSerial = feedSerializer.serialize("open_feed", {
+              const wasOpeningSerial = FeedNameArgs("opening_feed", {
                 feed: "args"
-              });
+              }).serial();
+              const wasOpenSerial = FeedNameArgs("open_feed", {
+                feed: "args"
+              }).serial();
 
               newState._clientFeedStates[cidTarget][wasOpenSerial] =
                 "terminated";
@@ -1939,15 +1915,12 @@ describe("The server.feedTermination() function", () => {
 
                 jest.advanceTimersByTime(epsilon); // Fire the termination timer
 
-                const openSerial = feedSerializer.serialize("open_feed", {
+                const openSerial = FeedNameArgs("open_feed", {
                   feed: "args"
-                });
-                const terminatedSerial = feedSerializer.serialize(
-                  "terminated_feed",
-                  {
-                    feed: "args"
-                  }
-                );
+                }).serial();
+                const terminatedSerial = FeedNameArgs("terminated_feed", {
+                  feed: "args"
+                }).serial();
 
                 delete newState._clientFeedStates[cidTarget][openSerial];
                 delete newState._clientFeedStates[cidTarget][terminatedSerial];
@@ -2054,15 +2027,12 @@ describe("The server.feedTermination() function", () => {
 
               go();
 
-              const wasOpeningSerial = feedSerializer.serialize(
-                "opening_feed",
-                {
-                  feed: "args"
-                }
-              );
-              const wasOpenSerial = feedSerializer.serialize("open_feed", {
+              const wasOpeningSerial = FeedNameArgs("opening_feed", {
                 feed: "args"
-              });
+              }).serial();
+              const wasOpenSerial = FeedNameArgs("open_feed", {
+                feed: "args"
+              }).serial();
 
               newState._clientFeedStates[cidTarget][wasOpenSerial] =
                 "terminated";
@@ -2176,15 +2146,12 @@ describe("The server.feedTermination() function", () => {
 
                 jest.advanceTimersByTime(epsilon); // Fire the termination timer
 
-                const openSerial = feedSerializer.serialize("open_feed", {
+                const openSerial = FeedNameArgs("open_feed", {
                   feed: "args"
-                });
-                const terminatedSerial = feedSerializer.serialize(
-                  "terminated_feed",
-                  {
-                    feed: "args"
-                  }
-                );
+                }).serial();
+                const terminatedSerial = FeedNameArgs("terminated_feed", {
+                  feed: "args"
+                }).serial();
 
                 delete newState._clientFeedStates[cidTarget][openSerial];
                 delete newState._clientFeedStates[cidTarget][terminatedSerial];

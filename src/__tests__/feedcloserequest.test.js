@@ -1,11 +1,14 @@
+import FeedNameArgs from "feedme-util/feednameargs";
 import feedCloseRequest from "../feedcloserequest";
 
 describe("The feedCloseRequest() factory function", () => {
   it("should return an object", () => {
-    expect(feedCloseRequest("client1", "someFeed", { feed: "arg" })).toEqual({
+    const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+    expect(feedCloseRequest("client1", feedNameArgs)).toEqual({
       clientId: "client1",
-      feedName: "someFeed",
-      feedArgs: { feed: "arg" }
+      feedName: "some_feed",
+      feedArgs: { feed: "arg" },
+      _feedNameArgs: feedNameArgs
     });
   });
 });

@@ -6,11 +6,10 @@
 /**
  * Factory function.
  * @param {String} clientId
- * @param {String} feedName
- * @param {Object} feedArgs
+ * @param {FeedNameArgs} feedNameArgs
  * @returns {FeedOpenRequest}
  */
-export default function feedOpenRequestFactory(clientId, feedName, feedArgs) {
+export default function feedOpenRequestFactory(clientId, feedNameArgs) {
   const feedOpenRequest = {};
 
   /**
@@ -22,12 +21,21 @@ export default function feedOpenRequestFactory(clientId, feedName, feedArgs) {
   feedOpenRequest.clientId = clientId;
 
   /**
+   * Feed name, arguments, serial.
+   * @memberof FeedOpenRequest
+   * @instance
+   * @private
+   * @type {FeedNameArgs}
+   */
+  feedOpenRequest._feedNameArgs = feedNameArgs;
+
+  /**
    * Name of the feed being opened.
    * @memberof FeedOpenRequest
    * @instance
    * @type {String}
    */
-  feedOpenRequest.feedName = feedName;
+  feedOpenRequest.feedName = feedNameArgs.name();
 
   /**
    * Arguments for the feed being opened.
@@ -35,7 +43,7 @@ export default function feedOpenRequestFactory(clientId, feedName, feedArgs) {
    * @instance
    * @type {Object}
    */
-  feedOpenRequest.feedArgs = feedArgs;
+  feedOpenRequest.feedArgs = feedNameArgs.args();
 
   return feedOpenRequest;
 }

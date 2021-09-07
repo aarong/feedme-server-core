@@ -6,11 +6,11 @@
 /**
  * Factory function.
  * @param {String} clientId
- * @param {String} feedName
+ * @param {FeedNameArgs} feedNameArgs
  * @param {Object} feedArgs
  * @returns {FeedCloseRequest}
  */
-export default function feedCloseRequestFactory(clientId, feedName, feedArgs) {
+export default function feedCloseRequestFactory(clientId, feedNameArgs) {
   const feedCloseRequest = {};
 
   /**
@@ -22,12 +22,21 @@ export default function feedCloseRequestFactory(clientId, feedName, feedArgs) {
   feedCloseRequest.clientId = clientId;
 
   /**
+   * Feed name, arguments, serial.
+   * @memberof FeedCloseRequest
+   * @instance
+   * @private
+   * @type {FeedNameArgs}
+   */
+  feedCloseRequest._feedNameArgs = feedNameArgs;
+
+  /**
    * Name of the feed being closed.
    * @memberof FeedCloseRequest
    * @instance
    * @type {String}
    */
-  feedCloseRequest.feedName = feedName;
+  feedCloseRequest.feedName = feedNameArgs.name();
 
   /**
    * Arguments for the feed being closed.
@@ -35,7 +44,7 @@ export default function feedCloseRequestFactory(clientId, feedName, feedArgs) {
    * @instance
    * @type {Object}
    */
-  feedCloseRequest.feedArgs = feedArgs;
+  feedCloseRequest.feedArgs = feedNameArgs.args();
 
   return feedCloseRequest;
 }

@@ -1,4 +1,4 @@
-import feedSerializer from "feedme-util/feedserializer";
+import FeedNameArgs from "feedme-util/feednameargs";
 import check from "check-types";
 import md5Calculator from "feedme-util/md5calculator";
 import server from "../server";
@@ -1627,9 +1627,8 @@ describe("The server._appFeedOpenSuccess() function - via feedOpenResponse.succe
         })
       );
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       newState._clientFeedStates[cid][feedSerial] = "open";
       newState._feedClientStates[feedSerial][cid] = "open";
       delete newState._feedOpenResponses[cid];
@@ -1672,9 +1671,8 @@ describe("The server._appFeedOpenSuccess() function - via feedOpenResponse.succe
         })
       );
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       newState._clientFeedStates[cid][feedSerial] = "open";
       newState._feedClientStates[feedSerial][cid] = "open";
       delete newState._feedOpenResponses[cid][feedSerial];
@@ -1718,9 +1716,8 @@ describe("The server._appFeedOpenSuccess() function - via feedOpenResponse.succe
         })
       );
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       newState._clientFeedStates[cid][feedSerial] = "open";
       newState._feedClientStates[feedSerial][cid] = "open";
       delete newState._feedOpenResponses[cid];
@@ -1839,9 +1836,8 @@ describe("The server._appFeedOpenFailure() function - via feedOpenResponse.failu
         })
       );
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       delete newState._clientFeedStates[cid];
       delete newState._feedClientStates[feedSerial];
       delete newState._feedOpenResponses[cid];
@@ -1884,9 +1880,8 @@ describe("The server._appFeedOpenFailure() function - via feedOpenResponse.failu
         })
       );
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       delete newState._clientFeedStates[cid][feedSerial];
       delete newState._feedClientStates[feedSerial];
       delete newState._feedOpenResponses[cid][feedSerial];
@@ -1930,9 +1925,8 @@ describe("The server._appFeedOpenFailure() function - via feedOpenResponse.failu
         })
       );
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       delete newState._clientFeedStates[cid];
       delete newState._feedClientStates[feedSerial][cid];
       delete newState._feedOpenResponses[cid];
@@ -2064,9 +2058,8 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
         })
       );
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       delete newState._clientFeedStates[cid];
       delete newState._feedClientStates[feedSerial];
       delete newState._feedCloseResponses[cid];
@@ -2121,9 +2114,8 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
         })
       );
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       delete newState._clientFeedStates[cid][feedSerial];
       delete newState._feedClientStates[feedSerial];
       delete newState._feedCloseResponses[cid][feedSerial];
@@ -2179,9 +2171,8 @@ describe("The server._appFeedCloseSuccess() function - via feedCloseResponse.suc
         })
       );
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       delete newState._clientFeedStates[cid];
       delete newState._feedClientStates[feedSerial][cid];
       delete newState._feedCloseResponses[cid];
@@ -5690,9 +5681,8 @@ describe("The server._processFeedOpen() function", () => {
       const newState = harn.getServerState();
       harn.transport.emit("message", "some_tcid", msg);
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       delete newState._clientFeedStates[cid];
       delete newState._feedClientStates[feedSerial];
       delete newState._terminationTimers[cid];
@@ -5744,9 +5734,8 @@ describe("The server._processFeedOpen() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       const timerId = harn.server._terminationTimers[cid][feedSerial];
 
       clearTimeout.mockClear();
@@ -5823,9 +5812,8 @@ describe("The server._processFeedOpen() function", () => {
       const newState = harn.getServerState();
       harn.transport.emit("message", "some_tcid", msg);
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       newState._clientFeedStates = {
         [cid]: {
           [feedSerial]: "opening"
@@ -5967,9 +5955,8 @@ describe("The server._processFeedOpen() function", () => {
       const newState = harn.getServerState();
       harn.transport.emit("message", "some_tcid", msg);
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       newState._clientFeedStates = {
         [cid]: {
           [feedSerial]: "opening"
@@ -6040,9 +6027,8 @@ describe("The server._processFeedOpen() function", () => {
         // Sit on it
       });
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       const timerId = harn.server._terminationTimers[cid][feedSerial];
 
       clearTimeout.mockClear();
@@ -6625,9 +6611,8 @@ describe("The server._processFeedClose() function", () => {
       const newState = harn.getServerState();
       harn.transport.emit("message", "some_tcid", msg);
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       delete newState._clientFeedStates[cid];
       delete newState._feedClientStates[feedSerial];
       expect(harn.server).toHaveState(newState);
@@ -6721,9 +6706,8 @@ describe("The server._processFeedClose() function", () => {
       const newState = harn.getServerState();
       harn.transport.emit("message", "some_tcid", msg);
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       delete newState._clientFeedStates[cid];
       delete newState._feedClientStates[feedSerial];
       delete newState._terminationTimers[cid];
@@ -6772,9 +6756,8 @@ describe("The server._processFeedClose() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       const timerId = harn.server._terminationTimers[cid][feedSerial];
 
       clearTimeout.mockClear();
@@ -6863,9 +6846,8 @@ describe("The server._processFeedClose() function", () => {
       const newState = harn.getServerState();
       harn.transport.emit("message", "some_tcid", msg);
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       newState._clientFeedStates[cid][feedSerial] = "closing";
       newState._feedClientStates[feedSerial][cid] = "closing";
       newState._feedCloseResponses[cid] = {
@@ -6996,9 +6978,8 @@ describe("The server._processFeedClose() function", () => {
       const newState = harn.getServerState();
       harn.transport.emit("message", "some_tcid", msg);
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       delete newState._clientFeedStates[cid];
       delete newState._feedClientStates[feedSerial];
       delete newState._terminationTimers[cid];
@@ -7053,9 +7034,8 @@ describe("The server._processFeedClose() function", () => {
         FeedArgs: { feed: "args" }
       });
 
-      const feedSerial = feedSerializer.serialize("some_feed", {
-        feed: "args"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "args" });
+      const feedSerial = feedNameArgs.serial();
       const timerId = harn.server._terminationTimers[cid][feedSerial];
 
       clearTimeout.mockClear();
@@ -7321,10 +7301,10 @@ describe("The server._processDisconnect() function", () => {
     delete newState._handshakeStatus[leaverCid];
     delete newState._clientFeedStates[leaverCid];
     delete newState._feedClientStates[
-      feedSerializer.serialize("some_feed", { feed: "args" })
+      FeedNameArgs("some_feed", { feed: "args" }).serial()
     ][leaverCid];
     delete newState._feedClientStates[
-      feedSerializer.serialize("other_feed", { feed: "args" })
+      FeedNameArgs("other_feed", { feed: "args" }).serial()
     ];
     delete newState._feedOpenResponses[leaverCid];
     delete newState._feedOpenResponseStates[leaverCid];
@@ -7381,10 +7361,10 @@ describe("The server._processDisconnect() function", () => {
     delete newState._handshakeStatus[leaverCid];
     delete newState._clientFeedStates[leaverCid];
     delete newState._feedClientStates[
-      feedSerializer.serialize("some_feed", { feed: "args" })
+      FeedNameArgs("some_feed", { feed: "args" }).serial()
     ][leaverCid];
     delete newState._feedClientStates[
-      feedSerializer.serialize("other_feed", { feed: "args" })
+      FeedNameArgs("other_feed", { feed: "args" }).serial()
     ];
     delete newState._feedCloseResponses[leaverCid];
     delete newState._feedCloseResponseStates[leaverCid];
@@ -7430,10 +7410,10 @@ describe("The server._processDisconnect() function", () => {
     delete newState._handshakeStatus[leaverCid];
     delete newState._clientFeedStates[leaverCid];
     delete newState._feedClientStates[
-      feedSerializer.serialize("some_feed", { feed: "args" })
+      FeedNameArgs("some_feed", { feed: "args" }).serial()
     ][leaverCid];
     delete newState._feedClientStates[
-      feedSerializer.serialize("other_feed", { feed: "args" })
+      FeedNameArgs("other_feed", { feed: "args" }).serial()
     ];
     expect(harn.server).toHaveState(newState);
   });
@@ -7462,10 +7442,10 @@ describe("The server._processDisconnect() function", () => {
     delete newState._handshakeStatus[leaverCid];
     delete newState._clientFeedStates[leaverCid];
     delete newState._feedClientStates[
-      feedSerializer.serialize("some_feed", { feed: "args" })
+      FeedNameArgs("some_feed", { feed: "args" }).serial()
     ][leaverCid];
     delete newState._feedClientStates[
-      feedSerializer.serialize("other_feed", { feed: "args" })
+      FeedNameArgs("other_feed", { feed: "args" }).serial()
     ];
     delete newState._terminationTimers[leaverCid];
     expect(harn.server).toHaveState(newState);
@@ -7538,10 +7518,8 @@ describe("The server._processDisconnect() function", () => {
     harn.makeClient("tcid_stayer");
     harn.makeFeedTerminated("tcid_stayer", "some_feed", { feed: "args" });
 
-    const feedSerial1 = feedSerializer.serialize("some_feed", { feed: "args" });
-    const feedSerial2 = feedSerializer.serialize("other_feed", {
-      feed: "args"
-    });
+    const feedSerial1 = FeedNameArgs("some_feed", { feed: "args" }).serial();
+    const feedSerial2 = FeedNameArgs("other_feed", { feed: "args" }).serial();
     const clearTimeoutId1 =
       harn.server._terminationTimers[leaverCid][feedSerial1];
     const clearTimeoutId2 =
@@ -7678,8 +7656,7 @@ describe("The server._terminateOpeningFeed() function", () => {
     const serverListener = harn.createServerListener();
     harn.server._terminateOpeningFeed(
       cid,
-      "some_feed",
-      { feed: "args" },
+      FeedNameArgs("some_feed", { feed: "args" }),
       "SOME_ERROR",
       { error: "data" }
     );
@@ -7709,13 +7686,12 @@ describe("The server._terminateOpeningFeed() function", () => {
     const newState = harn.getServerState();
     harn.server._terminateOpeningFeed(
       cid,
-      "some_feed",
-      { feed: "args" },
+      FeedNameArgs("some_feed", { feed: "args" }),
       "SOME_ERROR",
       { error: "data" }
     );
 
-    const feedSerial = feedSerializer.serialize("some_feed", { feed: "args" });
+    const feedSerial = FeedNameArgs("some_feed", { feed: "args" }).serial();
     delete newState._clientFeedStates[cid];
     delete newState._feedClientStates[feedSerial];
     delete newState._feedOpenResponses[cid];
@@ -7734,8 +7710,7 @@ describe("The server._terminateOpeningFeed() function", () => {
     harn.transport.mockClear();
     harn.server._terminateOpeningFeed(
       cid,
-      "some_feed",
-      { feed: "args" },
+      FeedNameArgs("some_feed", { feed: "args" }),
       "SOME_ERROR",
       { error: "data" }
     );
@@ -7782,8 +7757,7 @@ describe("The server._terminateOpenFeed() function", () => {
     const serverListener = harn.createServerListener();
     harn.server._terminateOpenFeed(
       cid,
-      "some_feed",
-      { feed: "args" },
+      FeedNameArgs("some_feed", { feed: "args" }),
       "SOME_ERROR",
       { error: "data" }
     );
@@ -7818,13 +7792,12 @@ describe("The server._terminateOpenFeed() function", () => {
     const newState = harn.getServerState();
     harn.server._terminateOpenFeed(
       cid,
-      "some_feed",
-      { feed: "args" },
+      FeedNameArgs("some_feed", { feed: "args" }),
       "SOME_ERROR",
       { error: "data" }
     );
 
-    const feedSerial = feedSerializer.serialize("some_feed", { feed: "args" });
+    const feedSerial = FeedNameArgs("some_feed", { feed: "args" }).serial();
     newState._clientFeedStates[cid][feedSerial] = "terminated";
     newState._feedClientStates[feedSerial][cid] = "terminated";
     expect(harn.server).toHaveState(newState);
@@ -7844,13 +7817,12 @@ describe("The server._terminateOpenFeed() function", () => {
     const newState = harn.getServerState();
     harn.server._terminateOpenFeed(
       cid,
-      "some_feed",
-      { feed: "args" },
+      FeedNameArgs("some_feed", { feed: "args" }),
       "SOME_ERROR",
       { error: "data" }
     );
 
-    const feedSerial = feedSerializer.serialize("some_feed", { feed: "args" });
+    const feedSerial = FeedNameArgs("some_feed", { feed: "args" }).serial();
     newState._clientFeedStates[cid][feedSerial] = "terminated";
     newState._feedClientStates[feedSerial][cid] = "terminated";
     newState._terminationTimers[cid] = {
@@ -7875,8 +7847,7 @@ describe("The server._terminateOpenFeed() function", () => {
     harn.transport.mockClear();
     harn.server._terminateOpenFeed(
       cid,
-      "some_feed",
-      { feed: "args" },
+      FeedNameArgs("some_feed", { feed: "args" }),
       "SOME_ERROR",
       { error: "data" }
     );
@@ -7912,8 +7883,7 @@ describe("The server._terminateOpenFeed() function", () => {
     setTimeout.mockClear();
     harn.server._terminateOpenFeed(
       cid,
-      "some_feed",
-      { feed: "args" },
+      FeedNameArgs("some_feed", { feed: "args" }),
       "SOME_ERROR",
       { error: "data" }
     );
@@ -7938,8 +7908,7 @@ describe("The server._terminateOpenFeed() function", () => {
     setTimeout.mockClear();
     harn.server._terminateOpenFeed(
       cid,
-      "some_feed",
-      { feed: "args" },
+      FeedNameArgs("some_feed", { feed: "args" }),
       "SOME_ERROR",
       { error: "data" }
     );

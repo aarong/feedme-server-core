@@ -1,10 +1,12 @@
+import FeedNameArgs from "feedme-util/feednameargs";
 import feedCloseRequest from "../feedcloserequest";
 import feedCloseResponse from "../feedcloseresponse";
 
 describe("The feedCloseResponse() factory function", () => {
   it("should return a properly structured object", () => {
     const s = {};
-    const fcreq = feedCloseRequest("some_client", "some_feed", { feed: "arg" });
+    const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+    const fcreq = feedCloseRequest("some_client", feedNameArgs);
     const fcres = feedCloseResponse(s, fcreq);
     expect(fcres._server).toBe(s);
     expect(fcres._feedCloseRequest).toBe(fcreq);
@@ -24,7 +26,8 @@ describe("The success() and _neutralize() functions should work correctly on", (
   it("success (server fn), success (throw)", () => {
     // Create the object
     const s = { _appFeedCloseSuccess: jest.fn() };
-    const fcreq = feedCloseRequest("some_client", "some_feed", { feed: "arg" });
+    const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+    const fcreq = feedCloseRequest("some_client", feedNameArgs);
     const fcres = feedCloseResponse(s, fcreq);
 
     // Call success() - check return value, check state, app call
@@ -34,10 +37,9 @@ describe("The success() and _neutralize() functions should work correctly on", (
     expect(fcres._appResponded).toBe(true);
     expect(fcres._neutralized).toBe(false);
     expect(s._appFeedCloseSuccess.mock.calls.length).toBe(1);
-    expect(s._appFeedCloseSuccess.mock.calls[0].length).toBe(3);
+    expect(s._appFeedCloseSuccess.mock.calls[0].length).toBe(2);
     expect(s._appFeedCloseSuccess.mock.calls[0][0]).toBe("some_client");
-    expect(s._appFeedCloseSuccess.mock.calls[0][1]).toBe("some_feed");
-    expect(s._appFeedCloseSuccess.mock.calls[0][2]).toEqual({ feed: "arg" });
+    expect(s._appFeedCloseSuccess.mock.calls[0][1]).toBe(feedNameArgs);
 
     s._appFeedCloseSuccess.mockClear();
 
@@ -59,7 +61,8 @@ describe("The success() and _neutralize() functions should work correctly on", (
   it("success (server fn), neutralize (throw)", () => {
     // Create the object
     const s = { _appFeedCloseSuccess: jest.fn() };
-    const fcreq = feedCloseRequest("some_client", "some_feed", { feed: "arg" });
+    const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+    const fcreq = feedCloseRequest("some_client", feedNameArgs);
     const fcres = feedCloseResponse(s, fcreq);
 
     // Call success() - check return value, check state, app call
@@ -69,10 +72,9 @@ describe("The success() and _neutralize() functions should work correctly on", (
     expect(fcres._appResponded).toBe(true);
     expect(fcres._neutralized).toBe(false);
     expect(s._appFeedCloseSuccess.mock.calls.length).toBe(1);
-    expect(s._appFeedCloseSuccess.mock.calls[0].length).toBe(3);
+    expect(s._appFeedCloseSuccess.mock.calls[0].length).toBe(2);
     expect(s._appFeedCloseSuccess.mock.calls[0][0]).toBe("some_client");
-    expect(s._appFeedCloseSuccess.mock.calls[0][1]).toBe("some_feed");
-    expect(s._appFeedCloseSuccess.mock.calls[0][2]).toEqual({ feed: "arg" });
+    expect(s._appFeedCloseSuccess.mock.calls[0][1]).toBe(feedNameArgs);
 
     s._appFeedCloseSuccess.mockClear();
 
@@ -94,7 +96,8 @@ describe("The success() and _neutralize() functions should work correctly on", (
   it("neutralize (succeed), success (succeed but no server fn), success (throw)", () => {
     // Create the object
     const s = { _appFeedCloseSuccess: jest.fn() };
-    const fcreq = feedCloseRequest("some_client", "some_feed", { feed: "arg" });
+    const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+    const fcreq = feedCloseRequest("some_client", feedNameArgs);
     const fcres = feedCloseResponse(s, fcreq);
 
     // Call _neutralize() - check return value, check state, app call
@@ -133,7 +136,8 @@ describe("The success() and _neutralize() functions should work correctly on", (
   it("neutralize (succeed), neutralize (throw)", () => {
     // Create the object
     const s = { _appFeedCloseSuccess: jest.fn() };
-    const fcreq = feedCloseRequest("some_client", "some_feed", { feed: "arg" });
+    const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+    const fcreq = feedCloseRequest("some_client", feedNameArgs);
     const fcres = feedCloseResponse(s, fcreq);
 
     // Call _neutralize() - check return value, check state, app call

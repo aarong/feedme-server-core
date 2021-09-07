@@ -81,8 +81,7 @@ proto.success = function success() {
   if (!this._neutralized) {
     s._appFeedCloseSuccess(
       this._feedCloseRequest.clientId,
-      this._feedCloseRequest.feedName,
-      this._feedCloseRequest.feedArgs
+      this._feedCloseRequest._feedNameArgs
     );
   }
 };

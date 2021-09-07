@@ -1,10 +1,12 @@
+import FeedNameArgs from "feedme-util/feednameargs";
 import feedOpenRequest from "../feedopenrequest";
 import feedOpenResponse from "../feedopenresponse";
 
 describe("The feedOpenResponse() factory function", () => {
   it("should return a properly structured object", () => {
     const s = {};
-    const foreq = feedOpenRequest("some_client", "some_feed", { feed: "arg" });
+    const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+    const foreq = feedOpenRequest("some_client", feedNameArgs);
     const fores = feedOpenResponse(s, foreq);
     expect(fores._server).toBe(s);
     expect(fores._feedOpenRequest).toBe(foreq);
@@ -28,9 +30,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       _appFeedOpenSuccess: jest.fn(),
       _appFeedOpenFailure: jest.fn()
     };
-    const foreq = feedOpenRequest("some_client", "some_feed", {
-      feed: "arg"
-    });
+    const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+    const foreq = feedOpenRequest("some_client", feedNameArgs);
     const fores = feedOpenResponse(s, foreq);
 
     // Success - throw on invalid feedData type
@@ -70,9 +71,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         _appFeedOpenSuccess: jest.fn(),
         _appFeedOpenFailure: jest.fn()
       };
-      const foreq = feedOpenRequest("some_client", "some_feed", {
-        feed: "arg"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+      const foreq = feedOpenRequest("some_client", feedNameArgs);
       const fores = feedOpenResponse(s, foreq);
 
       // Call success() - check return value, check state, app call
@@ -83,11 +83,10 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       expect(fores._appResponded).toBe(true);
       expect(fores._neutralized).toBe(false);
       expect(s._appFeedOpenSuccess.mock.calls.length).toBe(1);
-      expect(s._appFeedOpenSuccess.mock.calls[0].length).toBe(4);
+      expect(s._appFeedOpenSuccess.mock.calls[0].length).toBe(3);
       expect(s._appFeedOpenSuccess.mock.calls[0][0]).toBe("some_client");
-      expect(s._appFeedOpenSuccess.mock.calls[0][1]).toBe("some_feed");
-      expect(s._appFeedOpenSuccess.mock.calls[0][2]).toEqual({ feed: "arg" });
-      expect(s._appFeedOpenSuccess.mock.calls[0][3]).toEqual({ feed: "data" });
+      expect(s._appFeedOpenSuccess.mock.calls[0][1]).toBe(feedNameArgs);
+      expect(s._appFeedOpenSuccess.mock.calls[0][2]).toEqual({ feed: "data" });
       expect(s._appFeedOpenFailure.mock.calls.length).toBe(0);
 
       s._appFeedOpenSuccess.mockClear();
@@ -133,9 +132,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         _appFeedOpenSuccess: jest.fn(),
         _appFeedOpenFailure: jest.fn()
       };
-      const foreq = feedOpenRequest("some_client", "some_feed", {
-        feed: "arg"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+      const foreq = feedOpenRequest("some_client", feedNameArgs);
       const fores = feedOpenResponse(s, foreq);
 
       // Call success() - check return value, check state, app call
@@ -146,11 +144,10 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       expect(fores._appResponded).toBe(true);
       expect(fores._neutralized).toBe(false);
       expect(s._appFeedOpenSuccess.mock.calls.length).toBe(1);
-      expect(s._appFeedOpenSuccess.mock.calls[0].length).toBe(4);
+      expect(s._appFeedOpenSuccess.mock.calls[0].length).toBe(3);
       expect(s._appFeedOpenSuccess.mock.calls[0][0]).toBe("some_client");
-      expect(s._appFeedOpenSuccess.mock.calls[0][1]).toBe("some_feed");
-      expect(s._appFeedOpenSuccess.mock.calls[0][2]).toEqual({ feed: "arg" });
-      expect(s._appFeedOpenSuccess.mock.calls[0][3]).toEqual({ feed: "data" });
+      expect(s._appFeedOpenSuccess.mock.calls[0][1]).toBe(feedNameArgs);
+      expect(s._appFeedOpenSuccess.mock.calls[0][2]).toEqual({ feed: "data" });
       expect(s._appFeedOpenFailure.mock.calls.length).toBe(0);
 
       s._appFeedOpenSuccess.mockClear();
@@ -196,9 +193,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         _appFeedOpenSuccess: jest.fn(),
         _appFeedOpenFailure: jest.fn()
       };
-      const foreq = feedOpenRequest("some_client", "some_feed", {
-        feed: "arg"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+      const foreq = feedOpenRequest("some_client", feedNameArgs);
       const fores = feedOpenResponse(s, foreq);
 
       // Call failure() - check return value, check state, app call
@@ -210,12 +206,11 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       expect(fores._neutralized).toBe(false);
       expect(s._appFeedOpenSuccess.mock.calls.length).toBe(0);
       expect(s._appFeedOpenFailure.mock.calls.length).toBe(1);
-      expect(s._appFeedOpenFailure.mock.calls[0].length).toBe(5);
+      expect(s._appFeedOpenFailure.mock.calls[0].length).toBe(4);
       expect(s._appFeedOpenFailure.mock.calls[0][0]).toBe("some_client");
-      expect(s._appFeedOpenFailure.mock.calls[0][1]).toBe("some_feed");
-      expect(s._appFeedOpenFailure.mock.calls[0][2]).toEqual({ feed: "arg" });
-      expect(s._appFeedOpenFailure.mock.calls[0][3]).toBe("SOME_ERROR");
-      expect(s._appFeedOpenFailure.mock.calls[0][4]).toEqual({ error: "data" });
+      expect(s._appFeedOpenFailure.mock.calls[0][1]).toBe(feedNameArgs);
+      expect(s._appFeedOpenFailure.mock.calls[0][2]).toBe("SOME_ERROR");
+      expect(s._appFeedOpenFailure.mock.calls[0][3]).toEqual({ error: "data" });
 
       s._appFeedOpenSuccess.mockClear();
       s._appFeedOpenFailure.mockClear();
@@ -260,9 +255,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         _appFeedOpenSuccess: jest.fn(),
         _appFeedOpenFailure: jest.fn()
       };
-      const foreq = feedOpenRequest("some_client", "some_feed", {
-        feed: "arg"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+      const foreq = feedOpenRequest("some_client", feedNameArgs);
       const fores = feedOpenResponse(s, foreq);
 
       // Call failure() - check return value, check state, app call
@@ -274,12 +268,11 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       expect(fores._neutralized).toBe(false);
       expect(s._appFeedOpenSuccess.mock.calls.length).toBe(0);
       expect(s._appFeedOpenFailure.mock.calls.length).toBe(1);
-      expect(s._appFeedOpenFailure.mock.calls[0].length).toBe(5);
+      expect(s._appFeedOpenFailure.mock.calls[0].length).toBe(4);
       expect(s._appFeedOpenFailure.mock.calls[0][0]).toBe("some_client");
-      expect(s._appFeedOpenFailure.mock.calls[0][1]).toBe("some_feed");
-      expect(s._appFeedOpenFailure.mock.calls[0][2]).toEqual({ feed: "arg" });
-      expect(s._appFeedOpenFailure.mock.calls[0][3]).toBe("SOME_ERROR");
-      expect(s._appFeedOpenFailure.mock.calls[0][4]).toEqual({ error: "data" });
+      expect(s._appFeedOpenFailure.mock.calls[0][1]).toBe(feedNameArgs);
+      expect(s._appFeedOpenFailure.mock.calls[0][2]).toBe("SOME_ERROR");
+      expect(s._appFeedOpenFailure.mock.calls[0][3]).toEqual({ error: "data" });
 
       s._appFeedOpenSuccess.mockClear();
       s._appFeedOpenFailure.mockClear();
@@ -324,9 +317,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         _appFeedOpenSuccess: jest.fn(),
         _appFeedOpenFailure: jest.fn()
       };
-      const foreq = feedOpenRequest("some_client", "some_feed", {
-        feed: "arg"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+      const foreq = feedOpenRequest("some_client", feedNameArgs);
       const fores = feedOpenResponse(s, foreq);
 
       // Call _neutralize() - check return value, check state, app call
@@ -375,9 +367,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         _appFeedOpenSuccess: jest.fn(),
         _appFeedOpenFailure: jest.fn()
       };
-      const foreq = feedOpenRequest("some_client", "some_feed", {
-        feed: "arg"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+      const foreq = feedOpenRequest("some_client", feedNameArgs);
       const fores = feedOpenResponse(s, foreq);
 
       // Call _neutralize() - check return value, check state, app call
@@ -426,9 +417,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         _appFeedOpenSuccess: jest.fn(),
         _appFeedOpenFailure: jest.fn()
       };
-      const foreq = feedOpenRequest("some_client", "some_feed", {
-        feed: "arg"
-      });
+      const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
+      const foreq = feedOpenRequest("some_client", feedNameArgs);
       const fores = feedOpenResponse(s, foreq);
 
       // Call _neutralize() - check return value, check state, app call

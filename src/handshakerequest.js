@@ -6,9 +6,7 @@
 /**
  * Factory function.
  * @param {String} clientId
- * @param {String} feedName
- * @param {Object} feedArgs
- * @returns {FeedCloseRequest}
+ * @returns {HandshakeRequest}
  */
 export default function handshakeRequestFactory(clientId) {
   const handshakeRequest = {};

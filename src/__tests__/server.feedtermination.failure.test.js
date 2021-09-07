@@ -50,7 +50,7 @@ describe("The server.feedTermination() function", () => {
         expect(() => {
           harn.server.feedTermination({
             clientId: "some_client",
-            feedName: "",
+            feedName: 123,
             feedArgs: { feed: "arg" },
             errorCode: "SOME_ERROR",
             errorData: { error: "data" }
@@ -221,7 +221,7 @@ describe("The server.feedTermination() function", () => {
         harn.makeServerStarted();
         expect(() => {
           harn.server.feedTermination({
-            feedName: "",
+            feedName: 123,
             feedArgs: { feed: "arg" },
             errorCode: "SOME_ERROR",
             errorData: { error: "data" }

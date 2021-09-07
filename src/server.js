@@ -1,5 +1,5 @@
 import _ from "lodash";
-import feedSerializer from "feedme-util/feedserializer";
+import FeedNameArgs from "feedme-util/feednameargs";
 import check from "check-types";
 import emitter from "component-emitter";
 import debug from "debug";
@@ -12,7 +12,6 @@ import validateFeedOpen from "feedme-util/validatefeedopen";
 import validateFeedClose from "feedme-util/validatefeedclose";
 import validateDelta from "feedme-util/validatedelta";
 import md5Calculator from "feedme-util/md5calculator";
-import feedValidator from "feedme-util/feedvalidator";
 import config from "./config";
 import handshakeRequest from "./handshakerequest";
 import handshakeResponse from "./handshakeresponse";
@@ -547,7 +546,7 @@ proto.actionRevelation = function actionRevelation(params) {
   }
 
   // Validate feed name/arg types and cascade errors
-  feedValidator.validate(params.feedName, params.feedArgs);
+  const feedNameArgs = FeedNameArgs(params.feedName, params.feedArgs); // Cascade INVALID_ARGUMENT
 
   // Validate feed deltas
   if (!check.array(params.feedDeltas)) {
@@ -604,7 +603,7 @@ proto.actionRevelation = function actionRevelation(params) {
   msg = JSON.stringify(msg);
 
   // Transmit to clients with the feed open
-  const feedSerial = feedSerializer.serialize(params.feedName, params.feedArgs);
+  const feedSerial = feedNameArgs.serial();
   if (feedSerial in this._feedClientStates) {
     _.each(this._feedClientStates[feedSerial], (state, clientId) => {
       if (state === "open") {
@@ -660,8 +659,9 @@ proto.feedTermination = function feedTermination(params) {
   }
 
   // Check feed name/args and cascade errors (if required by usage)
+  let feedNameArgs;
   if (usage !== 2) {
-    feedValidator.validate(params.feedName, params.feedArgs);
+    feedNameArgs = FeedNameArgs(params.feedName, params.feedArgs); // Cascade INVALID_ARGUMENT
   }
 
   // Check error code (required for all usages) - empty is spec-valid
@@ -680,10 +680,7 @@ proto.feedTermination = function feedTermination(params) {
     // 1. Specific feed and client
     dbg("Feed termination usage 1");
 
-    const feedSerial = feedSerializer.serialize(
-      params.feedName,
-      params.feedArgs
-    );
+    const feedSerial = feedNameArgs.serial();
     const feedState = this._get(
       this._clientFeedStates,
       params.clientId,
@@ -694,16 +691,14 @@ proto.feedTermination = function feedTermination(params) {
     if (feedState === "opening") {
       this._terminateOpeningFeed(
         params.clientId,
-        params.feedName,
-        params.feedArgs,
+        feedNameArgs,
         params.errorCode,
         params.errorData
       );
     } else if (feedState === "open") {
       this._terminateOpenFeed(
         params.clientId,
-        params.feedName,
-        params.feedArgs,
+        feedNameArgs,
         params.errorCode,
         params.errorData
       );
@@ -715,20 +710,18 @@ proto.feedTermination = function feedTermination(params) {
     if (params.clientId in this._clientFeedStates) {
       _.each(this._clientFeedStates[params.clientId], (state, feedSerial) => {
         if (state === "opening") {
-          const f = feedSerializer.unserialize(feedSerial);
+          const f = FeedNameArgs(feedSerial);
           this._terminateOpeningFeed(
             params.clientId,
-            f.feedName,
-            f.feedArgs,
+            f,
             params.errorCode,
             params.errorData
           );
         } else if (state === "open") {
-          const f = feedSerializer.unserialize(feedSerial);
+          const f = FeedNameArgs(feedSerial);
           this._terminateOpenFeed(
             params.clientId,
-            f.feedName,
-            f.feedArgs,
+            f,
             params.errorCode,
             params.errorData
           );
@@ -739,26 +732,21 @@ proto.feedTermination = function feedTermination(params) {
     // 3. All clients on one feed
     dbg("Feed termination usage 3");
 
-    const feedSerial = feedSerializer.serialize(
-      params.feedName,
-      params.feedArgs
-    );
+    const feedSerial = feedNameArgs.serial();
 
     if (feedSerial in this._feedClientStates) {
       _.each(this._feedClientStates[feedSerial], (state, clientId) => {
         if (state === "opening") {
           this._terminateOpeningFeed(
             clientId,
-            params.feedName,
-            params.feedArgs,
+            feedNameArgs,
             params.errorCode,
             params.errorData
           );
         } else if (state === "open") {
           this._terminateOpenFeed(
             clientId,
-            params.feedName,
-            params.feedArgs,
+            feedNameArgs,
             params.errorCode,
             params.errorData
           );
@@ -1148,7 +1136,8 @@ proto._processFeedOpen = function _processFeedOpen(clientId, msg, msgString) {
   dbg("Received FeedOpen message");
 
   const transportClientId = this._transportClientIds[clientId];
-  const feedSerial = feedSerializer.serialize(msg.FeedName, msg.FeedArgs);
+  const feedNameArgs = FeedNameArgs(msg.FeedName, msg.FeedArgs);
+  const feedSerial = feedNameArgs.serial();
 
   // Handshake complete?
   if (this._handshakeStatus[clientId] !== "complete") {
@@ -1249,7 +1238,7 @@ proto._processFeedOpen = function _processFeedOpen(clientId, msg, msgString) {
   this._set(this._feedClientStates, feedSerial, clientId, "opening");
 
   // Create, store, and emit a FeedOpenResponse object
-  const foreq = feedOpenRequest(clientId, msg.FeedName, msg.FeedArgs);
+  const foreq = feedOpenRequest(clientId, feedNameArgs);
   const fores = feedOpenResponse(this, foreq);
   this._set(this._feedOpenResponses, clientId, feedSerial, fores);
   this.emit("feedOpen", foreq, fores);
@@ -1268,7 +1257,8 @@ proto._processFeedClose = function _processFeedClose(clientId, msg, msgString) {
   dbg("Received FeedClose message");
 
   const transportClientId = this._transportClientIds[clientId];
-  const feedSerial = feedSerializer.serialize(msg.FeedName, msg.FeedArgs);
+  const feedNameArgs = FeedNameArgs(msg.FeedName, msg.FeedArgs);
+  const feedSerial = feedNameArgs.serial();
 
   // Handshake complete?
   if (this._handshakeStatus[clientId] !== "complete") {
@@ -1350,7 +1340,7 @@ proto._processFeedClose = function _processFeedClose(clientId, msg, msgString) {
     this._set(this._feedClientStates, feedSerial, clientId, "closing");
 
     // Create, store, and emit a FeedCloseResponse object
-    const fcreq = feedCloseRequest(clientId, msg.FeedName, msg.FeedArgs);
+    const fcreq = feedCloseRequest(clientId, feedNameArgs);
     const fcres = feedCloseResponse(this, fcreq);
     this._set(this._feedCloseResponses, clientId, feedSerial, fcres);
     this.emit("feedClose", fcreq, fcres);
@@ -1569,21 +1559,19 @@ proto._appActionFailure = function _appActionFailure(
  * @instance
  * @private
  * @param {string} clientId
- * @param {string} feedName
- * @param {Object} feedArgs
+ * @param {FeedNameArgs} feedNameArgs
  * @param {Object} feedData
  */
 
 proto._appFeedOpenSuccess = function _appFeedOpenSuccess(
   clientId,
-  feedName,
-  feedArgs,
+  feedNameArgs,
   feedData
 ) {
   dbg("Processing feed open success");
 
   const transportClientId = this._transportClientIds[clientId];
-  const feedSerial = feedSerializer.serialize(feedName, feedArgs);
+  const feedSerial = feedNameArgs.serial();
 
   // Update state (any termination timer is already cleared)
   this._delete(this._feedOpenResponses, clientId, feedSerial);
@@ -1596,8 +1584,8 @@ proto._appFeedOpenSuccess = function _appFeedOpenSuccess(
     JSON.stringify({
       MessageType: "FeedOpenResponse",
       Success: true,
-      FeedName: feedName,
-      FeedArgs: feedArgs,
+      FeedName: feedNameArgs.name(),
+      FeedArgs: feedNameArgs.args(),
       FeedData: feedData
     })
   );
@@ -1611,23 +1599,21 @@ proto._appFeedOpenSuccess = function _appFeedOpenSuccess(
  * @instance
  * @private
  * @param {string} clientId
- * @param {string} feedName
- * @param {Object} feedArgs
+ * @param {FeedNameArgs} feedNameArgs
  * @param {string} errorCode
  * @param {Object} errorData
  */
 
 proto._appFeedOpenFailure = function _appFeedOpenFailure(
   clientId,
-  feedName,
-  feedArgs,
+  feedNameArgs,
   errorCode,
   errorData
 ) {
   dbg("Processing feed open failure");
 
   const transportClientId = this._transportClientIds[clientId];
-  const feedSerial = feedSerializer.serialize(feedName, feedArgs);
+  const feedSerial = feedNameArgs.serial();
 
   // Update state (any termination timer is already cleared)
   this._delete(this._clientFeedStates, clientId, feedSerial);
@@ -1640,8 +1626,8 @@ proto._appFeedOpenFailure = function _appFeedOpenFailure(
     JSON.stringify({
       MessageType: "FeedOpenResponse",
       Success: false,
-      FeedName: feedName,
-      FeedArgs: feedArgs,
+      FeedName: feedNameArgs.name(),
+      FeedArgs: feedNameArgs.args(),
       ErrorCode: errorCode,
       ErrorData: errorData
     })
@@ -1655,19 +1641,17 @@ proto._appFeedOpenFailure = function _appFeedOpenFailure(
  * @instance
  * @private
  * @param {string} clientId
- * @param {string} feedName
- * @param {Array} feedArgs
+ * @param {FeedNameArgs} feedNameArgs
  */
 
 proto._appFeedCloseSuccess = function _appFeedCloseSuccess(
   clientId,
-  feedName,
-  feedArgs
+  feedNameArgs
 ) {
   dbg("Processing feed close success");
 
   const transportClientId = this._transportClientIds[clientId];
-  const feedSerial = feedSerializer.serialize(feedName, feedArgs);
+  const feedSerial = feedNameArgs.serial();
 
   // Update state (any termination timer is already cleared)
   this._delete(this._clientFeedStates, clientId, feedSerial);
@@ -1679,8 +1663,8 @@ proto._appFeedCloseSuccess = function _appFeedCloseSuccess(
     transportClientId,
     JSON.stringify({
       MessageType: "FeedCloseResponse",
-      FeedName: feedName,
-      FeedArgs: feedArgs
+      FeedName: feedNameArgs.name(),
+      FeedArgs: feedNameArgs.args()
     })
   );
 };
@@ -1694,23 +1678,21 @@ proto._appFeedCloseSuccess = function _appFeedCloseSuccess(
  * @instance
  * @private
  * @param {string} clientId
- * @param {string} feedName
- * @param {Array} feedArgs
+ * @param {FeedNameArgs} feedNameArgs
  * @param {string} errorCode
  * @param {Object} errorData
  * @returns {void}
  */
 proto._terminateOpeningFeed = function _terminateOpeningFeed(
   clientId,
-  feedName,
-  feedArgs,
+  feedNameArgs,
   errorCode,
   errorData
 ) {
   dbg("Terminating opening feed");
 
   const transportClientId = this._transportClientIds[clientId];
-  const feedSerial = feedSerializer.serialize(feedName, feedArgs);
+  const feedSerial = feedNameArgs.serial();
 
   // Set feed state to closed
   this._delete(this._clientFeedStates, clientId, feedSerial);
@@ -1726,8 +1708,8 @@ proto._terminateOpeningFeed = function _terminateOpeningFeed(
     JSON.stringify({
       MessageType: "FeedOpenResponse",
       Success: false,
-      FeedName: feedName,
-      FeedArgs: feedArgs,
+      FeedName: feedNameArgs.name(),
+      FeedArgs: feedNameArgs.args(),
       ErrorCode: errorCode,
       ErrorData: errorData
     })
@@ -1741,23 +1723,21 @@ proto._terminateOpeningFeed = function _terminateOpeningFeed(
  * @instance
  * @private
  * @param {string} clientId
- * @param {string} feedName
- * @param {Array} feedArgs
+ * @param {FeedNameArgs} feedNameArgs
  * @param {string} errorCode
  * @param {Object} errorData
  * @returns {void}
  */
 proto._terminateOpenFeed = function _terminateOpenFeed(
   clientId,
-  feedName,
-  feedArgs,
+  feedNameArgs,
   errorCode,
   errorData
 ) {
   dbg("Terminating open feed");
 
   const transportClientId = this._transportClientIds[clientId];
-  const feedSerial = feedSerializer.serialize(feedName, feedArgs);
+  const feedSerial = feedNameArgs.serial();
 
   // Set feed state to terminated
   this._set(this._clientFeedStates, clientId, feedSerial, "terminated");
@@ -1782,8 +1762,8 @@ proto._terminateOpenFeed = function _terminateOpenFeed(
     transportClientId,
     JSON.stringify({
       MessageType: "FeedTermination",
-      FeedName: feedName,
-      FeedArgs: feedArgs,
+      FeedName: feedNameArgs.name(),
+      FeedArgs: feedNameArgs.args(),
       ErrorCode: errorCode,
       ErrorData: errorData
     })

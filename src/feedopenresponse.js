@@ -96,8 +96,7 @@ proto.success = function success(feedData) {
   if (!this._neutralized) {
     s._appFeedOpenSuccess(
       this._feedOpenRequest.clientId,
-      this._feedOpenRequest.feedName,
-      this._feedOpenRequest.feedArgs,
+      this._feedOpenRequest._feedNameArgs,
       feedData
     );
   }
@@ -148,8 +147,7 @@ proto.failure = function failure(errorCode, errorData) {
   if (!this._neutralized) {
     s._appFeedOpenFailure(
       this._feedOpenRequest.clientId,
-      this._feedOpenRequest.feedName,
-      this._feedOpenRequest.feedArgs,
+      this._feedOpenRequest._feedNameArgs,
       errorCode,
       errorData
     );
