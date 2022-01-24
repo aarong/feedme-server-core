@@ -10,8 +10,6 @@ jobs:
       language: node_js
       node_js: "14"
       script:
-        # Ensure that you can build and tests pass in Node 6+
-
         - nvm use 14
         - npm run build # test-src, build, test-build
 
