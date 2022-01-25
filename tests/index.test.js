@@ -3029,8 +3029,8 @@ describe("When the transport emits an invalid message event", () => {
           "INVALID_MESSAGE: Invalid JSON or schema violation."
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].parseError
-        ).toBeInstanceOf(Error);
+          check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+        ).toBe(true);
         expect(
           serverListener.badClientMessage.mock.calls[0][1].clientMessage
         ).toBe(msg);
@@ -3095,8 +3095,8 @@ describe("When the transport emits an invalid message event", () => {
           "INVALID_MESSAGE: Invalid JSON or schema violation."
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].parseError
-        ).toBeInstanceOf(Error);
+          check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+        ).toBe(true);
         expect(
           serverListener.badClientMessage.mock.calls[0][1].clientMessage
         ).toBe(msg);
@@ -3163,8 +3163,8 @@ describe("When the transport emits an invalid message event", () => {
           "INVALID_MESSAGE: Invalid JSON or schema violation."
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].parseError
-        ).toBeInstanceOf(Error);
+          check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+        ).toBe(true);
         expect(
           serverListener.badClientMessage.mock.calls[0][1].clientMessage
         ).toBe(msg);
@@ -3233,8 +3233,8 @@ describe("When the transport emits an invalid message event", () => {
           "INVALID_MESSAGE: Invalid JSON or schema violation."
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].parseError
-        ).toBeInstanceOf(Error);
+          check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+        ).toBe(true);
         expect(
           serverListener.badClientMessage.mock.calls[0][1].clientMessage
         ).toBe(msg);
@@ -3303,8 +3303,8 @@ describe("When the transport emits an invalid message event", () => {
           "INVALID_MESSAGE: Invalid JSON or schema violation."
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].parseError
-        ).toBeInstanceOf(Error);
+          check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+        ).toBe(true);
         expect(
           serverListener.badClientMessage.mock.calls[0][1].clientMessage
         ).toBe(msg);
@@ -3373,8 +3373,8 @@ describe("When the transport emits an invalid message event", () => {
           "INVALID_MESSAGE: Invalid JSON or schema violation."
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].parseError
-        ).toBeInstanceOf(Error);
+          check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+        ).toBe(true);
         expect(
           serverListener.badClientMessage.mock.calls[0][1].clientMessage
         ).toBe(msg);
@@ -3443,8 +3443,8 @@ describe("When the transport emits an invalid message event", () => {
           "INVALID_MESSAGE: Invalid JSON or schema violation."
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].parseError
-        ).toBeInstanceOf(Error);
+          check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+        ).toBe(true);
         expect(
           serverListener.badClientMessage.mock.calls[0][1].clientMessage
         ).toBe(msg);

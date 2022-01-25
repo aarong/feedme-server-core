@@ -2826,8 +2826,8 @@ describe("The server._processMessage() function", () => {
         "INVALID_MESSAGE: Invalid JSON or schema violation."
       );
       expect(
-        serverListener.badClientMessage.mock.calls[0][1].parseError
-      ).toBeInstanceOf(Error);
+        check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+      ).toBe(true);
       expect(
         serverListener.badClientMessage.mock.calls[0][1].clientMessage
       ).toBe('"bad message"');
@@ -2917,8 +2917,8 @@ describe("The server._processMessage() function", () => {
         "INVALID_MESSAGE: Invalid JSON or schema violation."
       );
       expect(
-        serverListener.badClientMessage.mock.calls[0][1].parseError
-      ).toBeInstanceOf(Error);
+        check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+      ).toBe(true);
       expect(
         serverListener.badClientMessage.mock.calls[0][1].clientMessage
       ).toBe(msg);
@@ -3012,8 +3012,8 @@ describe("The server._processMessage() function", () => {
         "INVALID_MESSAGE: Invalid JSON or schema violation."
       );
       expect(
-        serverListener.badClientMessage.mock.calls[0][1].parseError
-      ).toBeInstanceOf(Error);
+        check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+      ).toBe(true);
       expect(
         serverListener.badClientMessage.mock.calls[0][1].clientMessage
       ).toBe(msg);
@@ -3107,8 +3107,8 @@ describe("The server._processMessage() function", () => {
         "INVALID_MESSAGE: Invalid JSON or schema violation."
       );
       expect(
-        serverListener.badClientMessage.mock.calls[0][1].parseError
-      ).toBeInstanceOf(Error);
+        check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+      ).toBe(true);
       expect(
         serverListener.badClientMessage.mock.calls[0][1].clientMessage
       ).toBe(msg);
@@ -3202,8 +3202,8 @@ describe("The server._processMessage() function", () => {
         "INVALID_MESSAGE: Invalid JSON or schema violation."
       );
       expect(
-        serverListener.badClientMessage.mock.calls[0][1].parseError
-      ).toBeInstanceOf(Error);
+        check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+      ).toBe(true);
       expect(
         serverListener.badClientMessage.mock.calls[0][1].clientMessage
       ).toBe(msg);

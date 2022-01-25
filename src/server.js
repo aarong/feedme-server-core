@@ -5,12 +5,8 @@ import emitter from "component-emitter";
 import debug from "debug";
 import uuid from "uuid";
 import jsonExpressible from "json-expressible";
-import validateClientMessage from "feedme-util/validateclientmessage";
-import validateHandshake from "feedme-util/validatehandshake";
-import validateAction from "feedme-util/validateaction";
-import validateFeedOpen from "feedme-util/validatefeedopen";
-import validateFeedClose from "feedme-util/validatefeedclose";
-import validateDelta from "feedme-util/validatedelta";
+import parseClientMessage from "feedme-util/parseclientmessage";
+import validateFeedDelta from "feedme-util/validators/feed-delta";
 import md5Calculator from "feedme-util/md5calculator";
 import config from "./config";
 import handshakeRequest from "./handshakerequest";
@@ -553,9 +549,8 @@ proto.actionRevelation = function actionRevelation(params) {
     throw new Error("INVALID_ARGUMENT: Invalid feed deltas.");
   }
   _.each(params.feedDeltas, delta => {
-    try {
-      validateDelta.check(delta, true); // Ensure values are JSON-expressible
-    } catch (e) {
+    const errorMessage = validateFeedDelta(delta, true); // Ensure values are JSON-expressible
+    if (errorMessage) {
       throw new Error("INVALID_ARGUMENT: Invalid feed delta.");
     }
   });
@@ -893,21 +888,9 @@ proto._processMessage = function _processMessage(transportClientId, msg) {
 
   const clientId = this._clientIds[transportClientId];
 
-  // Try to parse JSON and validate message structure
-  let val;
-  try {
-    val = JSON.parse(msg);
-    validateClientMessage.check(val);
-    if (val.MessageType === "Handshake") {
-      validateHandshake.check(val, false); // No need to check JSON-expressibility (coming from JSON)
-    } else if (val.MessageType === "Action") {
-      validateAction.check(val, false);
-    } else if (val.MessageType === "FeedOpen") {
-      validateFeedOpen.check(val, false);
-    } else {
-      validateFeedClose.check(val, false); // FeedClose
-    }
-  } catch (e) {
+  // Parse and validate message
+  const result = parseClientMessage(msg);
+  if (!result.valid) {
     dbg("Invalid JSON or schema violation");
 
     // Send ViolationResponse
@@ -925,7 +908,7 @@ proto._processMessage = function _processMessage(transportClientId, msg) {
     // Emit badClientMessage
     const err = new Error("INVALID_MESSAGE: Invalid JSON or schema violation.");
     err.clientMessage = msg;
-    err.parseError = e;
+    err.reason = result.errorMessage;
     this.emit("badClientMessage", clientId, err);
 
     return; // Stop
@@ -933,7 +916,7 @@ proto._processMessage = function _processMessage(transportClientId, msg) {
 
   // Route the message
   dbg("Routing the message");
-  this[`_process${val.MessageType}`](clientId, val, msg);
+  this[`_process${result.message.MessageType}`](clientId, result.message, msg);
 };
 
 /**

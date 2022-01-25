@@ -365,7 +365,7 @@ The following errors are possible:
 
   - `err.clientMessage` (string) contains the client message.
 
-  - `err.parseError` (Error) contains the message parsing error.
+  - `err.reason` (string) describes the problem in additional detail.
 
 - `err.message === "UNEXPECTED_MESSAGE: ..."`
 
