@@ -2789,6 +2789,100 @@ describe("The server._processConnect() function", () => {
 });
 
 describe("The server._processMessage() function", () => {
+  describe("it may receive invalid JSON", () => {
+    // Events
+
+    it("should emit badClientMessage", () => {
+      const harn = harness();
+      harn.makeServerStarted();
+
+      let cid;
+      harn.server.once("connect", ecid => {
+        cid = ecid;
+      });
+
+      harn.transport.emit("connect", "some_tcid");
+
+      const serverListener = harn.createServerListener();
+      harn.transport.emit("message", "some_tcid", "{invalid json}");
+
+      expect(serverListener.starting.mock.calls.length).toBe(0);
+      expect(serverListener.start.mock.calls.length).toBe(0);
+      expect(serverListener.stopping.mock.calls.length).toBe(0);
+      expect(serverListener.stop.mock.calls.length).toBe(0);
+      expect(serverListener.connect.mock.calls.length).toBe(0);
+      expect(serverListener.handshake.mock.calls.length).toBe(0);
+      expect(serverListener.action.mock.calls.length).toBe(0);
+      expect(serverListener.feedOpen.mock.calls.length).toBe(0);
+      expect(serverListener.feedClose.mock.calls.length).toBe(0);
+      expect(serverListener.disconnect.mock.calls.length).toBe(0);
+      expect(serverListener.badClientMessage.mock.calls.length).toBe(1);
+      expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
+      expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
+      expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
+        Error
+      );
+      expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
+        "INVALID_MESSAGE: Invalid JSON."
+      );
+      expect(
+        serverListener.badClientMessage.mock.calls[0][1].parseError
+      ).toBeInstanceOf(Error);
+      expect(
+        serverListener.badClientMessage.mock.calls[0][1].clientMessage
+      ).toBe("{invalid json}");
+      expect(serverListener.transportError.mock.calls.length).toBe(0);
+    });
+
+    // State
+
+    it("should not change the state", () => {
+      const harn = harness();
+      harn.makeServerStarted();
+
+      harn.transport.emit("connect", "some_tcid");
+
+      const newState = harn.getServerState();
+      harn.transport.emit("message", "some_tcid", "{invalid json}");
+
+      expect(harn.server).toHaveState(newState);
+    });
+
+    // Transport calls
+
+    it("should send a ViolationResponse on the transport", () => {
+      const harn = harness();
+      harn.makeServerStarted();
+
+      harn.transport.emit("connect", "some_tcid");
+
+      harn.transport.mockClear();
+      harn.transport.emit("message", "some_tcid", "{invalid json}");
+
+      expect(harn.transport.start.mock.calls.length).toBe(0);
+      expect(harn.transport.stop.mock.calls.length).toBe(0);
+      expect(harn.transport.send.mock.calls.length).toBe(1);
+      expect(harn.transport.send.mock.calls[0].length).toBe(2);
+      expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
+      expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
+        MessageType: "ViolationResponse",
+        Diagnostics: {
+          Problem: "Invalid JSON.",
+          Message: "{invalid json}"
+        }
+      });
+      expect(harn.transport.disconnect.mock.calls.length).toBe(0);
+    });
+
+    // Function calls - N/A
+
+    // Outbound callback - N/A
+
+    // Inbound callbacks (events, state, transport, outer callbacks) - N/A
+
+    // Return value - N/A
+  });
+
   describe("it may receive an invalid message", () => {
     // Events
 
@@ -2823,14 +2917,16 @@ describe("The server._processMessage() function", () => {
         Error
       );
       expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-        "INVALID_MESSAGE: Invalid JSON or schema violation."
+        "INVALID_MESSAGE: Schema violation."
       );
       expect(
-        check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+        check.string(
+          serverListener.badClientMessage.mock.calls[0][1].schemaViolation
+        )
       ).toBe(true);
       expect(
         serverListener.badClientMessage.mock.calls[0][1].clientMessage
-      ).toBe('"bad message"');
+      ).toBe("bad message");
       expect(serverListener.transportError.mock.calls.length).toBe(0);
     });
 
@@ -2867,7 +2963,7 @@ describe("The server._processMessage() function", () => {
       expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
-          Problem: "Invalid JSON or schema violation.",
+          Problem: "Schema violation.",
           Message: '"bad message"'
         }
       });
@@ -2890,9 +2986,10 @@ describe("The server._processMessage() function", () => {
       const harn = harness();
       harn.makeServerStarted();
       const cid = harn.makeClient("some_tcid");
-      const msg = JSON.stringify({
+      const msgObject = {
         MessageType: "Handshake"
-      });
+      };
+      const msg = JSON.stringify(msgObject);
 
       const serverListener = harn.createServerListener();
       harn.transport.emit("message", "some_tcid", msg);
@@ -2914,14 +3011,16 @@ describe("The server._processMessage() function", () => {
         Error
       );
       expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-        "INVALID_MESSAGE: Invalid JSON or schema violation."
+        "INVALID_MESSAGE: Schema violation."
       );
       expect(
-        check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+        check.string(
+          serverListener.badClientMessage.mock.calls[0][1].schemaViolation
+        )
       ).toBe(true);
       expect(
         serverListener.badClientMessage.mock.calls[0][1].clientMessage
-      ).toBe(msg);
+      ).toEqual(msgObject);
       expect(serverListener.transportError.mock.calls.length).toBe(0);
     });
 
@@ -2962,7 +3061,7 @@ describe("The server._processMessage() function", () => {
       expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
-          Problem: "Invalid JSON or schema violation.",
+          Problem: "Schema violation.",
           Message: msg
         }
       });
@@ -2985,9 +3084,10 @@ describe("The server._processMessage() function", () => {
       const harn = harness();
       harn.makeServerStarted();
       const cid = harn.makeClient("some_tcid");
-      const msg = JSON.stringify({
+      const msgObject = {
         MessageType: "Action"
-      });
+      };
+      const msg = JSON.stringify(msgObject);
 
       const serverListener = harn.createServerListener();
       harn.transport.emit("message", "some_tcid", msg);
@@ -3009,14 +3109,16 @@ describe("The server._processMessage() function", () => {
         Error
       );
       expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-        "INVALID_MESSAGE: Invalid JSON or schema violation."
+        "INVALID_MESSAGE: Schema violation."
       );
       expect(
-        check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+        check.string(
+          serverListener.badClientMessage.mock.calls[0][1].schemaViolation
+        )
       ).toBe(true);
       expect(
         serverListener.badClientMessage.mock.calls[0][1].clientMessage
-      ).toBe(msg);
+      ).toEqual(msgObject);
       expect(serverListener.transportError.mock.calls.length).toBe(0);
     });
 
@@ -3057,7 +3159,7 @@ describe("The server._processMessage() function", () => {
       expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
-          Problem: "Invalid JSON or schema violation.",
+          Problem: "Schema violation.",
           Message: msg
         }
       });
@@ -3080,9 +3182,10 @@ describe("The server._processMessage() function", () => {
       const harn = harness();
       harn.makeServerStarted();
       const cid = harn.makeClient("some_tcid");
-      const msg = JSON.stringify({
+      const msgObject = {
         MessageType: "FeedOpen"
-      });
+      };
+      const msg = JSON.stringify(msgObject);
 
       const serverListener = harn.createServerListener();
       harn.transport.emit("message", "some_tcid", msg);
@@ -3104,14 +3207,16 @@ describe("The server._processMessage() function", () => {
         Error
       );
       expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-        "INVALID_MESSAGE: Invalid JSON or schema violation."
+        "INVALID_MESSAGE: Schema violation."
       );
       expect(
-        check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+        check.string(
+          serverListener.badClientMessage.mock.calls[0][1].schemaViolation
+        )
       ).toBe(true);
       expect(
         serverListener.badClientMessage.mock.calls[0][1].clientMessage
-      ).toBe(msg);
+      ).toEqual(msgObject);
       expect(serverListener.transportError.mock.calls.length).toBe(0);
     });
 
@@ -3152,7 +3257,7 @@ describe("The server._processMessage() function", () => {
       expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
-          Problem: "Invalid JSON or schema violation.",
+          Problem: "Schema violation.",
           Message: msg
         }
       });
@@ -3175,9 +3280,10 @@ describe("The server._processMessage() function", () => {
       const harn = harness();
       harn.makeServerStarted();
       const cid = harn.makeClient("some_tcid");
-      const msg = JSON.stringify({
+      const msgObject = {
         MessageType: "FeedClose"
-      });
+      };
+      const msg = JSON.stringify(msgObject);
 
       const serverListener = harn.createServerListener();
       harn.transport.emit("message", "some_tcid", msg);
@@ -3199,14 +3305,16 @@ describe("The server._processMessage() function", () => {
         Error
       );
       expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-        "INVALID_MESSAGE: Invalid JSON or schema violation."
+        "INVALID_MESSAGE: Schema violation."
       );
       expect(
-        check.string(serverListener.badClientMessage.mock.calls[0][1].reason)
+        check.string(
+          serverListener.badClientMessage.mock.calls[0][1].schemaViolation
+        )
       ).toBe(true);
       expect(
         serverListener.badClientMessage.mock.calls[0][1].clientMessage
-      ).toBe(msg);
+      ).toEqual(msgObject);
       expect(serverListener.transportError.mock.calls.length).toBe(0);
     });
 
@@ -3247,7 +3355,7 @@ describe("The server._processMessage() function", () => {
       expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "ViolationResponse",
         Diagnostics: {
-          Problem: "Invalid JSON or schema violation.",
+          Problem: "Schema violation.",
           Message: msg
         }
       });

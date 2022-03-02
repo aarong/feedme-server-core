@@ -363,9 +363,15 @@ The following errors are possible:
   The client transmitted a message that was not valid JSON or that violated one
   of the JSON schemas laid out in the Feedme specification.
 
-  - `err.clientMessage` (string) contains the client message.
+  - `err.clientMessage` (Object or string) - The message received from the
+    client. If the message was not valid JSON, then this property holds the raw
+    string message, otherwise it holds the parsed JSON value.
 
-  - `err.reason` (string) describes the problem in additional detail.
+  - `err.parseError` (optional Error) is the error thrown by the JSON parser, if
+    applicable.
+
+  - `err.schemaViolation` (optional string) describes the schema violation, if
+    applicable.
 
 - `err.message === "UNEXPECTED_MESSAGE: ..."`
 

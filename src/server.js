@@ -5,7 +5,7 @@ import emitter from "component-emitter";
 import debug from "debug";
 import uuid from "uuid";
 import jsonExpressible from "json-expressible";
-import parseClientMessage from "feedme-util/parseclientmessage";
+import validateClientMessage from "feedme-util/validators/client-message";
 import validateFeedDelta from "feedme-util/validators/feed-delta";
 import md5Calculator from "feedme-util/md5calculator";
 import config from "./config";
@@ -888,10 +888,12 @@ proto._processMessage = function _processMessage(transportClientId, msg) {
 
   const clientId = this._clientIds[transportClientId];
 
-  // Parse and validate message
-  const result = parseClientMessage(msg);
-  if (!result.valid) {
-    dbg("Invalid JSON or schema violation");
+  // Parse message
+  let value;
+  try {
+    value = JSON.parse(msg);
+  } catch (e) {
+    dbg("Invalid JSON");
 
     // Send ViolationResponse
     this._transportWrapper.send(
@@ -899,16 +901,43 @@ proto._processMessage = function _processMessage(transportClientId, msg) {
       JSON.stringify({
         MessageType: "ViolationResponse",
         Diagnostics: {
-          Problem: "Invalid JSON or schema violation.",
+          Problem: "Invalid JSON.",
           Message: msg
         }
       })
     );
 
     // Emit badClientMessage
-    const err = new Error("INVALID_MESSAGE: Invalid JSON or schema violation.");
-    err.clientMessage = msg;
-    err.reason = result.errorMessage;
+    const err = new Error("INVALID_MESSAGE: Invalid JSON.");
+    err.clientMessage = msg; // string
+    err.parseError = e;
+    this.emit("badClientMessage", clientId, err);
+
+    return; // Stop
+  }
+
+  // Validate message
+  // No need to check whether JSON-expressible - just parsed
+  const schemaViolationMessage = validateClientMessage(value, false);
+  if (schemaViolationMessage) {
+    dbg("Schema violation");
+
+    // Send ViolationResponse
+    this._transportWrapper.send(
+      transportClientId,
+      JSON.stringify({
+        MessageType: "ViolationResponse",
+        Diagnostics: {
+          Problem: "Schema violation.",
+          Message: msg
+        }
+      })
+    );
+
+    // Emit badClientMessage
+    const err = new Error("INVALID_MESSAGE: Schema violation.");
+    err.clientMessage = value;
+    err.schemaViolation = schemaViolationMessage;
     this.emit("badClientMessage", clientId, err);
 
     return; // Stop
@@ -916,7 +945,7 @@ proto._processMessage = function _processMessage(transportClientId, msg) {
 
   // Route the message
   dbg("Routing the message");
-  this[`_process${result.message.MessageType}`](clientId, result.message, msg);
+  this[`_process${value.MessageType}`](clientId, value, msg);
 };
 
 /**
