@@ -541,8 +541,11 @@ proto.actionRevelation = function actionRevelation(params) {
     throw new Error("INVALID_ARGUMENT: Action data is not JSON-expressible.");
   }
 
-  // Validate feed name/arg types and cascade errors
-  const feedNameArgs = FeedNameArgs(params.feedName, params.feedArgs); // Cascade INVALID_ARGUMENT
+  // Validate feed name/args
+  const feedNameArgs = FeedNameArgs(params.feedName, params.feedArgs);
+  if (feedNameArgs.error()) {
+    throw new Error(`INVALID_ARGUMENT: ${feedNameArgs.error()}`);
+  }
 
   // Validate feed deltas
   if (!check.array(params.feedDeltas)) {
@@ -653,10 +656,13 @@ proto.feedTermination = function feedTermination(params) {
     throw new Error("INVALID_ARGUMENT: Invalid client id.");
   }
 
-  // Check feed name/args and cascade errors (if required by usage)
+  // Check feed name/args (if required by usage)
   let feedNameArgs;
   if (usage !== 2) {
-    feedNameArgs = FeedNameArgs(params.feedName, params.feedArgs); // Cascade INVALID_ARGUMENT
+    feedNameArgs = FeedNameArgs(params.feedName, params.feedArgs);
+    if (feedNameArgs.error()) {
+      throw new Error(`INVALID_ARGUMENT: ${feedNameArgs.error()}`);
+    }
   }
 
   // Check error code (required for all usages) - empty is spec-valid
