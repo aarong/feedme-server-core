@@ -17,8 +17,8 @@ describe("When the transport emits a valid Action message", () => {
           MessageType: "Action",
           ActionName: "some_action",
           ActionArgs: { action: "args" },
-          CallbackId: "abc"
-        })
+          CallbackId: "abc",
+        }),
       );
 
       expect(harn.server.emit.mock.calls.length).toBe(0);
@@ -39,8 +39,8 @@ describe("When the transport emits a valid Action message", () => {
           MessageType: "Action",
           ActionName: "some_action",
           ActionArgs: { action: "args" },
-          CallbackId: "abc"
-        })
+          CallbackId: "abc",
+        }),
       );
 
       expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -53,7 +53,7 @@ describe("When the transport emits a valid Action message", () => {
         Success: false,
         ErrorCode: "INTERNAL_ERROR",
         ErrorData: {},
-        CallbackId: "abc"
+        CallbackId: "abc",
       });
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
     });
@@ -83,8 +83,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -98,10 +98,10 @@ describe("When the transport emits a valid Action message", () => {
           expect(serverListener.action.mock.calls[0][0]).toBeInstanceOf(Object);
           expect(serverListener.action.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.action.mock.calls[0][0].actionName).toBe(
-            "some_action"
+            "some_action",
           );
           expect(serverListener.action.mock.calls[0][0].actionArgs).toEqual({
-            action: "args"
+            action: "args",
           });
           expect(serverListener.action.mock.calls[0][1]).toBeInstanceOf(Object);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -164,8 +164,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -185,7 +185,7 @@ describe("When the transport emits a valid Action message", () => {
             MessageType: "ActionResponse",
             Success: true,
             ActionData: { action: "data" },
-            CallbackId: "abc"
+            CallbackId: "abc",
           });
           expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -218,8 +218,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(ares.success({ action: "data" })).toBeUndefined();
@@ -228,8 +228,8 @@ describe("When the transport emits a valid Action message", () => {
             ares.success({ action: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() or failure() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+            ),
           );
         });
       });
@@ -254,8 +254,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -269,10 +269,10 @@ describe("When the transport emits a valid Action message", () => {
           expect(serverListener.action.mock.calls[0][0]).toBeInstanceOf(Object);
           expect(serverListener.action.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.action.mock.calls[0][0].actionName).toBe(
-            "some_action"
+            "some_action",
           );
           expect(serverListener.action.mock.calls[0][0].actionArgs).toEqual({
-            action: "args"
+            action: "args",
           });
           expect(serverListener.action.mock.calls[0][1]).toBeInstanceOf(Object);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -335,8 +335,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -356,7 +356,7 @@ describe("When the transport emits a valid Action message", () => {
             MessageType: "ActionResponse",
             Success: true,
             ActionData: { action: "data" },
-            CallbackId: "abc"
+            CallbackId: "abc",
           });
           expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -389,8 +389,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(ares.success({ action: "data" })).toBeUndefined();
@@ -399,8 +399,8 @@ describe("When the transport emits a valid Action message", () => {
             ares.failure("SOME_ERROR", { error: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() or failure() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+            ),
           );
         });
       });
@@ -425,8 +425,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -440,10 +440,10 @@ describe("When the transport emits a valid Action message", () => {
           expect(serverListener.action.mock.calls[0][0]).toBeInstanceOf(Object);
           expect(serverListener.action.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.action.mock.calls[0][0].actionName).toBe(
-            "some_action"
+            "some_action",
           );
           expect(serverListener.action.mock.calls[0][0].actionArgs).toEqual({
-            action: "args"
+            action: "args",
           });
           expect(serverListener.action.mock.calls[0][1]).toBeInstanceOf(Object);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -506,8 +506,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -528,7 +528,7 @@ describe("When the transport emits a valid Action message", () => {
             Success: false,
             ErrorCode: "SOME_ERROR",
             ErrorData: { error: "data" },
-            CallbackId: "abc"
+            CallbackId: "abc",
           });
           expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -561,8 +561,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(ares.failure("SOME_ERROR", { error: "data" })).toBeUndefined();
@@ -571,8 +571,8 @@ describe("When the transport emits a valid Action message", () => {
             ares.success({ action: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() or failure() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+            ),
           );
         });
       });
@@ -597,8 +597,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -612,10 +612,10 @@ describe("When the transport emits a valid Action message", () => {
           expect(serverListener.action.mock.calls[0][0]).toBeInstanceOf(Object);
           expect(serverListener.action.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.action.mock.calls[0][0].actionName).toBe(
-            "some_action"
+            "some_action",
           );
           expect(serverListener.action.mock.calls[0][0].actionArgs).toEqual({
-            action: "args"
+            action: "args",
           });
           expect(serverListener.action.mock.calls[0][1]).toBeInstanceOf(Object);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -678,8 +678,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -700,7 +700,7 @@ describe("When the transport emits a valid Action message", () => {
             Success: false,
             ErrorCode: "SOME_ERROR",
             ErrorData: { error: "data" },
-            CallbackId: "abc"
+            CallbackId: "abc",
           });
           expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -733,8 +733,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(ares.failure("SOME_ERROR", { error: "data" })).toBeUndefined();
@@ -743,8 +743,8 @@ describe("When the transport emits a valid Action message", () => {
             ares.failure("SOME_ERROR", { error: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() or failure() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+            ),
           );
         });
       });
@@ -771,8 +771,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -786,10 +786,10 @@ describe("When the transport emits a valid Action message", () => {
           expect(serverListener.action.mock.calls[0][0]).toBeInstanceOf(Object);
           expect(serverListener.action.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.action.mock.calls[0][0].actionName).toBe(
-            "some_action"
+            "some_action",
           );
           expect(serverListener.action.mock.calls[0][0].actionArgs).toEqual({
-            action: "args"
+            action: "args",
           });
           expect(serverListener.action.mock.calls[0][1]).toBeInstanceOf(Object);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -801,7 +801,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           serverListener.mockClear();
@@ -858,8 +858,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -870,7 +870,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           harn.transport.mockClear();
@@ -910,14 +910,14 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           expect(ares.success({ action: "data" })).toBeUndefined();
@@ -926,8 +926,8 @@ describe("When the transport emits a valid Action message", () => {
             ares.success({ action: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() or failure() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+            ),
           );
         });
       });
@@ -952,8 +952,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -967,10 +967,10 @@ describe("When the transport emits a valid Action message", () => {
           expect(serverListener.action.mock.calls[0][0]).toBeInstanceOf(Object);
           expect(serverListener.action.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.action.mock.calls[0][0].actionName).toBe(
-            "some_action"
+            "some_action",
           );
           expect(serverListener.action.mock.calls[0][0].actionArgs).toEqual({
-            action: "args"
+            action: "args",
           });
           expect(serverListener.action.mock.calls[0][1]).toBeInstanceOf(Object);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -982,7 +982,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           serverListener.mockClear();
@@ -1039,8 +1039,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -1051,7 +1051,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           harn.transport.mockClear();
@@ -1091,14 +1091,14 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           expect(ares.success({ action: "data" })).toBeUndefined();
@@ -1107,8 +1107,8 @@ describe("When the transport emits a valid Action message", () => {
             ares.failure("SOME_ERROR", { error: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() or failure() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+            ),
           );
         });
       });
@@ -1133,8 +1133,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -1148,10 +1148,10 @@ describe("When the transport emits a valid Action message", () => {
           expect(serverListener.action.mock.calls[0][0]).toBeInstanceOf(Object);
           expect(serverListener.action.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.action.mock.calls[0][0].actionName).toBe(
-            "some_action"
+            "some_action",
           );
           expect(serverListener.action.mock.calls[0][0].actionArgs).toEqual({
-            action: "args"
+            action: "args",
           });
           expect(serverListener.action.mock.calls[0][1]).toBeInstanceOf(Object);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1163,7 +1163,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           serverListener.mockClear();
@@ -1220,8 +1220,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -1232,7 +1232,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           harn.transport.mockClear();
@@ -1272,14 +1272,14 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           expect(ares.failure("SOME_ERROR", { error: "data" })).toBeUndefined();
@@ -1288,8 +1288,8 @@ describe("When the transport emits a valid Action message", () => {
             ares.success({ action: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() or failure() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+            ),
           );
         });
       });
@@ -1314,8 +1314,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -1329,10 +1329,10 @@ describe("When the transport emits a valid Action message", () => {
           expect(serverListener.action.mock.calls[0][0]).toBeInstanceOf(Object);
           expect(serverListener.action.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.action.mock.calls[0][0].actionName).toBe(
-            "some_action"
+            "some_action",
           );
           expect(serverListener.action.mock.calls[0][0].actionArgs).toEqual({
-            action: "args"
+            action: "args",
           });
           expect(serverListener.action.mock.calls[0][1]).toBeInstanceOf(Object);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1344,7 +1344,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           serverListener.mockClear();
@@ -1401,8 +1401,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -1413,7 +1413,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           harn.transport.mockClear();
@@ -1453,14 +1453,14 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           expect(ares.failure("SOME_ERROR", { error: "data" })).toBeUndefined();
@@ -1469,8 +1469,8 @@ describe("When the transport emits a valid Action message", () => {
             ares.failure("SOME_ERROR", { error: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() or failure() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+            ),
           );
         });
       });
@@ -1497,8 +1497,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -1512,10 +1512,10 @@ describe("When the transport emits a valid Action message", () => {
           expect(serverListener.action.mock.calls[0][0]).toBeInstanceOf(Object);
           expect(serverListener.action.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.action.mock.calls[0][0].actionName).toBe(
-            "some_action"
+            "some_action",
           );
           expect(serverListener.action.mock.calls[0][0].actionArgs).toEqual({
-            action: "args"
+            action: "args",
           });
           expect(serverListener.action.mock.calls[0][1]).toBeInstanceOf(Object);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1527,7 +1527,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -1586,8 +1586,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -1598,7 +1598,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -1640,14 +1640,14 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -1658,8 +1658,8 @@ describe("When the transport emits a valid Action message", () => {
             ares.success({ action: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() or failure() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+            ),
           );
         });
       });
@@ -1684,8 +1684,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -1699,10 +1699,10 @@ describe("When the transport emits a valid Action message", () => {
           expect(serverListener.action.mock.calls[0][0]).toBeInstanceOf(Object);
           expect(serverListener.action.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.action.mock.calls[0][0].actionName).toBe(
-            "some_action"
+            "some_action",
           );
           expect(serverListener.action.mock.calls[0][0].actionArgs).toEqual({
-            action: "args"
+            action: "args",
           });
           expect(serverListener.action.mock.calls[0][1]).toBeInstanceOf(Object);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1714,7 +1714,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -1773,8 +1773,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -1785,7 +1785,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -1826,14 +1826,14 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -1844,8 +1844,8 @@ describe("When the transport emits a valid Action message", () => {
             ares.failure("SOME_ERROR", { error: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() or failure() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+            ),
           );
         });
       });
@@ -1870,8 +1870,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -1885,10 +1885,10 @@ describe("When the transport emits a valid Action message", () => {
           expect(serverListener.action.mock.calls[0][0]).toBeInstanceOf(Object);
           expect(serverListener.action.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.action.mock.calls[0][0].actionName).toBe(
-            "some_action"
+            "some_action",
           );
           expect(serverListener.action.mock.calls[0][0].actionArgs).toEqual({
-            action: "args"
+            action: "args",
           });
           expect(serverListener.action.mock.calls[0][1]).toBeInstanceOf(Object);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -1900,7 +1900,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -1958,8 +1958,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -1970,7 +1970,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -2011,14 +2011,14 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -2029,8 +2029,8 @@ describe("When the transport emits a valid Action message", () => {
             ares.success({ action: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() or failure() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+            ),
           );
         });
       });
@@ -2055,8 +2055,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -2070,10 +2070,10 @@ describe("When the transport emits a valid Action message", () => {
           expect(serverListener.action.mock.calls[0][0]).toBeInstanceOf(Object);
           expect(serverListener.action.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.action.mock.calls[0][0].actionName).toBe(
-            "some_action"
+            "some_action",
           );
           expect(serverListener.action.mock.calls[0][0].actionArgs).toEqual({
-            action: "args"
+            action: "args",
           });
           expect(serverListener.action.mock.calls[0][1]).toBeInstanceOf(Object);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -2085,7 +2085,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -2143,8 +2143,8 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -2155,7 +2155,7 @@ describe("When the transport emits a valid Action message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -2196,14 +2196,14 @@ describe("When the transport emits a valid Action message", () => {
               MessageType: "Action",
               ActionName: "some_action",
               ActionArgs: { action: "args" },
-              CallbackId: "abc"
-            })
+              CallbackId: "abc",
+            }),
           );
 
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -2214,8 +2214,8 @@ describe("When the transport emits a valid Action message", () => {
             ares.failure("SOME_ERROR", { error: "data" });
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() or failure() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+            ),
           );
         });
       });

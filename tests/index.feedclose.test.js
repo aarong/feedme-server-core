@@ -13,7 +13,7 @@ describe("When the transport emits a valid FeedClose message", () => {
           "some_tcid",
           "some_feed",
           { feed: "args" },
-          { feed: "data" }
+          { feed: "data" },
         );
 
         harn.server.emit = jest.fn(); // Can't create a listener
@@ -23,8 +23,8 @@ describe("When the transport emits a valid FeedClose message", () => {
           JSON.stringify({
             MessageType: "FeedClose",
             FeedName: "some_feed",
-            FeedArgs: { feed: "args" }
-          })
+            FeedArgs: { feed: "args" },
+          }),
         );
 
         expect(harn.server.emit.mock.calls.length).toBe(0);
@@ -40,7 +40,7 @@ describe("When the transport emits a valid FeedClose message", () => {
           "some_tcid",
           "some_feed",
           { feed: "args" },
-          { feed: "data" }
+          { feed: "data" },
         );
 
         harn.transport.mockClear();
@@ -50,8 +50,8 @@ describe("When the transport emits a valid FeedClose message", () => {
           JSON.stringify({
             MessageType: "FeedClose",
             FeedName: "some_feed",
-            FeedArgs: { feed: "args" }
-          })
+            FeedArgs: { feed: "args" },
+          }),
         );
 
         expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -62,7 +62,7 @@ describe("When the transport emits a valid FeedClose message", () => {
         expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
           MessageType: "FeedCloseResponse",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -86,8 +86,8 @@ describe("When the transport emits a valid FeedClose message", () => {
           JSON.stringify({
             MessageType: "FeedClose",
             FeedName: "some_feed",
-            FeedArgs: { feed: "args" }
-          })
+            FeedArgs: { feed: "args" },
+          }),
         );
 
         expect(harn.server.emit.mock.calls.length).toBe(0);
@@ -108,8 +108,8 @@ describe("When the transport emits a valid FeedClose message", () => {
           JSON.stringify({
             MessageType: "FeedClose",
             FeedName: "some_feed",
-            FeedArgs: { feed: "args" }
-          })
+            FeedArgs: { feed: "args" },
+          }),
         );
 
         expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -120,7 +120,7 @@ describe("When the transport emits a valid FeedClose message", () => {
         expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
           MessageType: "FeedCloseResponse",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -142,7 +142,7 @@ describe("When the transport emits a valid FeedClose message", () => {
             "some_tcid",
             "some_feed",
             { feed: "args" },
-            { feed: "data" }
+            { feed: "data" },
           );
 
           const serverListener = harn.createServerListener();
@@ -152,8 +152,8 @@ describe("When the transport emits a valid FeedClose message", () => {
             JSON.stringify({
               MessageType: "FeedClose",
               FeedName: "some_feed",
-              FeedArgs: { feed: "args" }
-            })
+              FeedArgs: { feed: "args" },
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -167,17 +167,17 @@ describe("When the transport emits a valid FeedClose message", () => {
           expect(serverListener.feedClose.mock.calls.length).toBe(1);
           expect(serverListener.feedClose.mock.calls[0].length).toBe(2);
           expect(serverListener.feedClose.mock.calls[0][0]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.feedClose.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.feedClose.mock.calls[0][0].feedName).toBe(
-            "some_feed"
+            "some_feed",
           );
           expect(serverListener.feedClose.mock.calls[0][0].feedArgs).toEqual({
-            feed: "args"
+            feed: "args",
           });
           expect(serverListener.feedClose.mock.calls[0][1]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.disconnect.mock.calls.length).toBe(0);
           expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
@@ -229,7 +229,7 @@ describe("When the transport emits a valid FeedClose message", () => {
             "some_tcid",
             "some_feed",
             { feed: "args" },
-            { feed: "data" }
+            { feed: "data" },
           );
           let fcres;
           harn.server.once("feedClose", (req, res) => {
@@ -243,8 +243,8 @@ describe("When the transport emits a valid FeedClose message", () => {
             JSON.stringify({
               MessageType: "FeedClose",
               FeedName: "some_feed",
-              FeedArgs: { feed: "args" }
-            })
+              FeedArgs: { feed: "args" },
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -263,7 +263,7 @@ describe("When the transport emits a valid FeedClose message", () => {
           expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
             MessageType: "FeedCloseResponse",
             FeedName: "some_feed",
-            FeedArgs: { feed: "args" }
+            FeedArgs: { feed: "args" },
           });
           expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -287,7 +287,7 @@ describe("When the transport emits a valid FeedClose message", () => {
             "some_tcid",
             "some_feed",
             { feed: "args" },
-            { feed: "data" }
+            { feed: "data" },
           );
           let fcres;
           harn.server.once("feedClose", (req, res) => {
@@ -300,8 +300,8 @@ describe("When the transport emits a valid FeedClose message", () => {
             JSON.stringify({
               MessageType: "FeedClose",
               FeedName: "some_feed",
-              FeedArgs: { feed: "args" }
-            })
+              FeedArgs: { feed: "args" },
+            }),
           );
 
           expect(fcres.success()).toBeUndefined();
@@ -310,8 +310,8 @@ describe("When the transport emits a valid FeedClose message", () => {
             fcres.success();
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() method has already been called.",
+            ),
           );
         });
       });
@@ -327,7 +327,7 @@ describe("When the transport emits a valid FeedClose message", () => {
             "some_tcid",
             "some_feed",
             { feed: "args" },
-            { feed: "data" }
+            { feed: "data" },
           );
 
           const serverListener = harn.createServerListener();
@@ -337,8 +337,8 @@ describe("When the transport emits a valid FeedClose message", () => {
             JSON.stringify({
               MessageType: "FeedClose",
               FeedName: "some_feed",
-              FeedArgs: { feed: "args" }
-            })
+              FeedArgs: { feed: "args" },
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -352,17 +352,17 @@ describe("When the transport emits a valid FeedClose message", () => {
           expect(serverListener.feedClose.mock.calls.length).toBe(1);
           expect(serverListener.feedClose.mock.calls[0].length).toBe(2);
           expect(serverListener.feedClose.mock.calls[0][0]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.feedClose.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.feedClose.mock.calls[0][0].feedName).toBe(
-            "some_feed"
+            "some_feed",
           );
           expect(serverListener.feedClose.mock.calls[0][0].feedArgs).toEqual({
-            feed: "args"
+            feed: "args",
           });
           expect(serverListener.feedClose.mock.calls[0][1]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.disconnect.mock.calls.length).toBe(0);
           expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
@@ -373,7 +373,7 @@ describe("When the transport emits a valid FeedClose message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           serverListener.mockClear();
@@ -420,7 +420,7 @@ describe("When the transport emits a valid FeedClose message", () => {
             "some_tcid",
             "some_feed",
             { feed: "args" },
-            { feed: "data" }
+            { feed: "data" },
           );
           let fcres;
           harn.server.once("feedClose", (req, res) => {
@@ -434,8 +434,8 @@ describe("When the transport emits a valid FeedClose message", () => {
             JSON.stringify({
               MessageType: "FeedClose",
               FeedName: "some_feed",
-              FeedArgs: { feed: "args" }
-            })
+              FeedArgs: { feed: "args" },
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -446,7 +446,7 @@ describe("When the transport emits a valid FeedClose message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           harn.transport.mockClear();
@@ -477,7 +477,7 @@ describe("When the transport emits a valid FeedClose message", () => {
             "some_tcid",
             "some_feed",
             { feed: "args" },
-            { feed: "data" }
+            { feed: "data" },
           );
           let fcres;
           harn.server.once("feedClose", (req, res) => {
@@ -490,14 +490,14 @@ describe("When the transport emits a valid FeedClose message", () => {
             JSON.stringify({
               MessageType: "FeedClose",
               FeedName: "some_feed",
-              FeedArgs: { feed: "args" }
-            })
+              FeedArgs: { feed: "args" },
+            }),
           );
 
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           expect(fcres.success()).toBeUndefined();
@@ -506,8 +506,8 @@ describe("When the transport emits a valid FeedClose message", () => {
             fcres.success();
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() method has already been called.",
+            ),
           );
         });
       });
@@ -523,7 +523,7 @@ describe("When the transport emits a valid FeedClose message", () => {
             "some_tcid",
             "some_feed",
             { feed: "args" },
-            { feed: "data" }
+            { feed: "data" },
           );
 
           const serverListener = harn.createServerListener();
@@ -533,8 +533,8 @@ describe("When the transport emits a valid FeedClose message", () => {
             JSON.stringify({
               MessageType: "FeedClose",
               FeedName: "some_feed",
-              FeedArgs: { feed: "args" }
-            })
+              FeedArgs: { feed: "args" },
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -548,17 +548,17 @@ describe("When the transport emits a valid FeedClose message", () => {
           expect(serverListener.feedClose.mock.calls.length).toBe(1);
           expect(serverListener.feedClose.mock.calls[0].length).toBe(2);
           expect(serverListener.feedClose.mock.calls[0][0]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.feedClose.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.feedClose.mock.calls[0][0].feedName).toBe(
-            "some_feed"
+            "some_feed",
           );
           expect(serverListener.feedClose.mock.calls[0][0].feedArgs).toEqual({
-            feed: "args"
+            feed: "args",
           });
           expect(serverListener.feedClose.mock.calls[0][1]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.disconnect.mock.calls.length).toBe(0);
           expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
@@ -569,7 +569,7 @@ describe("When the transport emits a valid FeedClose message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -618,7 +618,7 @@ describe("When the transport emits a valid FeedClose message", () => {
             "some_tcid",
             "some_feed",
             { feed: "args" },
-            { feed: "data" }
+            { feed: "data" },
           );
           let fcres;
           harn.server.once("feedClose", (req, res) => {
@@ -632,8 +632,8 @@ describe("When the transport emits a valid FeedClose message", () => {
             JSON.stringify({
               MessageType: "FeedClose",
               FeedName: "some_feed",
-              FeedArgs: { feed: "args" }
-            })
+              FeedArgs: { feed: "args" },
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -644,7 +644,7 @@ describe("When the transport emits a valid FeedClose message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -677,7 +677,7 @@ describe("When the transport emits a valid FeedClose message", () => {
             "some_tcid",
             "some_feed",
             { feed: "args" },
-            { feed: "data" }
+            { feed: "data" },
           );
           let fcres;
           harn.server.once("feedClose", (req, res) => {
@@ -690,14 +690,14 @@ describe("When the transport emits a valid FeedClose message", () => {
             JSON.stringify({
               MessageType: "FeedClose",
               FeedName: "some_feed",
-              FeedArgs: { feed: "args" }
-            })
+              FeedArgs: { feed: "args" },
+            }),
           );
 
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -708,8 +708,8 @@ describe("When the transport emits a valid FeedClose message", () => {
             fcres.success();
           }).toThrow(
             new Error(
-              "ALREADY_RESPONDED: The success() method has already been called."
-            )
+              "ALREADY_RESPONDED: The success() method has already been called.",
+            ),
           );
         });
       });
@@ -731,8 +731,8 @@ describe("When the transport emits a valid FeedClose message", () => {
           JSON.stringify({
             MessageType: "FeedClose",
             FeedName: "some_feed",
-            FeedArgs: { feed: "args" }
-          })
+            FeedArgs: { feed: "args" },
+          }),
         );
 
         expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -764,8 +764,8 @@ describe("When the transport emits a valid FeedClose message", () => {
           JSON.stringify({
             MessageType: "FeedClose",
             FeedName: "some_feed",
-            FeedArgs: { feed: "args" }
-          })
+            FeedArgs: { feed: "args" },
+          }),
         );
 
         expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -776,7 +776,7 @@ describe("When the transport emits a valid FeedClose message", () => {
         expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
           MessageType: "FeedCloseResponse",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });

@@ -46,7 +46,7 @@ harnessProto.createServerListener = function createServerListener() {
     feedClose: jest.fn(),
     disconnect: jest.fn(),
     badClientMessage: jest.fn(),
-    transportError: jest.fn()
+    transportError: jest.fn(),
   };
   l.mockClear = function mockClear() {
     l.starting.mockClear();
@@ -101,8 +101,8 @@ harnessProto.makeClient = function connectClient(tcid) {
     tcid,
     JSON.stringify({
       MessageType: "Handshake",
-      Versions: ["0.1"]
-    })
+      Versions: ["0.1"],
+    }),
   );
   this.transport.mockClear();
   return cid;
@@ -122,8 +122,8 @@ harnessProto.makeFeedOpening = function makeFeedOpening(tcid, fn, fa) {
     JSON.stringify({
       MessageType: "FeedOpen",
       FeedName: fn,
-      FeedArgs: fa
-    })
+      FeedArgs: fa,
+    }),
   );
   this.transport.mockClear();
   return res;
@@ -141,8 +141,8 @@ harnessProto.makeFeedOpen = function makeFeedOpening(tcid, fn, fa, fd) {
     JSON.stringify({
       MessageType: "FeedOpen",
       FeedName: fn,
-      FeedArgs: fa
-    })
+      FeedArgs: fa,
+    }),
   );
   this.transport.mockClear();
 };
@@ -160,8 +160,8 @@ harnessProto.makeFeedClosing = function makeFeedOpening(tcid, fn, fa) {
     JSON.stringify({
       MessageType: "FeedOpen",
       FeedName: fn,
-      FeedArgs: fa
-    })
+      FeedArgs: fa,
+    }),
   );
 
   let res;
@@ -174,8 +174,8 @@ harnessProto.makeFeedClosing = function makeFeedOpening(tcid, fn, fa) {
     JSON.stringify({
       MessageType: "FeedClose",
       FeedName: fn,
-      FeedArgs: fa
-    })
+      FeedArgs: fa,
+    }),
   );
   this.transport.mockClear();
   return res;
@@ -193,8 +193,8 @@ harnessProto.makeFeedTerminated = function makeFeedOpening(tcid, fn, fa) {
     JSON.stringify({
       MessageType: "FeedOpen",
       FeedName: fn,
-      FeedArgs: fa
-    })
+      FeedArgs: fa,
+    }),
   );
 
   this.server.feedTermination({
@@ -202,7 +202,7 @@ harnessProto.makeFeedTerminated = function makeFeedOpening(tcid, fn, fa) {
     feedName: fn,
     feedArgs: fa,
     errorCode: "DISCARDED_CODE",
-    errorData: { discarded: "data" }
+    errorData: { discarded: "data" },
   });
 
   this.transport.mockClear();

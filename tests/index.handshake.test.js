@@ -7,7 +7,7 @@ describe("When the transport emits a valid Handshake message", () => {
 
       it("should emit no events", () => {
         const harn = harness({
-          handshakeMs: 0 // Don't leave a pending timer (Jest warns)
+          handshakeMs: 0, // Don't leave a pending timer (Jest warns)
         });
         harn.makeServerStarted();
         harn.transport.emit("connect", "some_tcid");
@@ -18,8 +18,8 @@ describe("When the transport emits a valid Handshake message", () => {
           "some_tcid",
           JSON.stringify({
             MessageType: "Handshake",
-            Versions: ["X.X"]
-          })
+            Versions: ["X.X"],
+          }),
         );
 
         expect(harn.server.emit.mock.calls.length).toBe(0);
@@ -29,7 +29,7 @@ describe("When the transport emits a valid Handshake message", () => {
 
       it("should return HandshakeResponse indicating failure", () => {
         const harn = harness({
-          handshakeMs: 0 // Don't leave a pending timer (Jest warns)
+          handshakeMs: 0, // Don't leave a pending timer (Jest warns)
         });
         harn.makeServerStarted();
         harn.transport.emit("connect", "some_tcid");
@@ -40,8 +40,8 @@ describe("When the transport emits a valid Handshake message", () => {
           "some_tcid",
           JSON.stringify({
             MessageType: "Handshake",
-            Versions: ["X.X"]
-          })
+            Versions: ["X.X"],
+          }),
         );
 
         expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -51,7 +51,7 @@ describe("When the transport emits a valid Handshake message", () => {
         expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
         expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
           MessageType: "HandshakeResponse",
-          Success: false
+          Success: false,
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -71,8 +71,8 @@ describe("When the transport emits a valid Handshake message", () => {
           "some_tcid",
           JSON.stringify({
             MessageType: "Handshake",
-            Versions: ["0.1"]
-          })
+            Versions: ["0.1"],
+          }),
         );
 
         expect(harn.server.emit.mock.calls.length).toBe(0);
@@ -91,8 +91,8 @@ describe("When the transport emits a valid Handshake message", () => {
           "some_tcid",
           JSON.stringify({
             MessageType: "Handshake",
-            Versions: ["0.1"]
-          })
+            Versions: ["0.1"],
+          }),
         );
 
         expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -103,7 +103,7 @@ describe("When the transport emits a valid Handshake message", () => {
         expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
           MessageType: "HandshakeResponse",
           Success: true,
-          Version: "0.1"
+          Version: "0.1",
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -122,8 +122,8 @@ describe("When the transport emits a valid Handshake message", () => {
           "some_tcid",
           JSON.stringify({
             MessageType: "Handshake",
-            Versions: ["X.X"]
-          })
+            Versions: ["X.X"],
+          }),
         );
 
         harn.server.emit = jest.fn(); // Can't listen
@@ -132,8 +132,8 @@ describe("When the transport emits a valid Handshake message", () => {
           "some_tcid",
           JSON.stringify({
             MessageType: "Handshake",
-            Versions: ["0.1"]
-          })
+            Versions: ["0.1"],
+          }),
         );
 
         expect(harn.server.emit.mock.calls.length).toBe(0);
@@ -151,8 +151,8 @@ describe("When the transport emits a valid Handshake message", () => {
           "some_tcid",
           JSON.stringify({
             MessageType: "Handshake",
-            Versions: ["X.X"]
-          })
+            Versions: ["X.X"],
+          }),
         );
 
         harn.transport.mockClear();
@@ -161,8 +161,8 @@ describe("When the transport emits a valid Handshake message", () => {
           "some_tcid",
           JSON.stringify({
             MessageType: "Handshake",
-            Versions: ["0.1"]
-          })
+            Versions: ["0.1"],
+          }),
         );
 
         expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -173,7 +173,7 @@ describe("When the transport emits a valid Handshake message", () => {
         expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
           MessageType: "HandshakeResponse",
           Success: true,
-          Version: "0.1"
+          Version: "0.1",
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -186,7 +186,7 @@ describe("When the transport emits a valid Handshake message", () => {
 
       it("should emit no events", () => {
         const harn = harness({
-          handshakeMs: 0 // Don't leave a pending timer (Jest warns)
+          handshakeMs: 0, // Don't leave a pending timer (Jest warns)
         });
         harn.makeServerStarted();
         harn.transport.emit("connect", "some_tcid");
@@ -197,8 +197,8 @@ describe("When the transport emits a valid Handshake message", () => {
           "some_tcid",
           JSON.stringify({
             MessageType: "Handshake",
-            Versions: ["X.X"]
-          })
+            Versions: ["X.X"],
+          }),
         );
 
         expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -219,7 +219,7 @@ describe("When the transport emits a valid Handshake message", () => {
 
       it("should return HandshakeResponse indicating failure", () => {
         const harn = harness({
-          handshakeMs: 0 // Don't leave a pending timer (Jest warns)
+          handshakeMs: 0, // Don't leave a pending timer (Jest warns)
         });
         harn.makeServerStarted();
         harn.transport.emit("connect", "some_tcid");
@@ -230,8 +230,8 @@ describe("When the transport emits a valid Handshake message", () => {
           "some_tcid",
           JSON.stringify({
             MessageType: "Handshake",
-            Versions: ["X.X"]
-          })
+            Versions: ["X.X"],
+          }),
         );
 
         expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -241,7 +241,7 @@ describe("When the transport emits a valid Handshake message", () => {
         expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
         expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
           MessageType: "HandshakeResponse",
-          Success: false
+          Success: false,
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -255,7 +255,7 @@ describe("When the transport emits a valid Handshake message", () => {
           const harn = harness();
           harn.makeServerStarted();
           let cid;
-          harn.server.once("connect", c => {
+          harn.server.once("connect", (c) => {
             cid = c;
           });
           harn.transport.emit("connect", "some_tcid");
@@ -266,8 +266,8 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["0.1"]
-            })
+              Versions: ["0.1"],
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -278,11 +278,11 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(serverListener.handshake.mock.calls.length).toBe(1);
           expect(serverListener.handshake.mock.calls[0].length).toBe(2);
           expect(serverListener.handshake.mock.calls[0][0]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.handshake.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.handshake.mock.calls[0][1]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.action.mock.calls.length).toBe(0);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -345,8 +345,8 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["0.1"]
-            })
+              Versions: ["0.1"],
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -365,7 +365,7 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
             MessageType: "HandshakeResponse",
             Success: true,
-            Version: "0.1"
+            Version: "0.1",
           });
           expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -396,8 +396,8 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["0.1"]
-            })
+              Versions: ["0.1"],
+            }),
           );
 
           expect(hres.success()).toBeUndefined();
@@ -405,7 +405,7 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(() => {
             hres.success();
           }).toThrow(
-            "ALREADY_RESPONDED: The success() method has already been called."
+            "ALREADY_RESPONDED: The success() method has already been called.",
           );
         });
       });
@@ -417,7 +417,7 @@ describe("When the transport emits a valid Handshake message", () => {
           const harn = harness();
           harn.makeServerStarted();
           let cid;
-          harn.server.once("connect", c => {
+          harn.server.once("connect", (c) => {
             cid = c;
           });
           harn.transport.emit("connect", "some_tcid");
@@ -428,8 +428,8 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["0.1"]
-            })
+              Versions: ["0.1"],
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -440,11 +440,11 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(serverListener.handshake.mock.calls.length).toBe(1);
           expect(serverListener.handshake.mock.calls[0].length).toBe(2);
           expect(serverListener.handshake.mock.calls[0][0]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.handshake.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.handshake.mock.calls[0][1]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.action.mock.calls.length).toBe(0);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -458,7 +458,7 @@ describe("When the transport emits a valid Handshake message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           serverListener.mockClear();
@@ -513,8 +513,8 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["0.1"]
-            })
+              Versions: ["0.1"],
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -525,7 +525,7 @@ describe("When the transport emits a valid Handshake message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           harn.transport.mockClear();
@@ -563,14 +563,14 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["0.1"]
-            })
+              Versions: ["0.1"],
+            }),
           );
 
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("FAILURE: ...")
+            new Error("FAILURE: ..."),
           );
 
           expect(hres.success()).toBeUndefined();
@@ -578,7 +578,7 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(() => {
             hres.success();
           }).toThrow(
-            "ALREADY_RESPONDED: The success() method has already been called."
+            "ALREADY_RESPONDED: The success() method has already been called.",
           );
         });
       });
@@ -590,7 +590,7 @@ describe("When the transport emits a valid Handshake message", () => {
           const harn = harness();
           harn.makeServerStarted();
           let cid;
-          harn.server.once("connect", c => {
+          harn.server.once("connect", (c) => {
             cid = c;
           });
           harn.transport.emit("connect", "some_tcid");
@@ -601,8 +601,8 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["0.1"]
-            })
+              Versions: ["0.1"],
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -613,11 +613,11 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(serverListener.handshake.mock.calls.length).toBe(1);
           expect(serverListener.handshake.mock.calls[0].length).toBe(2);
           expect(serverListener.handshake.mock.calls[0][0]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.handshake.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.handshake.mock.calls[0][1]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.action.mock.calls.length).toBe(0);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -631,7 +631,7 @@ describe("When the transport emits a valid Handshake message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -688,8 +688,8 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["0.1"]
-            })
+              Versions: ["0.1"],
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -700,7 +700,7 @@ describe("When the transport emits a valid Handshake message", () => {
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -740,14 +740,14 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["0.1"]
-            })
+              Versions: ["0.1"],
+            }),
           );
 
           harn.transport.emit(
             "disconnect",
             "some_tcid",
-            new Error("STOPPING: ...")
+            new Error("STOPPING: ..."),
           );
           harn.transport.state.mockReturnValue("stopping");
           harn.transport.emit("stopping", new Error("FAILURE: ..."));
@@ -757,7 +757,7 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(() => {
             hres.success();
           }).toThrow(
-            "ALREADY_RESPONDED: The success() method has already been called."
+            "ALREADY_RESPONDED: The success() method has already been called.",
           );
         });
       });
@@ -771,7 +771,7 @@ describe("When the transport emits a valid Handshake message", () => {
           const harn = harness();
           harn.makeServerStarted();
           let cid;
-          harn.server.once("connect", c => {
+          harn.server.once("connect", (c) => {
             cid = c;
           });
           harn.transport.emit("connect", "some_tcid");
@@ -782,8 +782,8 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["X.X"]
-            })
+              Versions: ["X.X"],
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -805,8 +805,8 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["0.1"]
-            })
+              Versions: ["0.1"],
+            }),
           );
 
           expect(serverListener.starting.mock.calls.length).toBe(0);
@@ -817,11 +817,11 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(serverListener.handshake.mock.calls.length).toBe(1);
           expect(serverListener.handshake.mock.calls[0].length).toBe(2);
           expect(serverListener.handshake.mock.calls[0][0]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.handshake.mock.calls[0][0].clientId).toBe(cid);
           expect(serverListener.handshake.mock.calls[0][1]).toBeInstanceOf(
-            Object
+            Object,
           );
           expect(serverListener.action.mock.calls.length).toBe(0);
           expect(serverListener.feedOpen.mock.calls.length).toBe(0);
@@ -884,8 +884,8 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["X.X"]
-            })
+              Versions: ["X.X"],
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -895,7 +895,7 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(harn.transport.send.mock.calls[0][0]).toBe("some_tcid");
           expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
             MessageType: "HandshakeResponse",
-            Success: false
+            Success: false,
           });
           expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -905,8 +905,8 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["0.1"]
-            })
+              Versions: ["0.1"],
+            }),
           );
 
           expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -925,7 +925,7 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
             MessageType: "HandshakeResponse",
             Success: true,
-            Version: "0.1"
+            Version: "0.1",
           });
           expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -956,8 +956,8 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["X.X"]
-            })
+              Versions: ["X.X"],
+            }),
           );
 
           harn.transport.emit(
@@ -965,8 +965,8 @@ describe("When the transport emits a valid Handshake message", () => {
             "some_tcid",
             JSON.stringify({
               MessageType: "Handshake",
-              Versions: ["0.1"]
-            })
+              Versions: ["0.1"],
+            }),
           );
 
           expect(hres.success()).toBeUndefined();
@@ -974,7 +974,7 @@ describe("When the transport emits a valid Handshake message", () => {
           expect(() => {
             hres.success();
           }).toThrow(
-            "ALREADY_RESPONDED: The success() method has already been called."
+            "ALREADY_RESPONDED: The success() method has already been called.",
           );
         });
       });

@@ -145,8 +145,8 @@ describe("The handshakeMs option", () => {
         "some_tcid",
         JSON.stringify({
           MessageType: "Handshake",
-          Versions: ["0.1"]
-        })
+          Versions: ["0.1"],
+        }),
       );
 
       // Check transport calls
@@ -218,8 +218,8 @@ describe("The handshakeMs option", () => {
         "some_tcid",
         JSON.stringify({
           MessageType: "Handshake",
-          Versions: ["0.1"]
-        })
+          Versions: ["0.1"],
+        }),
       );
 
       // Check transport calls
@@ -402,7 +402,7 @@ describe("The handshakeMs option", () => {
       const serverListener = harn.createServerListener();
       harn.makeServerStarted();
       let cid;
-      harn.server.once("connect", c => {
+      harn.server.once("connect", (c) => {
         cid = c;
       });
       harn.transport.emit("connect", "some_tcid");
@@ -450,7 +450,7 @@ describe("The handshakeMs option", () => {
       expect(harn.transport.disconnect.mock.calls[0][0]).toBe("some_tcid");
       expect(harn.transport.disconnect.mock.calls[0][1]).toBeInstanceOf(Error);
       expect(harn.transport.disconnect.mock.calls[0][1].message).toBe(
-        "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time."
+        "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time.",
       );
 
       // Transport required to emit a disconnect event
@@ -458,8 +458,8 @@ describe("The handshakeMs option", () => {
         "disconnect",
         "some_tcid",
         new Error(
-          "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time."
-        )
+          "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time.",
+        ),
       );
 
       // Check server events
@@ -477,7 +477,7 @@ describe("The handshakeMs option", () => {
       expect(serverListener.disconnect.mock.calls[0][0]).toBe(cid);
       expect(serverListener.disconnect.mock.calls[0][1]).toBeInstanceOf(Error);
       expect(serverListener.disconnect.mock.calls[0][1].message).toBe(
-        "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time."
+        "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time.",
       );
       expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
       expect(serverListener.transportError.mock.calls.length).toBe(0);
@@ -516,7 +516,7 @@ describe("The handshakeMs option", () => {
       const serverListener = harn.createServerListener();
       harn.makeServerStarted();
       let cid;
-      harn.server.once("connect", c => {
+      harn.server.once("connect", (c) => {
         cid = c;
       });
       harn.transport.emit("connect", "some_tcid");
@@ -591,7 +591,7 @@ describe("The handshakeMs option", () => {
       expect(harn.transport.disconnect.mock.calls[0][0]).toBe("some_tcid");
       expect(harn.transport.disconnect.mock.calls[0][1]).toBeInstanceOf(Error);
       expect(harn.transport.disconnect.mock.calls[0][1].message).toBe(
-        "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time."
+        "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time.",
       );
 
       // Transport required to emit a disconnect event
@@ -599,8 +599,8 @@ describe("The handshakeMs option", () => {
         "disconnect",
         "some_tcid",
         new Error(
-          "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time."
-        )
+          "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time.",
+        ),
       );
 
       // Check server events
@@ -618,7 +618,7 @@ describe("The handshakeMs option", () => {
       expect(serverListener.disconnect.mock.calls[0][0]).toBe(cid);
       expect(serverListener.disconnect.mock.calls[0][1]).toBeInstanceOf(Error);
       expect(serverListener.disconnect.mock.calls[0][1].message).toBe(
-        "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time."
+        "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time.",
       );
       expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
       expect(serverListener.transportError.mock.calls.length).toBe(0);
@@ -669,8 +669,8 @@ describe("The handshakeMs option", () => {
         "some_tcid",
         JSON.stringify({
           MessageType: "Handshake",
-          Versions: ["0.1"]
-        })
+          Versions: ["0.1"],
+        }),
       );
 
       // Check transport calls
@@ -742,8 +742,8 @@ describe("The handshakeMs option", () => {
         "some_tcid",
         JSON.stringify({
           MessageType: "Handshake",
-          Versions: ["0.1"]
-        })
+          Versions: ["0.1"],
+        }),
       );
 
       // Check transport calls
@@ -967,8 +967,8 @@ describe("The terminationMs option", () => {
         JSON.stringify({
           MessageType: "FeedClose",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
-        })
+          FeedArgs: { feed: "args" },
+        }),
       );
 
       // Check transport calls
@@ -980,7 +980,7 @@ describe("The terminationMs option", () => {
       expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "FeedCloseResponse",
         FeedName: "some_feed",
-        FeedArgs: { feed: "args" }
+        FeedArgs: { feed: "args" },
       });
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -1046,8 +1046,8 @@ describe("The terminationMs option", () => {
         JSON.stringify({
           MessageType: "FeedOpen",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
-        })
+          FeedArgs: { feed: "args" },
+        }),
       );
 
       // Check transport calls
@@ -1089,7 +1089,7 @@ describe("The terminationMs option", () => {
         FeedName: "some_feed",
         FeedArgs: { feed: "args" },
         Success: true,
-        FeedData: { feed: "data" }
+        FeedData: { feed: "data" },
       });
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -1155,8 +1155,8 @@ describe("The terminationMs option", () => {
         JSON.stringify({
           MessageType: "FeedClose",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
-        })
+          FeedArgs: { feed: "args" },
+        }),
       );
 
       // Check transport calls
@@ -1168,7 +1168,7 @@ describe("The terminationMs option", () => {
       expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual({
         MessageType: "FeedCloseResponse",
         FeedName: "some_feed",
-        FeedArgs: { feed: "args" }
+        FeedArgs: { feed: "args" },
       });
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -1230,7 +1230,7 @@ describe("The terminationMs option", () => {
       const msg = JSON.stringify({
         MessageType: "FeedClose",
         FeedName: "some_feed",
-        FeedArgs: { feed: "args" }
+        FeedArgs: { feed: "args" },
       });
       harn.transport.emit("message", "some_tcid", msg);
 
@@ -1244,8 +1244,8 @@ describe("The terminationMs option", () => {
         MessageType: "ViolationResponse",
         Diagnostics: {
           Message: msg,
-          Problem: "Unexpected FeedClose message."
-        }
+          Problem: "Unexpected FeedClose message.",
+        },
       });
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -1264,10 +1264,10 @@ describe("The terminationMs option", () => {
       expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
       expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
       expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-        Error
+        Error,
       );
       expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-        "UNEXPECTED_MESSAGE: FeedClose message referenced a feed that was not open or terminated."
+        "UNEXPECTED_MESSAGE: FeedClose message referenced a feed that was not open or terminated.",
       );
       expect(serverListener.transportError.mock.calls.length).toBe(0);
     });
@@ -1320,8 +1320,8 @@ describe("The terminationMs option", () => {
         JSON.stringify({
           MessageType: "FeedOpen",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
-        })
+          FeedArgs: { feed: "args" },
+        }),
       );
 
       // Check transport calls
@@ -1363,7 +1363,7 @@ describe("The terminationMs option", () => {
         FeedName: "some_feed",
         FeedArgs: { feed: "args" },
         Success: true,
-        FeedData: { feed: "data" }
+        FeedData: { feed: "data" },
       });
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -1430,8 +1430,8 @@ describe("The terminationMs option", () => {
         JSON.stringify({
           MessageType: "FeedOpen",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
-        })
+          FeedArgs: { feed: "args" },
+        }),
       );
 
       // Check transport calls
@@ -1473,7 +1473,7 @@ describe("The terminationMs option", () => {
         FeedName: "some_feed",
         FeedArgs: { feed: "args" },
         Success: true,
-        FeedData: { feed: "data" }
+        FeedData: { feed: "data" },
       });
       expect(harn.transport.disconnect.mock.calls.length).toBe(0);
 
@@ -1541,7 +1541,7 @@ describe("The factory function", () => {
     expect(() => {
       feedmeServerCore({ transport: {} });
     }).toThrow(
-      "INVALID_ARGUMENT: The supplied transport does not implement the required API."
+      "INVALID_ARGUMENT: The supplied transport does not implement the required API.",
     );
   });
 
@@ -1555,9 +1555,9 @@ describe("The factory function", () => {
           start: () => {},
           stop: () => {},
           send: () => {},
-          disconnect: () => {}
+          disconnect: () => {},
         },
-        handshakeMs: {}
+        handshakeMs: {},
       });
     }).toThrow("INVALID_ARGUMENT: The supplied transport is not stopped.");
   });
@@ -1572,9 +1572,9 @@ describe("The factory function", () => {
           start: () => {},
           stop: () => {},
           send: () => {},
-          disconnect: () => {}
+          disconnect: () => {},
         },
-        handshakeMs: {}
+        handshakeMs: {},
       });
     }).toThrow("INVALID_ARGUMENT: Invalid options.handshakeMs.");
   });
@@ -1589,9 +1589,9 @@ describe("The factory function", () => {
           start: () => {},
           stop: () => {},
           send: () => {},
-          disconnect: () => {}
+          disconnect: () => {},
         },
-        handshakeMs: 1.5
+        handshakeMs: 1.5,
       });
     }).toThrow("INVALID_ARGUMENT: Invalid options.handshakeMs.");
   });
@@ -1606,9 +1606,9 @@ describe("The factory function", () => {
           start: () => {},
           stop: () => {},
           send: () => {},
-          disconnect: () => {}
+          disconnect: () => {},
         },
-        handshakeMs: -1
+        handshakeMs: -1,
       });
     }).toThrow("INVALID_ARGUMENT: Invalid options.handshakeMs.");
   });
@@ -1623,9 +1623,9 @@ describe("The factory function", () => {
           start: () => {},
           stop: () => {},
           send: () => {},
-          disconnect: () => {}
+          disconnect: () => {},
         },
-        terminationMs: {}
+        terminationMs: {},
       });
     }).toThrow("INVALID_ARGUMENT: Invalid options.terminationMs.");
   });
@@ -1640,9 +1640,9 @@ describe("The factory function", () => {
           start: () => {},
           stop: () => {},
           send: () => {},
-          disconnect: () => {}
+          disconnect: () => {},
         },
-        terminationMs: 1.5
+        terminationMs: 1.5,
       });
     }).toThrow("INVALID_ARGUMENT: Invalid options.terminationMs.");
   });
@@ -1657,9 +1657,9 @@ describe("The factory function", () => {
           start: () => {},
           stop: () => {},
           send: () => {},
-          disconnect: () => {}
+          disconnect: () => {},
         },
-        terminationMs: -1
+        terminationMs: -1,
       });
     }).toThrow("INVALID_ARGUMENT: Invalid options.terminationMs.");
   });
@@ -1675,10 +1675,10 @@ describe("The factory function", () => {
             start: () => {},
             stop: () => {},
             send: () => {},
-            disconnect: () => {}
-          }
-        })
-      )
+            disconnect: () => {},
+          },
+        }),
+      ),
     ).toBe(true);
   });
 
@@ -1694,10 +1694,10 @@ describe("The factory function", () => {
       start: jest.fn(),
       stop: jest.fn(),
       send: jest.fn(),
-      disconnect: jest.fn()
+      disconnect: jest.fn(),
     };
     feedmeServerCore({
-      transport: t
+      transport: t,
     });
     expect(t.start.mock.calls.length).toBe(0);
     expect(t.stop.mock.calls.length).toBe(0);
@@ -1820,7 +1820,7 @@ describe("The server.start() function", () => {
     expect(serverListener.stopping.mock.calls[0].length).toBe(1);
     expect(serverListener.stopping.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(serverListener.stopping.mock.calls[0][0].message).toBe(
-      "FAILURE: ..."
+      "FAILURE: ...",
     );
     expect(serverListener.stop.mock.calls.length).toBe(0);
     expect(serverListener.connect.mock.calls.length).toBe(0);
@@ -1966,7 +1966,7 @@ describe("The server.actionRevelation() function", () => {
         actionData: { action: "data" },
         feedName: "some_feed",
         feedArgs: { feed: "args" },
-        feedDeltas: []
+        feedDeltas: [],
       });
     }).toThrow(new Error("INVALID_STATE: The server is not started."));
   });
@@ -1982,7 +1982,7 @@ describe("The server.actionRevelation() function", () => {
         actionData: { action: "data" },
         feedName: "some_feed",
         feedArgs: { feed: "args" },
-        feedDeltas: []
+        feedDeltas: [],
       });
     }).toThrow(new Error("INVALID_STATE: The server is not started."));
   });
@@ -2002,7 +2002,7 @@ describe("The server.actionRevelation() function", () => {
         actionData: { action: "data" },
         feedName: "some_feed",
         feedArgs: { feed: "args" },
-        feedDeltas: []
+        feedDeltas: [],
       });
     }).toThrow(new Error("INVALID_STATE: The server is not started."));
   });
@@ -2020,8 +2020,8 @@ describe("The server.actionRevelation() function", () => {
         actionData: { action: "data" },
         feedName: "some_feed",
         feedArgs: { feed: "args" },
-        feedDeltas: []
-      })
+        feedDeltas: [],
+      }),
     ).toBeUndefined();
   });
 
@@ -2039,7 +2039,7 @@ describe("The server.actionRevelation() function", () => {
       "closed_name",
       "other_feed",
       { feed: "args" },
-      { feed: "data" }
+      { feed: "data" },
     );
 
     // Feed closed - different feed arg open
@@ -2048,7 +2048,7 @@ describe("The server.actionRevelation() function", () => {
       "closed_args",
       "some_feed",
       { other: "args" },
-      { feed: "data" }
+      { feed: "data" },
     );
 
     // Feed opening
@@ -2078,10 +2078,10 @@ describe("The server.actionRevelation() function", () => {
           Operation: "Set",
           Path: [],
           Value: {
-            new: "data"
-          }
-        }
-      ]
+            new: "data",
+          },
+        },
+      ],
     });
 
     expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -2100,10 +2100,10 @@ describe("The server.actionRevelation() function", () => {
           Operation: "Set",
           Path: [],
           Value: {
-            new: "data"
-          }
-        }
-      ]
+            new: "data",
+          },
+        },
+      ],
     });
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
@@ -2118,7 +2118,7 @@ describe("The server.actionRevelation() function", () => {
       "closed_name",
       "other_feed",
       { feed: "args" },
-      { feed: "data" }
+      { feed: "data" },
     );
 
     // Feed closed - different feed arg open
@@ -2127,7 +2127,7 @@ describe("The server.actionRevelation() function", () => {
       "closed_args",
       "some_feed",
       { other: "args" },
-      { feed: "data" }
+      { feed: "data" },
     );
 
     // Feed opening
@@ -2157,11 +2157,11 @@ describe("The server.actionRevelation() function", () => {
           Operation: "Set",
           Path: [],
           Value: {
-            new: "data"
-          }
-        }
+            new: "data",
+          },
+        },
       ],
-      feedData: { new: "data" }
+      feedData: { new: "data" },
     });
 
     expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -2180,11 +2180,11 @@ describe("The server.actionRevelation() function", () => {
           Operation: "Set",
           Path: [],
           Value: {
-            new: "data"
-          }
-        }
+            new: "data",
+          },
+        },
       ],
-      FeedMd5: "pBTE+QEe33IXncYf8DOPgA==" // Hashing checked in unit tests
+      FeedMd5: "pBTE+QEe33IXncYf8DOPgA==", // Hashing checked in unit tests
     });
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
@@ -2199,7 +2199,7 @@ describe("The server.actionRevelation() function", () => {
       "closed_name",
       "other_feed",
       { feed: "args" },
-      { feed: "data" }
+      { feed: "data" },
     );
 
     // Feed closed - different feed arg open
@@ -2208,7 +2208,7 @@ describe("The server.actionRevelation() function", () => {
       "closed_args",
       "some_feed",
       { other: "args" },
-      { feed: "data" }
+      { feed: "data" },
     );
 
     // Feed opening
@@ -2238,11 +2238,11 @@ describe("The server.actionRevelation() function", () => {
           Operation: "Set",
           Path: [],
           Value: {
-            new: "data"
-          }
-        }
+            new: "data",
+          },
+        },
       ],
-      feedMd5: "pBTE+QEe33IXncYf8DOPgA=="
+      feedMd5: "pBTE+QEe33IXncYf8DOPgA==",
     });
 
     expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -2261,11 +2261,11 @@ describe("The server.actionRevelation() function", () => {
           Operation: "Set",
           Path: [],
           Value: {
-            new: "data"
-          }
-        }
+            new: "data",
+          },
+        },
       ],
-      FeedMd5: "pBTE+QEe33IXncYf8DOPgA=="
+      FeedMd5: "pBTE+QEe33IXncYf8DOPgA==",
     });
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
@@ -2282,7 +2282,7 @@ describe("The server.feedTermination() function", () => {
         feedName: "some_feed",
         feedArgs: { feed: "args" },
         errorCode: "SOME_ERROR",
-        errorData: { error: "data" }
+        errorData: { error: "data" },
       });
     }).toThrow(new Error("INVALID_STATE: The server is not started."));
   });
@@ -2298,7 +2298,7 @@ describe("The server.feedTermination() function", () => {
         feedName: "some_feed",
         feedArgs: { feed: "args" },
         errorCode: "SOME_ERROR",
-        errorData: { error: "data" }
+        errorData: { error: "data" },
       });
     }).toThrow(new Error("INVALID_STATE: The server is not started."));
   });
@@ -2318,7 +2318,7 @@ describe("The server.feedTermination() function", () => {
         feedName: "some_feed",
         feedArgs: { feed: "args" },
         errorCode: "SOME_ERROR",
-        errorData: { error: "data" }
+        errorData: { error: "data" },
       });
     }).toThrow(new Error("INVALID_STATE: The server is not started."));
   });
@@ -2336,8 +2336,8 @@ describe("The server.feedTermination() function", () => {
         feedName: "some_feed",
         feedArgs: { feed: "args" },
         errorCode: "SOME_ERROR",
-        errorData: { error: "data" }
-      })
+        errorData: { error: "data" },
+      }),
     ).toBeUndefined();
   });
 
@@ -2379,7 +2379,7 @@ describe("The server.feedTermination() function", () => {
       feedName: "some_feed",
       feedArgs: { feed: "args" },
       errorCode: "SOME_ERROR",
-      errorData: { error: "data" }
+      errorData: { error: "data" },
     });
 
     expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -2393,7 +2393,7 @@ describe("The server.feedTermination() function", () => {
       FeedArgs: { feed: "args" },
       Success: false,
       ErrorCode: "SOME_ERROR",
-      ErrorData: { error: "data" }
+      ErrorData: { error: "data" },
     });
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
@@ -2408,7 +2408,7 @@ describe("The server.feedTermination() function", () => {
       "target",
       "some_feed",
       { feed: "args" },
-      { feed: "data" }
+      { feed: "data" },
     );
 
     // Other feeds on target client
@@ -2416,13 +2416,13 @@ describe("The server.feedTermination() function", () => {
       "target",
       "other_feed",
       { feed: "args" },
-      { feed: "data" }
+      { feed: "data" },
     );
     harn.makeFeedOpen(
       "target",
       "some_feed",
       { other: "args" },
-      { feed: "data" }
+      { feed: "data" },
     );
 
     // Other client on target feed: feed opening
@@ -2447,7 +2447,7 @@ describe("The server.feedTermination() function", () => {
       feedName: "some_feed",
       feedArgs: { feed: "args" },
       errorCode: "SOME_ERROR",
-      errorData: { error: "data" }
+      errorData: { error: "data" },
     });
 
     expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -2460,7 +2460,7 @@ describe("The server.feedTermination() function", () => {
       FeedName: "some_feed",
       FeedArgs: { feed: "args" },
       ErrorCode: "SOME_ERROR",
-      ErrorData: { error: "data" }
+      ErrorData: { error: "data" },
     });
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
@@ -2476,7 +2476,7 @@ describe("The server.feedTermination() function", () => {
       "target",
       "open_feed",
       { feed: "args" },
-      { feed: "data" }
+      { feed: "data" },
     );
     harn.makeFeedClosing("target", "closing_feed", { feed: "args" });
     harn.makeFeedTerminated("target", "terminated_feed", { feed: "args" });
@@ -2492,7 +2492,7 @@ describe("The server.feedTermination() function", () => {
     harn.server.feedTermination({
       clientId: cidTarget,
       errorCode: "SOME_ERROR",
-      errorData: { error: "data" }
+      errorData: { error: "data" },
     });
 
     const feedTerminationExpected = {
@@ -2500,7 +2500,7 @@ describe("The server.feedTermination() function", () => {
       FeedName: "open_feed",
       FeedArgs: { feed: "args" },
       ErrorCode: "SOME_ERROR",
-      ErrorData: { error: "data" }
+      ErrorData: { error: "data" },
     };
     const feedOpenResponseExpected = {
       MessageType: "FeedOpenResponse",
@@ -2508,7 +2508,7 @@ describe("The server.feedTermination() function", () => {
       FeedArgs: { feed: "args" },
       Success: false,
       ErrorCode: "SOME_ERROR",
-      ErrorData: { error: "data" }
+      ErrorData: { error: "data" },
     };
 
     expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -2524,7 +2524,7 @@ describe("The server.feedTermination() function", () => {
       (_.isEqual(received1, feedTerminationExpected) &&
         _.isEqual(received2, feedOpenResponseExpected)) ||
         (_.isEqual(received2, feedTerminationExpected) &&
-          _.isEqual(received1, feedOpenResponseExpected))
+          _.isEqual(received1, feedOpenResponseExpected)),
     ).toBe(true);
     expect(harn.transport.disconnect.mock.calls.length).toBe(0);
   });
@@ -2539,7 +2539,7 @@ describe("The server.feedTermination() function", () => {
       "closed_name",
       "other_feed",
       { feed: "args" },
-      { feed: "data" }
+      { feed: "data" },
     );
 
     // Feed closed - different feed arg open
@@ -2548,7 +2548,7 @@ describe("The server.feedTermination() function", () => {
       "closed_args",
       "some_feed",
       { other: "args" },
-      { feed: "data" }
+      { feed: "data" },
     );
 
     // Feed opening
@@ -2572,7 +2572,7 @@ describe("The server.feedTermination() function", () => {
       feedName: "some_feed",
       feedArgs: { feed: "args" },
       errorCode: "SOME_ERROR",
-      errorData: { error: "data" }
+      errorData: { error: "data" },
     });
 
     const feedTerminationExpected = {
@@ -2580,7 +2580,7 @@ describe("The server.feedTermination() function", () => {
       FeedName: "some_feed",
       FeedArgs: { feed: "args" },
       ErrorCode: "SOME_ERROR",
-      ErrorData: { error: "data" }
+      ErrorData: { error: "data" },
     };
     const feedOpenResponseExpected = {
       MessageType: "FeedOpenResponse",
@@ -2588,7 +2588,7 @@ describe("The server.feedTermination() function", () => {
       FeedArgs: { feed: "args" },
       Success: false,
       ErrorCode: "SOME_ERROR",
-      ErrorData: { error: "data" }
+      ErrorData: { error: "data" },
     };
 
     expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -2599,20 +2599,20 @@ describe("The server.feedTermination() function", () => {
     if (harn.transport.send.mock.calls[0][0] === "opening") {
       expect(harn.transport.send.mock.calls[0][0]).toBe("opening");
       expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual(
-        feedOpenResponseExpected
+        feedOpenResponseExpected,
       );
       expect(harn.transport.send.mock.calls[1][0]).toBe("open");
       expect(JSON.parse(harn.transport.send.mock.calls[1][1])).toEqual(
-        feedTerminationExpected
+        feedTerminationExpected,
       );
     } else {
       expect(harn.transport.send.mock.calls[0][0]).toBe("open");
       expect(JSON.parse(harn.transport.send.mock.calls[0][1])).toEqual(
-        feedTerminationExpected
+        feedTerminationExpected,
       );
       expect(harn.transport.send.mock.calls[1][0]).toBe("opening");
       expect(JSON.parse(harn.transport.send.mock.calls[1][1])).toEqual(
-        feedOpenResponseExpected
+        feedOpenResponseExpected,
       );
     }
   });
@@ -2791,7 +2791,7 @@ describe("When the transport violates a library requirement", () => {
     expect(serverListener.transportError.mock.calls.length).toBe(1);
     expect(serverListener.transportError.mock.calls[0].length).toBe(1);
     expect(serverListener.transportError.mock.calls[0][0]).toBeInstanceOf(
-      Error
+      Error,
     );
   });
 
@@ -2832,7 +2832,7 @@ describe("When the transport emits stopping/stop events (failure)", () => {
     expect(serverListener.disconnect.mock.calls[0][0]).toBe(cid);
     expect(serverListener.disconnect.mock.calls[0][1]).toBeInstanceOf(Error);
     expect(serverListener.disconnect.mock.calls[0][1].message).toBe(
-      "STOPPING: ..."
+      "STOPPING: ...",
     );
     expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
     expect(serverListener.transportError.mock.calls.length).toBe(0);
@@ -2846,7 +2846,7 @@ describe("When the transport emits stopping/stop events (failure)", () => {
     expect(serverListener.stopping.mock.calls[0].length).toBe(1);
     expect(serverListener.stopping.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(serverListener.stopping.mock.calls[0][0].message).toBe(
-      "FAILURE: ..."
+      "FAILURE: ...",
     );
     expect(serverListener.stop.mock.calls.length).toBe(0);
     expect(serverListener.connect.mock.calls.length).toBe(0);
@@ -2973,7 +2973,7 @@ describe("When the transport emits a disconnect event (failure)", () => {
     expect(serverListener.disconnect.mock.calls[0][0]).toBe(cid);
     expect(serverListener.disconnect.mock.calls[0][1]).toBeInstanceOf(Error);
     expect(serverListener.disconnect.mock.calls[0][1].message).toBe(
-      "FAILURE: ..."
+      "FAILURE: ...",
     );
     expect(serverListener.badClientMessage.mock.calls.length).toBe(0);
     expect(serverListener.transportError.mock.calls.length).toBe(0);
@@ -3023,16 +3023,16 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "INVALID_MESSAGE: Invalid JSON."
+          "INVALID_MESSAGE: Invalid JSON.",
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].parseError
+          serverListener.badClientMessage.mock.calls[0][1].parseError,
         ).toBeInstanceOf(Error);
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toBe(msg);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -3056,8 +3056,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Invalid JSON."
-          }
+            Problem: "Invalid JSON.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -3089,18 +3089,18 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "INVALID_MESSAGE: Schema violation."
+          "INVALID_MESSAGE: Schema violation.",
         );
         expect(
           check.string(
-            serverListener.badClientMessage.mock.calls[0][1].schemaViolation
-          )
+            serverListener.badClientMessage.mock.calls[0][1].schemaViolation,
+          ),
         ).toBe(true);
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toBe(JSON.parse(msg));
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -3124,8 +3124,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Schema violation."
-          }
+            Problem: "Schema violation.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -3141,7 +3141,7 @@ describe("When the transport emits an invalid message event", () => {
         const serverListener = harn.createServerListener();
 
         const msgObject = {
-          MessageType: "junk"
+          MessageType: "junk",
         };
         const msg = JSON.stringify(msgObject);
         harn.transport.emit("message", "some_tcid", msg);
@@ -3160,18 +3160,18 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "INVALID_MESSAGE: Schema violation."
+          "INVALID_MESSAGE: Schema violation.",
         );
         expect(
           check.string(
-            serverListener.badClientMessage.mock.calls[0][1].schemaViolation
-          )
+            serverListener.badClientMessage.mock.calls[0][1].schemaViolation,
+          ),
         ).toBe(true);
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toEqual(msgObject);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -3184,7 +3184,7 @@ describe("When the transport emits an invalid message event", () => {
         harn.makeClient("some_tcid");
 
         const msg = JSON.stringify({
-          MessageType: "junk"
+          MessageType: "junk",
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3197,8 +3197,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Schema violation."
-          }
+            Problem: "Schema violation.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -3214,7 +3214,7 @@ describe("When the transport emits an invalid message event", () => {
         const serverListener = harn.createServerListener();
 
         const msgObject = {
-          MessageType: "Handshake"
+          MessageType: "Handshake",
         };
         const msg = JSON.stringify(msgObject);
         harn.transport.emit("message", "some_tcid", msg);
@@ -3233,18 +3233,18 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "INVALID_MESSAGE: Schema violation."
+          "INVALID_MESSAGE: Schema violation.",
         );
         expect(
           check.string(
-            serverListener.badClientMessage.mock.calls[0][1].schemaViolation
-          )
+            serverListener.badClientMessage.mock.calls[0][1].schemaViolation,
+          ),
         ).toBe(true);
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toEqual(msgObject);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -3257,7 +3257,7 @@ describe("When the transport emits an invalid message event", () => {
         harn.makeClient("some_tcid");
 
         const msg = JSON.stringify({
-          MessageType: "Handshake"
+          MessageType: "Handshake",
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3270,8 +3270,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Schema violation."
-          }
+            Problem: "Schema violation.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -3287,7 +3287,7 @@ describe("When the transport emits an invalid message event", () => {
         const serverListener = harn.createServerListener();
 
         const msgObject = {
-          MessageType: "Action"
+          MessageType: "Action",
         };
         const msg = JSON.stringify(msgObject);
         harn.transport.emit("message", "some_tcid", msg);
@@ -3306,18 +3306,18 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "INVALID_MESSAGE: Schema violation."
+          "INVALID_MESSAGE: Schema violation.",
         );
         expect(
           check.string(
-            serverListener.badClientMessage.mock.calls[0][1].schemaViolation
-          )
+            serverListener.badClientMessage.mock.calls[0][1].schemaViolation,
+          ),
         ).toBe(true);
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toEqual(msgObject);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -3330,7 +3330,7 @@ describe("When the transport emits an invalid message event", () => {
         harn.makeClient("some_tcid");
 
         const msg = JSON.stringify({
-          MessageType: "Action"
+          MessageType: "Action",
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3343,8 +3343,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Schema violation."
-          }
+            Problem: "Schema violation.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -3360,7 +3360,7 @@ describe("When the transport emits an invalid message event", () => {
         const serverListener = harn.createServerListener();
 
         const msgObject = {
-          MessageType: "FeedOpen"
+          MessageType: "FeedOpen",
         };
         const msg = JSON.stringify(msgObject);
         harn.transport.emit("message", "some_tcid", msg);
@@ -3379,18 +3379,18 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "INVALID_MESSAGE: Schema violation."
+          "INVALID_MESSAGE: Schema violation.",
         );
         expect(
           check.string(
-            serverListener.badClientMessage.mock.calls[0][1].schemaViolation
-          )
+            serverListener.badClientMessage.mock.calls[0][1].schemaViolation,
+          ),
         ).toBe(true);
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toEqual(msgObject);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -3403,7 +3403,7 @@ describe("When the transport emits an invalid message event", () => {
         harn.makeClient("some_tcid");
 
         const msg = JSON.stringify({
-          MessageType: "FeedOpen"
+          MessageType: "FeedOpen",
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3416,8 +3416,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Schema violation."
-          }
+            Problem: "Schema violation.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -3433,7 +3433,7 @@ describe("When the transport emits an invalid message event", () => {
         const serverListener = harn.createServerListener();
 
         const msgObject = {
-          MessageType: "FeedClose"
+          MessageType: "FeedClose",
         };
         const msg = JSON.stringify(msgObject);
         harn.transport.emit("message", "some_tcid", msg);
@@ -3452,18 +3452,18 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "INVALID_MESSAGE: Schema violation."
+          "INVALID_MESSAGE: Schema violation.",
         );
         expect(
           check.string(
-            serverListener.badClientMessage.mock.calls[0][1].schemaViolation
-          )
+            serverListener.badClientMessage.mock.calls[0][1].schemaViolation,
+          ),
         ).toBe(true);
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toEqual(msgObject);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -3476,7 +3476,7 @@ describe("When the transport emits an invalid message event", () => {
         harn.makeClient("some_tcid");
 
         const msg = JSON.stringify({
-          MessageType: "FeedClose"
+          MessageType: "FeedClose",
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3489,8 +3489,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Schema violation."
-          }
+            Problem: "Schema violation.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -3508,7 +3508,7 @@ describe("When the transport emits an invalid message event", () => {
 
         const msg = JSON.stringify({
           MessageType: "Handshake",
-          Versions: ["0.1"]
+          Versions: ["0.1"],
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3529,13 +3529,13 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "UNEXPECTED_MESSAGE: Unexpected Handshake message."
+          "UNEXPECTED_MESSAGE: Unexpected Handshake message.",
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toBe(msg);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -3549,7 +3549,7 @@ describe("When the transport emits an invalid message event", () => {
 
         const msg = JSON.stringify({
           MessageType: "Handshake",
-          Versions: ["0.1"]
+          Versions: ["0.1"],
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3565,8 +3565,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Unexpected Handshake message."
-          }
+            Problem: "Unexpected Handshake message.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -3579,7 +3579,7 @@ describe("When the transport emits an invalid message event", () => {
         const harn = harness();
         harn.makeServerStarted();
         let cid;
-        harn.server.once("connect", c => {
+        harn.server.once("connect", (c) => {
           cid = c;
         });
         harn.transport.emit("connect", "some_tcid");
@@ -3589,7 +3589,7 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "Action",
           ActionName: "some_action",
           ActionArgs: { action: "args" },
-          CallbackId: "123"
+          CallbackId: "123",
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3607,13 +3607,13 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "UNEXPECTED_MESSAGE: Action message received before successful Handshake."
+          "UNEXPECTED_MESSAGE: Action message received before successful Handshake.",
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toBe(msg);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -3629,7 +3629,7 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "Action",
           ActionName: "some_action",
           ActionArgs: { action: "args" },
-          CallbackId: "123"
+          CallbackId: "123",
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3642,8 +3642,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Handshake required."
-          }
+            Problem: "Handshake required.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -3662,7 +3662,7 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "Action",
           ActionName: "some_action",
           ActionArgs: { action: "args" },
-          CallbackId: "123"
+          CallbackId: "123",
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3683,13 +3683,13 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "UNEXPECTED_MESSAGE: Action message reused an outstanding CallbackId."
+          "UNEXPECTED_MESSAGE: Action message reused an outstanding CallbackId.",
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toBe(msg);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -3706,7 +3706,7 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "Action",
           ActionName: "some_action",
           ActionArgs: { action: "args" },
-          CallbackId: "123"
+          CallbackId: "123",
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3722,8 +3722,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Action message reused an outstanding CallbackId."
-          }
+            Problem: "Action message reused an outstanding CallbackId.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -3736,7 +3736,7 @@ describe("When the transport emits an invalid message event", () => {
         const harn = harness();
         harn.makeServerStarted();
         let cid;
-        harn.server.once("connect", c => {
+        harn.server.once("connect", (c) => {
           cid = c;
         });
         harn.transport.emit("connect", "some_tcid");
@@ -3745,7 +3745,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedOpen",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3763,13 +3763,13 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "UNEXPECTED_MESSAGE: FeedOpen message received before successful Handshake."
+          "UNEXPECTED_MESSAGE: FeedOpen message received before successful Handshake.",
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toBe(msg);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -3784,7 +3784,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedOpen",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3797,8 +3797,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Handshake required."
-          }
+            Problem: "Handshake required.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -3817,7 +3817,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedOpen",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3835,13 +3835,13 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "UNEXPECTED_MESSAGE: FeedOpen message referenced a feed that was not closed or terminated."
+          "UNEXPECTED_MESSAGE: FeedOpen message referenced a feed that was not closed or terminated.",
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toBe(msg);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -3857,7 +3857,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedOpen",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3870,8 +3870,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Unexpected FeedOpen message."
-          }
+            Problem: "Unexpected FeedOpen message.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -3888,14 +3888,14 @@ describe("When the transport emits an invalid message event", () => {
           "some_tcid",
           "some_feed",
           { feed: "args" },
-          { feed: "data" }
+          { feed: "data" },
         );
 
         const serverListener = harn.createServerListener();
         const msg = JSON.stringify({
           MessageType: "FeedOpen",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3913,13 +3913,13 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "UNEXPECTED_MESSAGE: FeedOpen message referenced a feed that was not closed or terminated."
+          "UNEXPECTED_MESSAGE: FeedOpen message referenced a feed that was not closed or terminated.",
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toBe(msg);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -3934,13 +3934,13 @@ describe("When the transport emits an invalid message event", () => {
           "some_tcid",
           "some_feed",
           { feed: "args" },
-          { feed: "data" }
+          { feed: "data" },
         );
 
         const msg = JSON.stringify({
           MessageType: "FeedOpen",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3953,8 +3953,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Unexpected FeedOpen message."
-          }
+            Problem: "Unexpected FeedOpen message.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -3973,7 +3973,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedOpen",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -3991,13 +3991,13 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "UNEXPECTED_MESSAGE: FeedOpen message referenced a feed that was not closed or terminated."
+          "UNEXPECTED_MESSAGE: FeedOpen message referenced a feed that was not closed or terminated.",
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toBe(msg);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -4013,7 +4013,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedOpen",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -4026,8 +4026,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Unexpected FeedOpen message."
-          }
+            Problem: "Unexpected FeedOpen message.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -4040,7 +4040,7 @@ describe("When the transport emits an invalid message event", () => {
         const harn = harness();
         harn.makeServerStarted();
         let cid;
-        harn.server.once("connect", c => {
+        harn.server.once("connect", (c) => {
           cid = c;
         });
         harn.transport.emit("connect", "some_tcid");
@@ -4049,7 +4049,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedClose",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -4067,13 +4067,13 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "UNEXPECTED_MESSAGE: FeedClose message received before successful Handshake."
+          "UNEXPECTED_MESSAGE: FeedClose message received before successful Handshake.",
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toBe(msg);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -4088,7 +4088,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedClose",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -4101,8 +4101,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Handshake required."
-          }
+            Problem: "Handshake required.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -4120,7 +4120,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedClose",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -4138,13 +4138,13 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "UNEXPECTED_MESSAGE: FeedClose message referenced a feed that was not open or terminated."
+          "UNEXPECTED_MESSAGE: FeedClose message referenced a feed that was not open or terminated.",
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toBe(msg);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -4159,7 +4159,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedClose",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -4172,8 +4172,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Unexpected FeedClose message."
-          }
+            Problem: "Unexpected FeedClose message.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -4192,7 +4192,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedClose",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -4210,13 +4210,13 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "UNEXPECTED_MESSAGE: FeedClose message referenced a feed that was not open or terminated."
+          "UNEXPECTED_MESSAGE: FeedClose message referenced a feed that was not open or terminated.",
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toBe(msg);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -4232,7 +4232,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedClose",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -4245,8 +4245,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Unexpected FeedClose message."
-          }
+            Problem: "Unexpected FeedClose message.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
@@ -4265,7 +4265,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedClose",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -4283,13 +4283,13 @@ describe("When the transport emits an invalid message event", () => {
         expect(serverListener.badClientMessage.mock.calls[0].length).toBe(2);
         expect(serverListener.badClientMessage.mock.calls[0][0]).toBe(cid);
         expect(serverListener.badClientMessage.mock.calls[0][1]).toBeInstanceOf(
-          Error
+          Error,
         );
         expect(serverListener.badClientMessage.mock.calls[0][1].message).toBe(
-          "UNEXPECTED_MESSAGE: FeedClose message referenced a feed that was not open or terminated."
+          "UNEXPECTED_MESSAGE: FeedClose message referenced a feed that was not open or terminated.",
         );
         expect(
-          serverListener.badClientMessage.mock.calls[0][1].clientMessage
+          serverListener.badClientMessage.mock.calls[0][1].clientMessage,
         ).toBe(msg);
         expect(serverListener.transportError.mock.calls.length).toBe(0);
       });
@@ -4305,7 +4305,7 @@ describe("When the transport emits an invalid message event", () => {
         const msg = JSON.stringify({
           MessageType: "FeedClose",
           FeedName: "some_feed",
-          FeedArgs: { feed: "args" }
+          FeedArgs: { feed: "args" },
         });
         harn.transport.emit("message", "some_tcid", msg);
 
@@ -4318,8 +4318,8 @@ describe("When the transport emits an invalid message event", () => {
           MessageType: "ViolationResponse",
           Diagnostics: {
             Message: msg,
-            Problem: "Unexpected FeedClose message."
-          }
+            Problem: "Unexpected FeedClose message.",
+          },
         });
         expect(harn.transport.disconnect.mock.calls.length).toBe(0);
       });
