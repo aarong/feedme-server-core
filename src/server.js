@@ -3,7 +3,7 @@ import FeedNameArgs from "feedme-util/feednameargs";
 import check from "check-types";
 import emitter from "component-emitter";
 import debug from "debug";
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 import jsonExpressible from "json-expressible";
 import validateClientMessage from "feedme-util/validators/client-message";
 import validateFeedDelta from "feedme-util/validators/feed-delta";
