@@ -34,9 +34,9 @@ describe("The main() factory function", () => {
           send: () => {},
           disconnect: () => {},
           stop: () => {},
-          on: () => {}
-        }
-      })
+          on: () => {},
+        },
+      }),
     ).toBeInstanceOf(Object);
   });
 });

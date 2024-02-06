@@ -83,7 +83,7 @@ proto.success = function success(feedData) {
   // Throw if the app already responded
   if (this._appResponded) {
     throw new Error(
-      "ALREADY_RESPONDED: The success() or failure() method has already been called."
+      "ALREADY_RESPONDED: The success() or failure() method has already been called.",
     );
   }
 
@@ -97,7 +97,7 @@ proto.success = function success(feedData) {
     s._appFeedOpenSuccess(
       this._feedOpenRequest.clientId,
       this._feedOpenRequest._feedNameArgs,
-      feedData
+      feedData,
     );
   }
 };
@@ -134,7 +134,7 @@ proto.failure = function failure(errorCode, errorData) {
   // Throw if the app already responded
   if (this._appResponded) {
     throw new Error(
-      "ALREADY_RESPONDED: The success() or failure() method has already been called."
+      "ALREADY_RESPONDED: The success() or failure() method has already been called.",
     );
   }
 
@@ -149,7 +149,7 @@ proto.failure = function failure(errorCode, errorData) {
       this._feedOpenRequest.clientId,
       this._feedOpenRequest._feedNameArgs,
       errorCode,
-      errorData
+      errorData,
     );
   }
 };
@@ -174,14 +174,14 @@ proto._neutralize = function _neutralize() {
   // Throw if the app already responded - bad server behavior
   if (this._appResponded) {
     throw new Error(
-      "ALREADY_RESPONDED: The success() or failure() method has already been called."
+      "ALREADY_RESPONDED: The success() or failure() method has already been called.",
     );
   }
 
   // Throw if already neutralized - bad server behavior
   if (this._neutralized) {
     throw new Error(
-      "ALREADY_NEUTRALIZED: The object has already been neutralized."
+      "ALREADY_NEUTRALIZED: The object has already been neutralized.",
     );
   }
 

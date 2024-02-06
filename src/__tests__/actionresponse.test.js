@@ -8,9 +8,9 @@ describe("The actionResponse() factory function", () => {
       "some_client",
       "some_action",
       {
-        action: "arg"
+        action: "arg",
       },
-      "some_callback_id"
+      "some_callback_id",
     );
     const ares = actionResponse(s, areq);
     expect(ares._server).toBe(s);
@@ -33,15 +33,15 @@ describe("The success(), failure(), and _neutralize() functions", () => {
     // Create the object
     const s = {
       _appActionSuccess: jest.fn(),
-      _appActionFailure: jest.fn()
+      _appActionFailure: jest.fn(),
     };
     const areq = actionRequest(
       "some_client",
       "some_callback_id",
       "some_action",
       {
-        action: "arg"
-      }
+        action: "arg",
+      },
     );
     const ares = actionResponse(s, areq);
 
@@ -54,7 +54,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
     expect(() => {
       ares.success({ something: undefined });
     }).toThrow(
-      new Error("INVALID_ARGUMENT: Action data is not JSON-expressible.")
+      new Error("INVALID_ARGUMENT: Action data is not JSON-expressible."),
     );
 
     // Failure - throw on invalid errorCode - type
@@ -71,7 +71,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
     expect(() => {
       ares.failure("SOME_ERROR", { something: undefined });
     }).toThrow(
-      new Error("INVALID_ARGUMENT: Error data is not JSON-expressible.")
+      new Error("INVALID_ARGUMENT: Error data is not JSON-expressible."),
     );
   });
 
@@ -80,15 +80,15 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appActionSuccess: jest.fn(),
-        _appActionFailure: jest.fn()
+        _appActionFailure: jest.fn(),
       };
       const areq = actionRequest(
         "some_client",
         "some_callback_id",
         "some_action",
         {
-          action: "arg"
-        }
+          action: "arg",
+        },
       );
       const ares = actionResponse(s, areq);
 
@@ -114,8 +114,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares.success({ action: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(ares._server).toBe(null);
       expect(ares._actionRequest).toBe(areq);
@@ -132,8 +132,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(ares._server).toBe(null);
       expect(ares._actionRequest).toBe(areq);
@@ -147,15 +147,15 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appActionSuccess: jest.fn(),
-        _appActionFailure: jest.fn()
+        _appActionFailure: jest.fn(),
       };
       const areq = actionRequest(
         "some_client",
         "some_callback_id",
         "some_action",
         {
-          action: "arg"
-        }
+          action: "arg",
+        },
       );
       const ares = actionResponse(s, areq);
 
@@ -181,8 +181,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares.failure("SOME_ERROR", { error: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(ares._server).toBe(null);
       expect(ares._actionRequest).toBe(areq);
@@ -199,8 +199,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(ares._server).toBe(null);
       expect(ares._actionRequest).toBe(areq);
@@ -214,15 +214,15 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appActionSuccess: jest.fn(),
-        _appActionFailure: jest.fn()
+        _appActionFailure: jest.fn(),
       };
       const areq = actionRequest(
         "some_client",
         "some_callback_id",
         "some_action",
         {
-          action: "arg"
-        }
+          action: "arg",
+        },
       );
       const ares = actionResponse(s, areq);
 
@@ -249,8 +249,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares.success({ action: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(ares._server).toBe(null);
       expect(ares._actionRequest).toBe(areq);
@@ -267,8 +267,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(ares._server).toBe(null);
       expect(ares._actionRequest).toBe(areq);
@@ -282,15 +282,15 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appActionSuccess: jest.fn(),
-        _appActionFailure: jest.fn()
+        _appActionFailure: jest.fn(),
       };
       const areq = actionRequest(
         "some_client",
         "some_callback_id",
         "some_action",
         {
-          action: "arg"
-        }
+          action: "arg",
+        },
       );
       const ares = actionResponse(s, areq);
 
@@ -317,8 +317,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares.failure("SOME_ERROR", { error: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(ares._server).toBe(null);
       expect(ares._actionRequest).toBe(areq);
@@ -335,8 +335,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(ares._server).toBe(null);
       expect(ares._actionRequest).toBe(areq);
@@ -350,15 +350,15 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appActionSuccess: jest.fn(),
-        _appActionFailure: jest.fn()
+        _appActionFailure: jest.fn(),
       };
       const areq = actionRequest(
         "some_client",
         "some_action",
         {
-          action: "arg"
+          action: "arg",
         },
-        "some_callback_id"
+        "some_callback_id",
       );
       const ares = actionResponse(s, areq);
 
@@ -391,8 +391,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares.success({ action: "data " });
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(ares._server).toBe(null);
       expect(ares._actionRequest).toBe(areq);
@@ -406,15 +406,15 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appActionSuccess: jest.fn(),
-        _appActionFailure: jest.fn()
+        _appActionFailure: jest.fn(),
       };
       const areq = actionRequest(
         "some_client",
         "some_action",
         {
-          action: "arg"
+          action: "arg",
         },
-        "some_callback_id"
+        "some_callback_id",
       );
       const ares = actionResponse(s, areq);
 
@@ -447,8 +447,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares.failure("SOME_ERROR", { error: "data" });
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(ares._server).toBe(null);
       expect(ares._actionRequest).toBe(areq);
@@ -462,15 +462,15 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appActionSuccess: jest.fn(),
-        _appActionFailure: jest.fn()
+        _appActionFailure: jest.fn(),
       };
       const areq = actionRequest(
         "some_client",
         "some_action",
         {
-          action: "arg"
+          action: "arg",
         },
-        "some_callback_id"
+        "some_callback_id",
       );
       const ares = actionResponse(s, areq);
 
@@ -491,8 +491,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         ares._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_NEUTRALIZED: The object has already been neutralized."
-        )
+          "ALREADY_NEUTRALIZED: The object has already been neutralized.",
+        ),
       );
       expect(ares._server).toBe(null);
       expect(ares._actionRequest).toBe(areq);

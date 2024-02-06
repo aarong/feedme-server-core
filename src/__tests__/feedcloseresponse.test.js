@@ -48,8 +48,8 @@ describe("The success() and _neutralize() functions should work correctly on", (
       fcres.success();
     }).toThrow(
       new Error(
-        "ALREADY_RESPONDED: The success() method has already been called."
-      )
+        "ALREADY_RESPONDED: The success() method has already been called.",
+      ),
     );
     expect(fcres._server).toBe(null);
     expect(fcres._feedCloseRequest).toBe(fcreq);
@@ -83,8 +83,8 @@ describe("The success() and _neutralize() functions should work correctly on", (
       fcres._neutralize();
     }).toThrow(
       new Error(
-        "ALREADY_RESPONDED: The success() method has already been called."
-      )
+        "ALREADY_RESPONDED: The success() method has already been called.",
+      ),
     );
     expect(fcres._server).toBe(null);
     expect(fcres._feedCloseRequest).toBe(fcreq);
@@ -123,8 +123,8 @@ describe("The success() and _neutralize() functions should work correctly on", (
       fcres.success();
     }).toThrow(
       new Error(
-        "ALREADY_RESPONDED: The success() method has already been called."
-      )
+        "ALREADY_RESPONDED: The success() method has already been called.",
+      ),
     );
     expect(fcres._server).toBe(null);
     expect(fcres._feedCloseRequest).toBe(fcreq);
@@ -154,7 +154,9 @@ describe("The success() and _neutralize() functions should work correctly on", (
     expect(() => {
       fcres._neutralize();
     }).toThrow(
-      new Error("ALREADY_NEUTRALIZED: The object has already been neutralized.")
+      new Error(
+        "ALREADY_NEUTRALIZED: The object has already been neutralized.",
+      ),
     );
     expect(fcres._server).toBe(null);
     expect(fcres._feedCloseRequest).toBe(fcreq);

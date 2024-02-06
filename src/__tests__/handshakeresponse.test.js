@@ -60,8 +60,8 @@ describe("The success() and _neutralize() functions", () => {
       hres.success();
     }).toThrow(
       new Error(
-        "ALREADY_RESPONDED: The success() method has already been called."
-      )
+        "ALREADY_RESPONDED: The success() method has already been called.",
+      ),
     );
     expect(hres._server).toBe(null);
     expect(hres._handshakeRequest).toBe(hreq);
@@ -93,8 +93,8 @@ describe("The success() and _neutralize() functions", () => {
       hres._neutralize();
     }).toThrow(
       new Error(
-        "ALREADY_RESPONDED: The success() method has already been called."
-      )
+        "ALREADY_RESPONDED: The success() method has already been called.",
+      ),
     );
     expect(hres._server).toBe(null);
     expect(hres._handshakeRequest).toBe(hreq);
@@ -132,8 +132,8 @@ describe("The success() and _neutralize() functions", () => {
       hres.success();
     }).toThrow(
       new Error(
-        "ALREADY_RESPONDED: The success() method has already been called."
-      )
+        "ALREADY_RESPONDED: The success() method has already been called.",
+      ),
     );
     expect(hres._server).toBe(null);
     expect(hres._handshakeRequest).toBe(hreq);
@@ -162,7 +162,9 @@ describe("The success() and _neutralize() functions", () => {
     expect(() => {
       hres._neutralize();
     }).toThrow(
-      new Error("ALREADY_NEUTRALIZED: The object has already been neutralized.")
+      new Error(
+        "ALREADY_NEUTRALIZED: The object has already been neutralized.",
+      ),
     );
     expect(hres._server).toBe(null);
     expect(hres._handshakeRequest).toBe(hreq);

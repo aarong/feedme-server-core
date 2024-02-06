@@ -8,7 +8,7 @@ describe("The transportWrapper() factory function", () => {
     expect(() => {
       transportWrapper();
     }).toThrow(
-      new Error("INVALID_ARGUMENT: The supplied transport is not an object.")
+      new Error("INVALID_ARGUMENT: The supplied transport is not an object."),
     );
   });
 
@@ -20,12 +20,12 @@ describe("The transportWrapper() factory function", () => {
         start: () => {},
         stop: () => {},
         send: () => {},
-        disconnect: () => {}
+        disconnect: () => {},
       });
     }).toThrow(
       new Error(
-        "INVALID_ARGUMENT: The supplied transport does not implement the required API."
-      )
+        "INVALID_ARGUMENT: The supplied transport does not implement the required API.",
+      ),
     );
   });
 
@@ -37,12 +37,12 @@ describe("The transportWrapper() factory function", () => {
         start: () => {},
         stop: () => {},
         send: () => {},
-        disconnect: () => {}
+        disconnect: () => {},
       });
     }).toThrow(
       new Error(
-        "INVALID_ARGUMENT: The supplied transport does not implement the required API."
-      )
+        "INVALID_ARGUMENT: The supplied transport does not implement the required API.",
+      ),
     );
   });
 
@@ -54,12 +54,12 @@ describe("The transportWrapper() factory function", () => {
         // start: () => {},
         stop: () => {},
         send: () => {},
-        disconnect: () => {}
+        disconnect: () => {},
       });
     }).toThrow(
       new Error(
-        "INVALID_ARGUMENT: The supplied transport does not implement the required API."
-      )
+        "INVALID_ARGUMENT: The supplied transport does not implement the required API.",
+      ),
     );
   });
 
@@ -71,12 +71,12 @@ describe("The transportWrapper() factory function", () => {
         start: () => {},
         // stop: () => {},
         send: () => {},
-        disconnect: () => {}
+        disconnect: () => {},
       });
     }).toThrow(
       new Error(
-        "INVALID_ARGUMENT: The supplied transport does not implement the required API."
-      )
+        "INVALID_ARGUMENT: The supplied transport does not implement the required API.",
+      ),
     );
   });
 
@@ -88,12 +88,12 @@ describe("The transportWrapper() factory function", () => {
         start: () => {},
         stop: () => {},
         // send: () => {},
-        disconnect: () => {}
+        disconnect: () => {},
       });
     }).toThrow(
       new Error(
-        "INVALID_ARGUMENT: The supplied transport does not implement the required API."
-      )
+        "INVALID_ARGUMENT: The supplied transport does not implement the required API.",
+      ),
     );
   });
 
@@ -104,13 +104,13 @@ describe("The transportWrapper() factory function", () => {
         state: () => {},
         start: () => {},
         stop: () => {},
-        send: () => {}
+        send: () => {},
         // disconnect: () => {}
       });
     }).toThrow(
       new Error(
-        "INVALID_ARGUMENT: The supplied transport does not implement the required API."
-      )
+        "INVALID_ARGUMENT: The supplied transport does not implement the required API.",
+      ),
     );
   });
 
@@ -122,10 +122,10 @@ describe("The transportWrapper() factory function", () => {
         start: () => {},
         stop: () => {},
         send: () => {},
-        disconnect: () => {}
+        disconnect: () => {},
       });
     }).toThrow(
-      new Error("INVALID_ARGUMENT: The supplied transport is not stopped.")
+      new Error("INVALID_ARGUMENT: The supplied transport is not stopped."),
     );
   });
 
@@ -137,8 +137,8 @@ describe("The transportWrapper() factory function", () => {
         start: () => {},
         stop: () => {},
         send: () => {},
-        disconnect: () => {}
-      })
+        disconnect: () => {},
+      }),
     ).toBeInstanceOf(Object);
   });
 });
@@ -154,7 +154,7 @@ describe("the state() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     };
     const wrapper = transportWrapper(transport);
     transport.state = () => {
@@ -175,7 +175,7 @@ describe("the state() function", () => {
     expect(listener.mock.calls[0].length).toBe(1);
     expect(listener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(listener.mock.calls[0][0].message).toBe(
-      "INVALID_RESULT: Transport threw an error on call to state()."
+      "INVALID_RESULT: Transport threw an error on call to state().",
     );
     expect(listener.mock.calls[0][0].transportError).toBeInstanceOf(Error);
     expect(listener.mock.calls[0][0].transportError.message).toBe("JUNK_ERROR");
@@ -189,7 +189,7 @@ describe("the state() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     };
     const wrapper = transportWrapper(transport);
     transport.state = () => "starting";
@@ -208,7 +208,7 @@ describe("the state() function", () => {
     expect(listener.mock.calls[0].length).toBe(1);
     expect(listener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(listener.mock.calls[0][0].message).toBe(
-      "INVALID_RESULT: Transport unexpectedly returned 'starting' on a call to state() when previous emission was 'stop'."
+      "INVALID_RESULT: Transport unexpectedly returned 'starting' on a call to state() when previous emission was 'stop'.",
     );
   });
 
@@ -220,7 +220,7 @@ describe("the state() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     };
     const wrapper = transportWrapper(transport);
 
@@ -243,7 +243,7 @@ describe("the state() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -271,7 +271,7 @@ describe("the state() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -303,7 +303,7 @@ describe("the state() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -341,7 +341,7 @@ describe("the start() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -359,8 +359,8 @@ describe("the start() function", () => {
       wrapper.start();
     }).toThrow(
       new Error(
-        "INVALID_CALL: Call to start() when the transport state was not 'stopped'."
-      )
+        "INVALID_CALL: Call to start() when the transport state was not 'stopped'.",
+      ),
     );
 
     // Check the listener
@@ -375,7 +375,7 @@ describe("the start() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
     transport.start = () => {
@@ -390,7 +390,7 @@ describe("the start() function", () => {
     expect(() => {
       wrapper.start();
     }).toThrow(
-      new Error("TRANSPORT_ERROR: Transport unexpectedly threw an error.")
+      new Error("TRANSPORT_ERROR: Transport unexpectedly threw an error."),
     );
 
     // Check the listener
@@ -398,7 +398,7 @@ describe("the start() function", () => {
     expect(listener.mock.calls[0].length).toBe(1);
     expect(listener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(listener.mock.calls[0][0].message).toBe(
-      "INVALID_RESULT: Transport threw an error on a call to start() when previous emission was 'stop'."
+      "INVALID_RESULT: Transport threw an error on a call to start() when previous emission was 'stop'.",
     );
     expect(listener.mock.calls[0][0].transportError).toBeInstanceOf(Error);
     expect(listener.mock.calls[0][0].transportError.message).toBe("JUNK_ERROR");
@@ -412,7 +412,7 @@ describe("the start() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -437,7 +437,7 @@ describe("the stop() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -450,8 +450,8 @@ describe("the stop() function", () => {
       wrapper.stop();
     }).toThrow(
       new Error(
-        "INVALID_CALL: Call to stop() when the transport state was not 'started'."
-      )
+        "INVALID_CALL: Call to stop() when the transport state was not 'started'.",
+      ),
     );
 
     // Check the listener
@@ -466,7 +466,7 @@ describe("the stop() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -492,7 +492,7 @@ describe("the stop() function", () => {
     expect(() => {
       wrapper.stop();
     }).toThrow(
-      new Error("TRANSPORT_ERROR: Transport unexpectedly threw an error.")
+      new Error("TRANSPORT_ERROR: Transport unexpectedly threw an error."),
     );
 
     // Check the listener
@@ -500,7 +500,7 @@ describe("the stop() function", () => {
     expect(listener.mock.calls[0].length).toBe(1);
     expect(listener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(listener.mock.calls[0][0].message).toBe(
-      "INVALID_RESULT: Transport threw an error on a call to stop() when previous emission was 'start'."
+      "INVALID_RESULT: Transport threw an error on a call to stop() when previous emission was 'start'.",
     );
     expect(listener.mock.calls[0][0].transportError).toBeInstanceOf(Error);
     expect(listener.mock.calls[0][0].transportError.message).toBe("JUNK_ERROR");
@@ -514,7 +514,7 @@ describe("the stop() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -548,7 +548,7 @@ describe("the send() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -561,8 +561,8 @@ describe("the send() function", () => {
       wrapper.send("some client", "some message");
     }).toThrow(
       new Error(
-        "INVALID_CALL: Call to send() when the transport state was not 'started'."
-      )
+        "INVALID_CALL: Call to send() when the transport state was not 'started'.",
+      ),
     );
 
     // Check the listener
@@ -577,7 +577,7 @@ describe("the send() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -599,8 +599,8 @@ describe("the send() function", () => {
       wrapper.send("some client", "some message");
     }).toThrow(
       new Error(
-        "INVALID_CALL: Call to send() referencing client not understood to be connected."
-      )
+        "INVALID_CALL: Call to send() referencing client not understood to be connected.",
+      ),
     );
 
     // Check the listener
@@ -615,7 +615,7 @@ describe("the send() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -642,7 +642,7 @@ describe("the send() function", () => {
     expect(() => {
       wrapper.send("client1", "some message");
     }).toThrow(
-      new Error("TRANSPORT_ERROR: Transport unexpectedly threw an error.")
+      new Error("TRANSPORT_ERROR: Transport unexpectedly threw an error."),
     );
 
     // Check the listener
@@ -650,7 +650,7 @@ describe("the send() function", () => {
     expect(listener.mock.calls[0].length).toBe(1);
     expect(listener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(listener.mock.calls[0][0].message).toBe(
-      "INVALID_RESULT: Transport threw an error on a call to send() when previous state emission was 'start' and client was understood to be connected."
+      "INVALID_RESULT: Transport threw an error on a call to send() when previous state emission was 'start' and client was understood to be connected.",
     );
     expect(listener.mock.calls[0][0].transportError).toBeInstanceOf(Error);
     expect(listener.mock.calls[0][0].transportError.message).toBe("JUNK_ERROR");
@@ -664,7 +664,7 @@ describe("the send() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -701,7 +701,7 @@ describe("the disconnect() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -714,8 +714,8 @@ describe("the disconnect() function", () => {
       wrapper.disconnect("some client");
     }).toThrow(
       new Error(
-        "INVALID_CALL: Call to disconnect() when the transport state was not 'started'."
-      )
+        "INVALID_CALL: Call to disconnect() when the transport state was not 'started'.",
+      ),
     );
 
     // Check the listener
@@ -730,7 +730,7 @@ describe("the disconnect() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -752,8 +752,8 @@ describe("the disconnect() function", () => {
       wrapper.disconnect("some client");
     }).toThrow(
       new Error(
-        "INVALID_CALL: Call to disconnect() referencing client not understood to be connected."
-      )
+        "INVALID_CALL: Call to disconnect() referencing client not understood to be connected.",
+      ),
     );
 
     // Check the listener
@@ -768,7 +768,7 @@ describe("the disconnect() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -795,7 +795,7 @@ describe("the disconnect() function", () => {
     expect(() => {
       wrapper.disconnect("client1");
     }).toThrow(
-      new Error("TRANSPORT_ERROR: Transport unexpectedly threw an error.")
+      new Error("TRANSPORT_ERROR: Transport unexpectedly threw an error."),
     );
 
     // Check the listener
@@ -803,7 +803,7 @@ describe("the disconnect() function", () => {
     expect(listener.mock.calls[0].length).toBe(1);
     expect(listener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(listener.mock.calls[0][0].message).toBe(
-      "INVALID_RESULT: Transport threw an error on a call to disconnect() when previous state emission was 'start' and client was understood to be connected."
+      "INVALID_RESULT: Transport threw an error on a call to disconnect() when previous state emission was 'start' and client was understood to be connected.",
     );
     expect(listener.mock.calls[0][0].transportError).toBeInstanceOf(Error);
     expect(listener.mock.calls[0][0].transportError.message).toBe("JUNK_ERROR");
@@ -817,7 +817,7 @@ describe("the disconnect() function", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -856,7 +856,7 @@ describe("the transport 'starting' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -879,7 +879,7 @@ describe("the transport 'starting' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'starting' event following a 'starting' emission."
+      "UNEXPECTED_EVENT: Transport emitted a  'starting' event following a 'starting' emission.",
     );
     expect(startingListener.mock.calls.length).toBe(0);
   });
@@ -892,7 +892,7 @@ describe("the transport 'starting' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -919,7 +919,7 @@ describe("the transport 'starting' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'starting' event following a 'start' emission."
+      "UNEXPECTED_EVENT: Transport emitted a  'starting' event following a 'start' emission.",
     );
     expect(startingListener.mock.calls.length).toBe(0);
   });
@@ -932,7 +932,7 @@ describe("the transport 'starting' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -963,7 +963,7 @@ describe("the transport 'starting' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'starting' event following a 'stopping' emission."
+      "UNEXPECTED_EVENT: Transport emitted a  'starting' event following a 'stopping' emission.",
     );
     expect(startingListener.mock.calls.length).toBe(0);
   });
@@ -976,7 +976,7 @@ describe("the transport 'starting' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -994,7 +994,7 @@ describe("the transport 'starting' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'starting' event."
+      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'starting' event.",
     );
     expect(startingListener.mock.calls.length).toBe(0);
   });
@@ -1007,7 +1007,7 @@ describe("the transport 'starting' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1036,7 +1036,7 @@ describe("the transport 'start' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1054,7 +1054,7 @@ describe("the transport 'start' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'start' event following a 'stop' emission."
+      "UNEXPECTED_EVENT: Transport emitted a  'start' event following a 'stop' emission.",
     );
     expect(startListener.mock.calls.length).toBe(0);
   });
@@ -1067,7 +1067,7 @@ describe("the transport 'start' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1094,7 +1094,7 @@ describe("the transport 'start' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'start' event following a 'start' emission."
+      "UNEXPECTED_EVENT: Transport emitted a  'start' event following a 'start' emission.",
     );
     expect(startListener.mock.calls.length).toBe(0);
   });
@@ -1107,7 +1107,7 @@ describe("the transport 'start' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1138,7 +1138,7 @@ describe("the transport 'start' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'start' event following a 'stopping' emission."
+      "UNEXPECTED_EVENT: Transport emitted a  'start' event following a 'stopping' emission.",
     );
     expect(startListener.mock.calls.length).toBe(0);
   });
@@ -1151,7 +1151,7 @@ describe("the transport 'start' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1174,7 +1174,7 @@ describe("the transport 'start' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'start' event."
+      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'start' event.",
     );
     expect(startListener.mock.calls.length).toBe(0);
   });
@@ -1187,7 +1187,7 @@ describe("the transport 'start' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1221,7 +1221,7 @@ describe("the transport 'stopping' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1239,7 +1239,7 @@ describe("the transport 'stopping' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'stopping' event following a 'stop' emission."
+      "UNEXPECTED_EVENT: Transport emitted a  'stopping' event following a 'stop' emission.",
     );
     expect(stoppingListener.mock.calls.length).toBe(0);
   });
@@ -1252,7 +1252,7 @@ describe("the transport 'stopping' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1283,7 +1283,7 @@ describe("the transport 'stopping' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'stopping' event following a 'stopping' emission."
+      "UNEXPECTED_EVENT: Transport emitted a  'stopping' event following a 'stopping' emission.",
     );
     expect(stoppingListener.mock.calls.length).toBe(0);
   });
@@ -1296,7 +1296,7 @@ describe("the transport 'stopping' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1319,7 +1319,7 @@ describe("the transport 'stopping' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'stopping' event."
+      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'stopping' event.",
     );
     expect(stoppingListener.mock.calls.length).toBe(0);
   });
@@ -1332,7 +1332,7 @@ describe("the transport 'stopping' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1355,7 +1355,7 @@ describe("the transport 'stopping' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stopping' event."
+      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stopping' event.",
     );
     expect(stoppingListener.mock.calls.length).toBe(0);
   });
@@ -1368,7 +1368,7 @@ describe("the transport 'stopping' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1391,7 +1391,7 @@ describe("the transport 'stopping' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stopping' event."
+      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stopping' event.",
     );
     expect(stoppingListener.mock.calls.length).toBe(0);
   });
@@ -1404,7 +1404,7 @@ describe("the transport 'stopping' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1438,7 +1438,7 @@ describe("the transport 'stopping' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1474,7 +1474,7 @@ describe("the transport 'stopping' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1514,7 +1514,7 @@ describe("the transport 'stop' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1532,7 +1532,7 @@ describe("the transport 'stop' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'stop' event following a 'stop' emission."
+      "UNEXPECTED_EVENT: Transport emitted a  'stop' event following a 'stop' emission.",
     );
     expect(stopListener.mock.calls.length).toBe(0);
   });
@@ -1545,7 +1545,7 @@ describe("the transport 'stop' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1568,7 +1568,7 @@ describe("the transport 'stop' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'stop' event following a 'starting' emission."
+      "UNEXPECTED_EVENT: Transport emitted a  'stop' event following a 'starting' emission.",
     );
     expect(stopListener.mock.calls.length).toBe(0);
   });
@@ -1581,7 +1581,7 @@ describe("the transport 'stop' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1608,7 +1608,7 @@ describe("the transport 'stop' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'stop' event following a 'start' emission."
+      "UNEXPECTED_EVENT: Transport emitted a  'stop' event following a 'start' emission.",
     );
     expect(stopListener.mock.calls.length).toBe(0);
   });
@@ -1621,7 +1621,7 @@ describe("the transport 'stop' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1652,7 +1652,7 @@ describe("the transport 'stop' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'stop' event."
+      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'stop' event.",
     );
     expect(stopListener.mock.calls.length).toBe(0);
   });
@@ -1665,7 +1665,7 @@ describe("the transport 'stop' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1696,7 +1696,7 @@ describe("the transport 'stop' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stop' event."
+      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stop' event.",
     );
     expect(stopListener.mock.calls.length).toBe(0);
   });
@@ -1709,7 +1709,7 @@ describe("the transport 'stop' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1740,7 +1740,7 @@ describe("the transport 'stop' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stop' event."
+      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stop' event.",
     );
     expect(stopListener.mock.calls.length).toBe(0);
   });
@@ -1753,7 +1753,7 @@ describe("the transport 'stop' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1793,7 +1793,7 @@ describe("the transport 'stop' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1837,7 +1837,7 @@ describe("the transport 'connect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1855,7 +1855,7 @@ describe("the transport 'connect' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'connect' event while not started."
+      "UNEXPECTED_EVENT: Transport emitted a  'connect' event while not started.",
     );
     expect(connectListener.mock.calls.length).toBe(0);
   });
@@ -1868,7 +1868,7 @@ describe("the transport 'connect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1895,7 +1895,7 @@ describe("the transport 'connect' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'connect' event."
+      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'connect' event.",
     );
     expect(connectListener.mock.calls.length).toBe(0);
   });
@@ -1908,7 +1908,7 @@ describe("the transport 'connect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1935,7 +1935,7 @@ describe("the transport 'connect' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'connect' event."
+      "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'connect' event.",
     );
     expect(connectListener.mock.calls.length).toBe(0);
   });
@@ -1948,7 +1948,7 @@ describe("the transport 'connect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -1975,7 +1975,7 @@ describe("the transport 'connect' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'connect' event."
+      "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'connect' event.",
     );
     expect(connectListener.mock.calls.length).toBe(0);
   });
@@ -1988,7 +1988,7 @@ describe("the transport 'connect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2018,7 +2018,7 @@ describe("the transport 'connect' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed an already-connected client id with the 'connect' event."
+      "BAD_EVENT_ARGUMENT: Transport passed an already-connected client id with the 'connect' event.",
     );
     expect(connectListener.mock.calls.length).toBe(0);
   });
@@ -2031,7 +2031,7 @@ describe("the transport 'connect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2076,7 +2076,7 @@ describe("the transport 'message' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2094,7 +2094,7 @@ describe("the transport 'message' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'message' event while not started."
+      "UNEXPECTED_EVENT: Transport emitted a  'message' event while not started.",
     );
     expect(messageListener.mock.calls.length).toBe(0);
   });
@@ -2107,7 +2107,7 @@ describe("the transport 'message' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2134,7 +2134,7 @@ describe("the transport 'message' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'message' event."
+      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'message' event.",
     );
     expect(messageListener.mock.calls.length).toBe(0);
   });
@@ -2147,7 +2147,7 @@ describe("the transport 'message' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2174,7 +2174,7 @@ describe("the transport 'message' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'message' event."
+      "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'message' event.",
     );
     expect(messageListener.mock.calls.length).toBe(0);
   });
@@ -2187,7 +2187,7 @@ describe("the transport 'message' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2214,7 +2214,7 @@ describe("the transport 'message' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'message' event."
+      "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'message' event.",
     );
     expect(messageListener.mock.calls.length).toBe(0);
   });
@@ -2227,7 +2227,7 @@ describe("the transport 'message' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2254,7 +2254,7 @@ describe("the transport 'message' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed a non-string message with the 'message' event."
+      "BAD_EVENT_ARGUMENT: Transport passed a non-string message with the 'message' event.",
     );
     expect(messageListener.mock.calls.length).toBe(0);
   });
@@ -2267,7 +2267,7 @@ describe("the transport 'message' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2294,7 +2294,7 @@ describe("the transport 'message' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed an unknown client id with the 'message' event."
+      "BAD_EVENT_ARGUMENT: Transport passed an unknown client id with the 'message' event.",
     );
     expect(messageListener.mock.calls.length).toBe(0);
   });
@@ -2307,7 +2307,7 @@ describe("the transport 'message' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2350,7 +2350,7 @@ describe("the transport 'disconnect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2368,7 +2368,7 @@ describe("the transport 'disconnect' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "UNEXPECTED_EVENT: Transport emitted a  'disconnect' event while not started."
+      "UNEXPECTED_EVENT: Transport emitted a  'disconnect' event while not started.",
     );
     expect(disconnectListener.mock.calls.length).toBe(0);
   });
@@ -2381,7 +2381,7 @@ describe("the transport 'disconnect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2405,7 +2405,7 @@ describe("the transport 'disconnect' event", () => {
       "disconnect",
       "some client",
       new Error("DISCONNECTED: ..."),
-      "junk"
+      "junk",
     );
 
     // Check the listeners
@@ -2413,7 +2413,7 @@ describe("the transport 'disconnect' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'disconnect' event."
+      "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'disconnect' event.",
     );
     expect(disconnectListener.mock.calls.length).toBe(0);
   });
@@ -2426,7 +2426,7 @@ describe("the transport 'disconnect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2453,7 +2453,7 @@ describe("the transport 'disconnect' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'disconnect' event."
+      "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'disconnect' event.",
     );
     expect(disconnectListener.mock.calls.length).toBe(0);
   });
@@ -2466,7 +2466,7 @@ describe("the transport 'disconnect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2493,7 +2493,7 @@ describe("the transport 'disconnect' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'disconnect' event."
+      "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'disconnect' event.",
     );
     expect(disconnectListener.mock.calls.length).toBe(0);
   });
@@ -2506,7 +2506,7 @@ describe("the transport 'disconnect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2533,7 +2533,7 @@ describe("the transport 'disconnect' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed an unknown client id with the 'disconnect' event."
+      "BAD_EVENT_ARGUMENT: Transport passed an unknown client id with the 'disconnect' event.",
     );
     expect(disconnectListener.mock.calls.length).toBe(0);
   });
@@ -2546,7 +2546,7 @@ describe("the transport 'disconnect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2576,7 +2576,7 @@ describe("the transport 'disconnect' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'disconnect' event."
+      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'disconnect' event.",
     );
     expect(disconnectListener.mock.calls.length).toBe(0);
   });
@@ -2589,7 +2589,7 @@ describe("the transport 'disconnect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2619,7 +2619,7 @@ describe("the transport 'disconnect' event", () => {
     expect(transportErrorListener.mock.calls[0].length).toBe(1);
     expect(transportErrorListener.mock.calls[0][0]).toBeInstanceOf(Error);
     expect(transportErrorListener.mock.calls[0][0].message).toBe(
-      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'disconnect' event."
+      "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'disconnect' event.",
     );
     expect(disconnectListener.mock.calls.length).toBe(0);
   });
@@ -2632,7 +2632,7 @@ describe("the transport 'disconnect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2676,7 +2676,7 @@ describe("the transport 'disconnect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2722,7 +2722,7 @@ describe("the transport 'disconnect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2768,7 +2768,7 @@ describe("the transport 'disconnect' event", () => {
       start: () => {},
       stop: () => {},
       send: () => {},
-      disconnect: () => {}
+      disconnect: () => {},
     });
     const wrapper = transportWrapper(transport);
 
@@ -2795,7 +2795,7 @@ describe("the transport 'disconnect' event", () => {
     transport.emit(
       "disconnect",
       "client1",
-      new Error("HANDSHAKE_TIMEOUT: ...")
+      new Error("HANDSHAKE_TIMEOUT: ..."),
     );
 
     // Check the listeners
@@ -2805,7 +2805,7 @@ describe("the transport 'disconnect' event", () => {
     expect(disconnectListener.mock.calls[0][0]).toBe("client1");
     expect(disconnectListener.mock.calls[0][1]).toBeInstanceOf(Error);
     expect(disconnectListener.mock.calls[0][1].message).toBe(
-      "HANDSHAKE_TIMEOUT: ..."
+      "HANDSHAKE_TIMEOUT: ...",
     );
 
     // Check wrapper._clientIds

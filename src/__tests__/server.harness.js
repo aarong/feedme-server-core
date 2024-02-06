@@ -37,7 +37,7 @@ export default function harnessFactory(options = {}) {
 
 harnessFactory.toHaveState = function toHaveState(
   receivedServer,
-  expectedState
+  expectedState,
 ) {
   // Check all that state members are as expected
 
@@ -66,15 +66,15 @@ harnessFactory.toHaveState = function toHaveState(
         "_feedOpenResponses",
         "_feedOpenResponseStates",
         "_feedCloseResponses",
-        "_feedCloseResponseStates"
-      ].sort()
+        "_feedCloseResponseStates",
+      ].sort(),
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected root keys to be valid, but they weren't";
-      }
+      },
     };
   }
 
@@ -84,7 +84,7 @@ harnessFactory.toHaveState = function toHaveState(
       pass: false,
       message() {
         return "expected ._options to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -94,7 +94,7 @@ harnessFactory.toHaveState = function toHaveState(
       pass: false,
       message() {
         return "expected transport wrapper objects to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -107,7 +107,7 @@ harnessFactory.toHaveState = function toHaveState(
       pass: false,
       message() {
         return "expected transport wrapper states to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -117,7 +117,7 @@ harnessFactory.toHaveState = function toHaveState(
       pass: false,
       message() {
         return "expected ._clientIds to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -125,14 +125,14 @@ harnessFactory.toHaveState = function toHaveState(
   if (
     !_.isEqual(
       receivedServer._transportClientIds,
-      expectedState._transportClientIds
+      expectedState._transportClientIds,
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected ._transportClientIds to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -140,14 +140,14 @@ harnessFactory.toHaveState = function toHaveState(
   if (
     !_.isEqual(
       _.keys(receivedServer._handshakeTimers).sort(),
-      _.keys(expectedState._handshakeTimers).sort()
+      _.keys(expectedState._handshakeTimers).sort(),
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected ._handshakeTimers keys to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -161,7 +161,7 @@ harnessFactory.toHaveState = function toHaveState(
         pass: false,
         message() {
           return "expected ._handshakeTimers values to match, but they didn't";
-        }
+        },
       };
     }
   });
@@ -177,7 +177,7 @@ harnessFactory.toHaveState = function toHaveState(
       pass: false,
       message() {
         return "expected ._handshakeStatus to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -185,14 +185,14 @@ harnessFactory.toHaveState = function toHaveState(
   if (
     !_.isEqual(
       _.keys(receivedServer._handshakeResponses).sort(),
-      _.keys(expectedState._handshakeResponses).sort()
+      _.keys(expectedState._handshakeResponses).sort(),
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected ._handshakeResponses keys to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -206,7 +206,7 @@ harnessFactory.toHaveState = function toHaveState(
         pass: false,
         message() {
           return "expected ._handshakeResponses values to match, but they didn't";
-        }
+        },
       };
     }
   });
@@ -218,14 +218,14 @@ harnessFactory.toHaveState = function toHaveState(
   if (
     !_.isEqual(
       _.keys(receivedServer._handshakeResponses).sort(),
-      _.keys(expectedState._handshakeResponseStates).sort()
+      _.keys(expectedState._handshakeResponseStates).sort(),
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected ._handshakeResponseStates keys to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -235,14 +235,19 @@ harnessFactory.toHaveState = function toHaveState(
     if (
       !_.isEqual(
         _.keys(expectedState._handshakeResponseStates[cid]).sort(),
-        ["_server", "_handshakeRequest", "_appResponded", "_neutralized"].sort()
+        [
+          "_server",
+          "_handshakeRequest",
+          "_appResponded",
+          "_neutralized",
+        ].sort(),
       )
     ) {
       err = {
         pass: false,
         message() {
           return "expected ._handshakeResponseStates[cid] keys to be valid, but they weren't";
-        }
+        },
       };
     }
 
@@ -252,7 +257,7 @@ harnessFactory.toHaveState = function toHaveState(
         expectedState._handshakeResponseStates[cid]._server ||
       !_.isEqual(
         receivedServer._handshakeResponses[cid]._handshakeRequest,
-        expectedState._handshakeResponseStates[cid]._handshakeRequest
+        expectedState._handshakeResponseStates[cid]._handshakeRequest,
       ) ||
       receivedServer._handshakeResponses[cid]._appResponded !==
         expectedState._handshakeResponseStates[cid]._appResponded ||
@@ -263,7 +268,7 @@ harnessFactory.toHaveState = function toHaveState(
         pass: false,
         message() {
           return "expected ._handshakeResponseStates[cid] values to match, but they didn't";
-        }
+        },
       };
     }
   });
@@ -275,14 +280,14 @@ harnessFactory.toHaveState = function toHaveState(
   if (
     !_.isEqual(
       _.keys(receivedServer._actionResponses).sort(),
-      _.keys(expectedState._actionResponses).sort()
+      _.keys(expectedState._actionResponses).sort(),
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected ._actionResponses keys to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -292,14 +297,14 @@ harnessFactory.toHaveState = function toHaveState(
     if (
       !_.isEqual(
         _.keys(receivedServer._actionResponses[cid]).sort(),
-        _.keys(expectedState._actionResponses[cid]).sort()
+        _.keys(expectedState._actionResponses[cid]).sort(),
       )
     ) {
       err = {
         pass: false,
         message() {
           return "expected ._actionResponses[cid] keys to match, but they didn't";
-        }
+        },
       };
     }
 
@@ -313,7 +318,7 @@ harnessFactory.toHaveState = function toHaveState(
           pass: false,
           message() {
             return "expected ._actionResponses[cid] values to match, but they didn't";
-          }
+          },
         };
       }
     });
@@ -326,14 +331,14 @@ harnessFactory.toHaveState = function toHaveState(
   if (
     !_.isEqual(
       _.keys(receivedServer._actionResponses).sort(),
-      _.keys(expectedState._actionResponseStates).sort()
+      _.keys(expectedState._actionResponseStates).sort(),
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected ._actionResponseStates keys to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -343,14 +348,14 @@ harnessFactory.toHaveState = function toHaveState(
     if (
       !_.isEqual(
         _.keys(receivedServer._actionResponses[cid]).sort(),
-        _.keys(expectedState._actionResponseStates[cid]).sort()
+        _.keys(expectedState._actionResponseStates[cid]).sort(),
       )
     ) {
       err = {
         pass: false,
         message() {
           return "expected ._actionResponseStates[cid] keys to match, but they didn't";
-        }
+        },
       };
     }
 
@@ -360,14 +365,14 @@ harnessFactory.toHaveState = function toHaveState(
       if (
         !_.isEqual(
           _.keys(expectedState._actionResponseStates[cid][acb]).sort(),
-          ["_server", "_actionRequest", "_appResponded", "_neutralized"].sort()
+          ["_server", "_actionRequest", "_appResponded", "_neutralized"].sort(),
         )
       ) {
         err = {
           pass: false,
           message() {
             return "expected ._actionResponseStates[cid][acb] keys to be valid, but they weren't";
-          }
+          },
         };
       }
 
@@ -377,7 +382,7 @@ harnessFactory.toHaveState = function toHaveState(
           expectedState._actionResponseStates[cid][acb]._server ||
         !_.isEqual(
           receivedServer._actionResponses[cid][acb]._actionRequest,
-          expectedState._actionResponseStates[cid][acb]._actionRequest
+          expectedState._actionResponseStates[cid][acb]._actionRequest,
         ) ||
         receivedServer._actionResponses[cid][acb]._appResponded !==
           expectedState._actionResponseStates[cid][acb]._appResponded ||
@@ -388,7 +393,7 @@ harnessFactory.toHaveState = function toHaveState(
           pass: false,
           message() {
             return "expected ._actionResponseStates[cid][acb] values to match, but they didn't";
-          }
+          },
         };
       }
     });
@@ -401,14 +406,14 @@ harnessFactory.toHaveState = function toHaveState(
   if (
     !_.isEqual(
       receivedServer._clientFeedStates,
-      expectedState._clientFeedStates
+      expectedState._clientFeedStates,
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected ._clientFeedStates to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -416,14 +421,14 @@ harnessFactory.toHaveState = function toHaveState(
   if (
     !_.isEqual(
       receivedServer._feedClientStates,
-      expectedState._feedClientStates
+      expectedState._feedClientStates,
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected ._feedClientStates to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -431,14 +436,14 @@ harnessFactory.toHaveState = function toHaveState(
   if (
     !_.isEqual(
       _.keys(receivedServer._terminationTimers).sort(),
-      _.keys(expectedState._terminationTimers).sort()
+      _.keys(expectedState._terminationTimers).sort(),
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected ._terminationTimers keys to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -448,14 +453,14 @@ harnessFactory.toHaveState = function toHaveState(
     if (
       !_.isEqual(
         _.keys(receivedServer._terminationTimers[cid]).sort(),
-        _.keys(expectedState._terminationTimers[cid]).sort()
+        _.keys(expectedState._terminationTimers[cid]).sort(),
       )
     ) {
       err = {
         pass: false,
         message() {
           return "expected ._terminationTimers[cid] keys to match, but they didn't";
-        }
+        },
       };
     }
 
@@ -469,7 +474,7 @@ harnessFactory.toHaveState = function toHaveState(
           pass: false,
           message() {
             return "expected ._terminationTimers[cid] values to match, but they didn't";
-          }
+          },
         };
       }
     });
@@ -482,14 +487,14 @@ harnessFactory.toHaveState = function toHaveState(
   if (
     !_.isEqual(
       _.keys(receivedServer._feedOpenResponses).sort(),
-      _.keys(expectedState._feedOpenResponses).sort()
+      _.keys(expectedState._feedOpenResponses).sort(),
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected ._feedOpenResponses keys to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -499,14 +504,14 @@ harnessFactory.toHaveState = function toHaveState(
     if (
       !_.isEqual(
         _.keys(receivedServer._feedOpenResponses[cid]).sort(),
-        _.keys(expectedState._feedOpenResponses[cid]).sort()
+        _.keys(expectedState._feedOpenResponses[cid]).sort(),
       )
     ) {
       err = {
         pass: false,
         message() {
           return "expected ._feedOpenResponses[cid] keys to match, but they didn't";
-        }
+        },
       };
     }
 
@@ -520,7 +525,7 @@ harnessFactory.toHaveState = function toHaveState(
           pass: false,
           message() {
             return "expected ._feedOpenResponses[cid] values to match, but they didn't";
-          }
+          },
         };
       }
     });
@@ -533,14 +538,14 @@ harnessFactory.toHaveState = function toHaveState(
   if (
     !_.isEqual(
       _.keys(receivedServer._feedOpenResponses).sort(),
-      _.keys(expectedState._feedOpenResponseStates).sort()
+      _.keys(expectedState._feedOpenResponseStates).sort(),
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected ._feedOpenResponseStates keys to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -550,14 +555,14 @@ harnessFactory.toHaveState = function toHaveState(
     if (
       !_.isEqual(
         _.keys(receivedServer._feedOpenResponses[cid]).sort(),
-        _.keys(expectedState._feedOpenResponseStates[cid]).sort()
+        _.keys(expectedState._feedOpenResponseStates[cid]).sort(),
       )
     ) {
       err = {
         pass: false,
         message() {
           return "expected ._feedOpenResponseStates[cid] keys to match, but they didn't";
-        }
+        },
       };
     }
 
@@ -571,15 +576,15 @@ harnessFactory.toHaveState = function toHaveState(
             "_server",
             "_feedOpenRequest",
             "_appResponded",
-            "_neutralized"
-          ].sort()
+            "_neutralized",
+          ].sort(),
         )
       ) {
         err = {
           pass: false,
           message() {
             return "expected ._feedOpenResponseStates[cid][ser] keys to be valid, but they weren't";
-          }
+          },
         };
       }
 
@@ -589,7 +594,7 @@ harnessFactory.toHaveState = function toHaveState(
           expectedState._feedOpenResponseStates[cid][ser]._server ||
         !_.isEqual(
           receivedServer._feedOpenResponses[cid][ser]._feedOpenRequest,
-          expectedState._feedOpenResponseStates[cid][ser]._feedOpenRequest
+          expectedState._feedOpenResponseStates[cid][ser]._feedOpenRequest,
         ) ||
         receivedServer._feedOpenResponses[cid][ser]._appResponded !==
           expectedState._feedOpenResponseStates[cid][ser]._appResponded ||
@@ -600,7 +605,7 @@ harnessFactory.toHaveState = function toHaveState(
           pass: false,
           message() {
             return "expected ._feedOpenResponseStates[cid][ser] values to match, but they didn't";
-          }
+          },
         };
       }
     });
@@ -613,14 +618,14 @@ harnessFactory.toHaveState = function toHaveState(
   if (
     !_.isEqual(
       _.keys(receivedServer._feedCloseResponses).sort(),
-      _.keys(expectedState._feedCloseResponses).sort()
+      _.keys(expectedState._feedCloseResponses).sort(),
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected ._feedCloseResponses keys to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -630,14 +635,14 @@ harnessFactory.toHaveState = function toHaveState(
     if (
       !_.isEqual(
         _.keys(receivedServer._feedCloseResponses[cid]).sort(),
-        _.keys(expectedState._feedCloseResponses[cid]).sort()
+        _.keys(expectedState._feedCloseResponses[cid]).sort(),
       )
     ) {
       err = {
         pass: false,
         message() {
           return "expected ._feedCloseResponses[cid] keys to match, but they didn't";
-        }
+        },
       };
     }
 
@@ -651,7 +656,7 @@ harnessFactory.toHaveState = function toHaveState(
           pass: false,
           message() {
             return "expected ._feedCloseResponses[cid] values to match, but they didn't";
-          }
+          },
         };
       }
     });
@@ -664,14 +669,14 @@ harnessFactory.toHaveState = function toHaveState(
   if (
     !_.isEqual(
       _.keys(receivedServer._feedCloseResponses).sort(),
-      _.keys(expectedState._feedCloseResponseStates).sort()
+      _.keys(expectedState._feedCloseResponseStates).sort(),
     )
   ) {
     return {
       pass: false,
       message() {
         return "expected ._feedCloseResponseStates keys to match, but they didn't";
-      }
+      },
     };
   }
 
@@ -681,14 +686,14 @@ harnessFactory.toHaveState = function toHaveState(
     if (
       !_.isEqual(
         _.keys(receivedServer._feedCloseResponses[cid]).sort(),
-        _.keys(expectedState._feedCloseResponseStates[cid]).sort()
+        _.keys(expectedState._feedCloseResponseStates[cid]).sort(),
       )
     ) {
       err = {
         pass: false,
         message() {
           return "expected ._feedCloseResponseStates[cid] keys to match, but they didn't";
-        }
+        },
       };
     }
 
@@ -702,15 +707,15 @@ harnessFactory.toHaveState = function toHaveState(
             "_server",
             "_feedCloseRequest",
             "_appResponded",
-            "_neutralized"
-          ].sort()
+            "_neutralized",
+          ].sort(),
         )
       ) {
         err = {
           pass: false,
           message() {
             return "expected ._feedCloseResponseStates[cid][ser] keys to be valid, but they weren't";
-          }
+          },
         };
       }
 
@@ -720,7 +725,7 @@ harnessFactory.toHaveState = function toHaveState(
           expectedState._feedCloseResponseStates[cid][ser]._server ||
         !_.isEqual(
           receivedServer._feedCloseResponses[cid][ser]._feedCloseRequest,
-          expectedState._feedCloseResponseStates[cid][ser]._feedCloseRequest
+          expectedState._feedCloseResponseStates[cid][ser]._feedCloseRequest,
         ) ||
         receivedServer._feedCloseResponses[cid][ser]._appResponded !==
           expectedState._feedCloseResponseStates[cid][ser]._appResponded ||
@@ -731,7 +736,7 @@ harnessFactory.toHaveState = function toHaveState(
           pass: false,
           message() {
             return "expected ._feedCloseResponseStates[cid][ser] values to match, but they didn't";
-          }
+          },
         };
       }
     });
@@ -757,7 +762,7 @@ harnessProto.createServerListener = function createServerListener() {
     feedClose: jest.fn(),
     disconnect: jest.fn(),
     badClientMessage: jest.fn(),
-    transportError: jest.fn()
+    transportError: jest.fn(),
   };
   l.mockClear = function mockClear() {
     l.starting.mockClear();
@@ -810,7 +815,7 @@ harnessProto.getServerState = function getServerState() {
       _server: resp._server, // object reference
       _handshakeRequest: _.cloneDeep(resp._handshakeRequest), // object copy
       _appResponded: resp._appResponded, // bool
-      _neutralized: resp._neutralized // bool
+      _neutralized: resp._neutralized, // bool
     };
   });
 
@@ -825,7 +830,7 @@ harnessProto.getServerState = function getServerState() {
         _server: resp._server, // object reference
         _actionRequest: _.cloneDeep(resp._actionRequest), // object copy
         _appResponded: resp._appResponded, // bool
-        _neutralized: resp._neutralized // bool
+        _neutralized: resp._neutralized, // bool
       };
     });
   });
@@ -845,7 +850,7 @@ harnessProto.getServerState = function getServerState() {
         _server: resp._server, // object reference
         _feedOpenRequest: _.cloneDeep(resp._feedOpenRequest), // object copy
         _appResponded: resp._appResponded, // bool
-        _neutralized: resp._neutralized // bool
+        _neutralized: resp._neutralized, // bool
       };
     });
   });
@@ -861,7 +866,7 @@ harnessProto.getServerState = function getServerState() {
         _server: resp._server, // object reference
         _feedCloseRequest: _.cloneDeep(resp._feedCloseRequest), // object copy
         _appResponded: resp._appResponded, // bool
-        _neutralized: resp._neutralized // bool
+        _neutralized: resp._neutralized, // bool
       };
     });
   });
@@ -893,8 +898,8 @@ harnessProto.makeClient = function connectClient(tcid) {
     tcid,
     JSON.stringify({
       MessageType: "Handshake",
-      Versions: ["0.1"]
-    })
+      Versions: ["0.1"],
+    }),
   );
   this.transport.mockClear();
   return cid;
@@ -914,8 +919,8 @@ harnessProto.makeFeedOpening = function makeFeedOpening(tcid, fn, fa) {
     JSON.stringify({
       MessageType: "FeedOpen",
       FeedName: fn,
-      FeedArgs: fa
-    })
+      FeedArgs: fa,
+    }),
   );
   this.transport.mockClear();
   return res;
@@ -933,8 +938,8 @@ harnessProto.makeFeedOpen = function makeFeedOpening(tcid, fn, fa, fd) {
     JSON.stringify({
       MessageType: "FeedOpen",
       FeedName: fn,
-      FeedArgs: fa
-    })
+      FeedArgs: fa,
+    }),
   );
   this.transport.mockClear();
 };
@@ -952,8 +957,8 @@ harnessProto.makeFeedClosing = function makeFeedOpening(tcid, fn, fa) {
     JSON.stringify({
       MessageType: "FeedOpen",
       FeedName: fn,
-      FeedArgs: fa
-    })
+      FeedArgs: fa,
+    }),
   );
 
   let res;
@@ -966,8 +971,8 @@ harnessProto.makeFeedClosing = function makeFeedOpening(tcid, fn, fa) {
     JSON.stringify({
       MessageType: "FeedClose",
       FeedName: fn,
-      FeedArgs: fa
-    })
+      FeedArgs: fa,
+    }),
   );
   this.transport.mockClear();
   return res;
@@ -985,8 +990,8 @@ harnessProto.makeFeedTerminated = function makeFeedOpening(tcid, fn, fa) {
     JSON.stringify({
       MessageType: "FeedOpen",
       FeedName: fn,
-      FeedArgs: fa
-    })
+      FeedArgs: fa,
+    }),
   );
 
   this.server.feedTermination({
@@ -994,7 +999,7 @@ harnessProto.makeFeedTerminated = function makeFeedOpening(tcid, fn, fa) {
     feedName: fn,
     feedArgs: fa,
     errorCode: "DISCARDED_CODE",
-    errorData: { discarded: "data" }
+    errorData: { discarded: "data" },
   });
 
   this.transport.mockClear();

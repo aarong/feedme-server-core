@@ -7,7 +7,7 @@ jest.useFakeTimers();
 const epsilon = 1;
 
 expect.extend({
-  toHaveState: harness.toHaveState
+  toHaveState: harness.toHaveState,
 });
 
 describe("The server.feedTermination() function", () => {
@@ -25,7 +25,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -97,7 +97,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -164,7 +164,7 @@ describe("The server.feedTermination() function", () => {
 
             cidClient1 = harn.makeClient("tcid_client_1");
             harn.makeFeedOpening("tcid_client_1", "some_feed", {
-              other: "args"
+              other: "args",
             });
           });
           const go = () =>
@@ -172,7 +172,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -242,9 +242,9 @@ describe("The server.feedTermination() function", () => {
               "tcid_client_1",
               "some_feed",
               {
-                other: "args"
+                other: "args",
               },
-              { feed: "data" }
+              { feed: "data" },
             );
           });
           const go = () =>
@@ -252,7 +252,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -319,7 +319,7 @@ describe("The server.feedTermination() function", () => {
 
             cidClient1 = harn.makeClient("tcid_client_1");
             harn.makeFeedClosing("tcid_client_1", "some_feed", {
-              other: "args"
+              other: "args",
             });
           });
           const go = () =>
@@ -327,7 +327,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -394,7 +394,7 @@ describe("The server.feedTermination() function", () => {
 
             cidClient1 = harn.makeClient("tcid_client_1");
             harn.makeFeedTerminated("tcid_client_1", "some_feed", {
-              other: "args"
+              other: "args",
             });
           });
           const go = () =>
@@ -402,7 +402,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -469,7 +469,7 @@ describe("The server.feedTermination() function", () => {
 
             cidClient1 = harn.makeClient("tcid_client_1");
             harn.makeFeedOpening("tcid_client_1", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
           });
           const go = () =>
@@ -477,7 +477,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -547,9 +547,9 @@ describe("The server.feedTermination() function", () => {
               "tcid_client_1",
               "other_feed",
               {
-                feed: "args"
+                feed: "args",
               },
-              { feed: "data" }
+              { feed: "data" },
             );
           });
           const go = () =>
@@ -557,7 +557,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -624,7 +624,7 @@ describe("The server.feedTermination() function", () => {
 
             cidClient1 = harn.makeClient("tcid_client_1");
             harn.makeFeedClosing("tcid_client_1", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
           });
           const go = () =>
@@ -632,7 +632,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -699,7 +699,7 @@ describe("The server.feedTermination() function", () => {
 
             cidClient1 = harn.makeClient("tcid_client_1");
             harn.makeFeedTerminated("tcid_client_1", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
           });
           const go = () =>
@@ -707,7 +707,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -775,7 +775,7 @@ describe("The server.feedTermination() function", () => {
           let cidClosing; // eslint-disable-line no-unused-vars
           let cidTerminated; // eslint-disable-line no-unused-vars
           const feedSerial = FeedNameArgs("some_feed", {
-            feed: "args"
+            feed: "args",
           }).serial();
           beforeEach(() => {
             harn = harness();
@@ -785,7 +785,7 @@ describe("The server.feedTermination() function", () => {
 
             cidOpening = harn.makeClient("tcid_client_opening");
             harn.makeFeedOpening("tcid_client_opening", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidOpen = harn.makeClient("tcid_client_open");
@@ -793,17 +793,17 @@ describe("The server.feedTermination() function", () => {
               "tcid_client_open",
               "some_feed",
               { feed: "args" },
-              { feed: "data" }
+              { feed: "data" },
             );
 
             cidClosing = harn.makeClient("tcid_client_closing");
             harn.makeFeedClosing("tcid_client_closing", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidTerminated = harn.makeClient("tcid_client_terminated");
             harn.makeFeedTerminated("tcid_client_terminated", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
           });
           const go = () =>
@@ -811,7 +811,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -849,7 +849,7 @@ describe("The server.feedTermination() function", () => {
             delete newState._feedOpenResponses[cidOpening];
             delete newState._feedOpenResponseStates[cidOpening];
             newState._terminationTimers[cidOpen] = {
-              [feedSerial]: 123
+              [feedSerial]: 123,
             };
 
             expect(harn.server).toHaveState(newState);
@@ -866,7 +866,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             const msgOpen = {
@@ -874,7 +874,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -888,23 +888,23 @@ describe("The server.feedTermination() function", () => {
                 harn.transport.send.mock.calls[1][0] === "tcid_client_open" &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[0][1]),
-                  msgOpening
+                  msgOpening,
                 ) &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[1][1]),
-                  msgOpen
+                  msgOpen,
                 )) ||
                 (harn.transport.send.mock.calls[1][0] ===
                   "tcid_client_opening" &&
                   harn.transport.send.mock.calls[0][0] === "tcid_client_open" &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[1][1]),
-                    msgOpening
+                    msgOpening,
                   ) &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[0][1]),
-                    msgOpen
-                  ))
+                    msgOpen,
+                  )),
             ).toBe(true);
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
@@ -987,7 +987,7 @@ describe("The server.feedTermination() function", () => {
           let cidClosing; // eslint-disable-line no-unused-vars
           let cidTerminated; // eslint-disable-line no-unused-vars
           const feedSerial = FeedNameArgs("some_feed", {
-            feed: "args"
+            feed: "args",
           }).serial();
           beforeEach(() => {
             harn = harness();
@@ -995,15 +995,15 @@ describe("The server.feedTermination() function", () => {
 
             cidClosed = harn.makeClient("tcid_client_closed");
             harn.makeFeedOpening("tcid_client_closed", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
 
             cidOpening = harn.makeClient("tcid_client_opening");
             harn.makeFeedOpening("tcid_client_opening", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedOpening("tcid_client_opening", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
 
             cidOpen = harn.makeClient("tcid_client_open");
@@ -1011,26 +1011,26 @@ describe("The server.feedTermination() function", () => {
               "tcid_client_open",
               "some_feed",
               { feed: "args" },
-              { feed: "data" }
+              { feed: "data" },
             );
             harn.makeFeedOpening("tcid_client_open", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
 
             cidClosing = harn.makeClient("tcid_client_closing");
             harn.makeFeedClosing("tcid_client_closing", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedOpening("tcid_client_closing", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
 
             cidTerminated = harn.makeClient("tcid_client_terminated");
             harn.makeFeedTerminated("tcid_client_terminated", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedOpening("tcid_client_terminated", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
           });
           const go = () =>
@@ -1038,7 +1038,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -1076,7 +1076,7 @@ describe("The server.feedTermination() function", () => {
             delete newState._feedOpenResponses[cidOpening][feedSerial];
             delete newState._feedOpenResponseStates[cidOpening][feedSerial];
             newState._terminationTimers[cidOpen] = {
-              [feedSerial]: 123
+              [feedSerial]: 123,
             };
 
             expect(harn.server).toHaveState(newState);
@@ -1093,7 +1093,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             const msgOpen = {
@@ -1101,7 +1101,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -1115,23 +1115,23 @@ describe("The server.feedTermination() function", () => {
                 harn.transport.send.mock.calls[1][0] === "tcid_client_open" &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[0][1]),
-                  msgOpening
+                  msgOpening,
                 ) &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[1][1]),
-                  msgOpen
+                  msgOpen,
                 )) ||
                 (harn.transport.send.mock.calls[1][0] ===
                   "tcid_client_opening" &&
                   harn.transport.send.mock.calls[0][0] === "tcid_client_open" &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[1][1]),
-                    msgOpening
+                    msgOpening,
                   ) &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[0][1]),
-                    msgOpen
-                  ))
+                    msgOpen,
+                  )),
             ).toBe(true);
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
@@ -1214,7 +1214,7 @@ describe("The server.feedTermination() function", () => {
           let cidClosing; // eslint-disable-line no-unused-vars
           let cidTerminated; // eslint-disable-line no-unused-vars
           const feedSerial = FeedNameArgs("some_feed", {
-            feed: "args"
+            feed: "args",
           }).serial();
           beforeEach(() => {
             harn = harness();
@@ -1225,22 +1225,22 @@ describe("The server.feedTermination() function", () => {
               "tcid_client_closed",
               "some_feed",
               {
-                other: "arg"
+                other: "arg",
               },
-              { feed: "data" }
+              { feed: "data" },
             );
 
             cidOpening = harn.makeClient("tcid_client_opening");
             harn.makeFeedOpening("tcid_client_opening", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedOpen(
               "tcid_client_opening",
               "some_feed",
               {
-                other: "arg"
+                other: "arg",
               },
-              { feed: "data" }
+              { feed: "data" },
             );
 
             cidOpen = harn.makeClient("tcid_client_open");
@@ -1248,41 +1248,41 @@ describe("The server.feedTermination() function", () => {
               "tcid_client_open",
               "some_feed",
               { feed: "args" },
-              { feed: "data" }
+              { feed: "data" },
             );
             harn.makeFeedOpen(
               "tcid_client_open",
               "some_feed",
               {
-                other: "arg"
+                other: "arg",
               },
-              { feed: "data" }
+              { feed: "data" },
             );
 
             cidClosing = harn.makeClient("tcid_client_closing");
             harn.makeFeedClosing("tcid_client_closing", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedOpen(
               "tcid_client_closing",
               "some_feed",
               {
-                other: "arg"
+                other: "arg",
               },
-              { feed: "data" }
+              { feed: "data" },
             );
 
             cidTerminated = harn.makeClient("tcid_client_terminated");
             harn.makeFeedTerminated("tcid_client_terminated", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedOpen(
               "tcid_client_terminated",
               "some_feed",
               {
-                other: "arg"
+                other: "arg",
               },
-              { feed: "data" }
+              { feed: "data" },
             );
           });
           const go = () =>
@@ -1290,7 +1290,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -1328,7 +1328,7 @@ describe("The server.feedTermination() function", () => {
             delete newState._feedOpenResponses[cidOpening];
             delete newState._feedOpenResponseStates[cidOpening];
             newState._terminationTimers[cidOpen] = {
-              [feedSerial]: 123
+              [feedSerial]: 123,
             };
 
             expect(harn.server).toHaveState(newState);
@@ -1345,7 +1345,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             const msgOpen = {
@@ -1353,7 +1353,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -1367,23 +1367,23 @@ describe("The server.feedTermination() function", () => {
                 harn.transport.send.mock.calls[1][0] === "tcid_client_open" &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[0][1]),
-                  msgOpening
+                  msgOpening,
                 ) &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[1][1]),
-                  msgOpen
+                  msgOpen,
                 )) ||
                 (harn.transport.send.mock.calls[1][0] ===
                   "tcid_client_opening" &&
                   harn.transport.send.mock.calls[0][0] === "tcid_client_open" &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[1][1]),
-                    msgOpening
+                    msgOpening,
                   ) &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[0][1]),
-                    msgOpen
-                  ))
+                    msgOpen,
+                  )),
             ).toBe(true);
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
@@ -1466,7 +1466,7 @@ describe("The server.feedTermination() function", () => {
           let cidClosing; // eslint-disable-line no-unused-vars
           let cidTerminated; // eslint-disable-line no-unused-vars
           const feedSerial = FeedNameArgs("some_feed", {
-            feed: "args"
+            feed: "args",
           }).serial();
           beforeEach(() => {
             harn = harness();
@@ -1474,15 +1474,15 @@ describe("The server.feedTermination() function", () => {
 
             cidClosed = harn.makeClient("tcid_client_closed");
             harn.makeFeedClosing("tcid_client_closed", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
 
             cidOpening = harn.makeClient("tcid_client_opening");
             harn.makeFeedOpening("tcid_client_opening", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedClosing("tcid_client_opening", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
 
             cidOpen = harn.makeClient("tcid_client_open");
@@ -1490,26 +1490,26 @@ describe("The server.feedTermination() function", () => {
               "tcid_client_open",
               "some_feed",
               { feed: "args" },
-              { feed: "data" }
+              { feed: "data" },
             );
             harn.makeFeedClosing("tcid_client_open", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
 
             cidClosing = harn.makeClient("tcid_client_closing");
             harn.makeFeedClosing("tcid_client_closing", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedClosing("tcid_client_closing", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
 
             cidTerminated = harn.makeClient("tcid_client_terminated");
             harn.makeFeedTerminated("tcid_client_terminated", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedClosing("tcid_client_terminated", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
           });
           const go = () =>
@@ -1517,7 +1517,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -1555,7 +1555,7 @@ describe("The server.feedTermination() function", () => {
             delete newState._feedOpenResponses[cidOpening];
             delete newState._feedOpenResponseStates[cidOpening];
             newState._terminationTimers[cidOpen] = {
-              [feedSerial]: 123
+              [feedSerial]: 123,
             };
 
             expect(harn.server).toHaveState(newState);
@@ -1572,7 +1572,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             const msgOpen = {
@@ -1580,7 +1580,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -1594,23 +1594,23 @@ describe("The server.feedTermination() function", () => {
                 harn.transport.send.mock.calls[1][0] === "tcid_client_open" &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[0][1]),
-                  msgOpening
+                  msgOpening,
                 ) &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[1][1]),
-                  msgOpen
+                  msgOpen,
                 )) ||
                 (harn.transport.send.mock.calls[1][0] ===
                   "tcid_client_opening" &&
                   harn.transport.send.mock.calls[0][0] === "tcid_client_open" &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[1][1]),
-                    msgOpening
+                    msgOpening,
                   ) &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[0][1]),
-                    msgOpen
-                  ))
+                    msgOpen,
+                  )),
             ).toBe(true);
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
@@ -1693,7 +1693,7 @@ describe("The server.feedTermination() function", () => {
           let cidClosing; // eslint-disable-line no-unused-vars
           let cidTerminated; // eslint-disable-line no-unused-vars
           const feedSerial = FeedNameArgs("some_feed", {
-            feed: "args"
+            feed: "args",
           }).serial();
           beforeEach(() => {
             harn = harness();
@@ -1701,15 +1701,15 @@ describe("The server.feedTermination() function", () => {
 
             cidClosed = harn.makeClient("tcid_client_closed");
             harn.makeFeedTerminated("tcid_client_closed", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
 
             cidOpening = harn.makeClient("tcid_client_opening");
             harn.makeFeedOpening("tcid_client_opening", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedTerminated("tcid_client_opening", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
 
             cidOpen = harn.makeClient("tcid_client_open");
@@ -1717,26 +1717,26 @@ describe("The server.feedTermination() function", () => {
               "tcid_client_open",
               "some_feed",
               { feed: "args" },
-              { feed: "data" }
+              { feed: "data" },
             );
             harn.makeFeedTerminated("tcid_client_open", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
 
             cidClosing = harn.makeClient("tcid_client_closing");
             harn.makeFeedClosing("tcid_client_closing", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedTerminated("tcid_client_closing", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
 
             cidTerminated = harn.makeClient("tcid_client_terminated");
             harn.makeFeedTerminated("tcid_client_terminated", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedTerminated("tcid_client_terminated", "some_feed", {
-              other: "arg"
+              other: "arg",
             });
           });
           const go = () =>
@@ -1744,7 +1744,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -1797,7 +1797,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             const msgOpen = {
@@ -1805,7 +1805,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -1819,23 +1819,23 @@ describe("The server.feedTermination() function", () => {
                 harn.transport.send.mock.calls[1][0] === "tcid_client_open" &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[0][1]),
-                  msgOpening
+                  msgOpening,
                 ) &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[1][1]),
-                  msgOpen
+                  msgOpen,
                 )) ||
                 (harn.transport.send.mock.calls[1][0] ===
                   "tcid_client_opening" &&
                   harn.transport.send.mock.calls[0][0] === "tcid_client_open" &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[1][1]),
-                    msgOpening
+                    msgOpening,
                   ) &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[0][1]),
-                    msgOpen
-                  ))
+                    msgOpen,
+                  )),
             ).toBe(true);
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
@@ -1882,13 +1882,13 @@ describe("The server.feedTermination() function", () => {
 
               newState._clientFeedStates = {
                 [cidClosing]: {
-                  [feedSerial]: "closing"
-                }
+                  [feedSerial]: "closing",
+                },
               };
               newState._feedClientStates = {
                 [feedSerial]: {
-                  [cidClosing]: "closing"
-                }
+                  [cidClosing]: "closing",
+                },
               };
               newState._terminationTimers = {};
               expect(harn.server).toHaveState(newState);
@@ -1923,7 +1923,7 @@ describe("The server.feedTermination() function", () => {
           let cidClosing; // eslint-disable-line no-unused-vars
           let cidTerminated; // eslint-disable-line no-unused-vars
           const feedSerial = FeedNameArgs("some_feed", {
-            feed: "args"
+            feed: "args",
           }).serial();
           beforeEach(() => {
             harn = harness();
@@ -1931,15 +1931,15 @@ describe("The server.feedTermination() function", () => {
 
             cidClosed = harn.makeClient("tcid_client_closed");
             harn.makeFeedOpening("tcid_client_closed", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidOpening = harn.makeClient("tcid_client_opening");
             harn.makeFeedOpening("tcid_client_opening", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedOpening("tcid_client_opening", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidOpen = harn.makeClient("tcid_client_open");
@@ -1947,26 +1947,26 @@ describe("The server.feedTermination() function", () => {
               "tcid_client_open",
               "some_feed",
               { feed: "args" },
-              { feed: "data" }
+              { feed: "data" },
             );
             harn.makeFeedOpening("tcid_client_open", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidClosing = harn.makeClient("tcid_client_closing");
             harn.makeFeedClosing("tcid_client_closing", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedOpening("tcid_client_closing", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidTerminated = harn.makeClient("tcid_client_terminated");
             harn.makeFeedTerminated("tcid_client_terminated", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedOpening("tcid_client_terminated", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
           });
           const go = () =>
@@ -1974,7 +1974,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -2012,7 +2012,7 @@ describe("The server.feedTermination() function", () => {
             delete newState._feedOpenResponses[cidOpening][feedSerial];
             delete newState._feedOpenResponseStates[cidOpening][feedSerial];
             newState._terminationTimers[cidOpen] = {
-              [feedSerial]: 123
+              [feedSerial]: 123,
             };
 
             expect(harn.server).toHaveState(newState);
@@ -2029,7 +2029,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             const msgOpen = {
@@ -2037,7 +2037,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -2051,23 +2051,23 @@ describe("The server.feedTermination() function", () => {
                 harn.transport.send.mock.calls[1][0] === "tcid_client_open" &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[0][1]),
-                  msgOpening
+                  msgOpening,
                 ) &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[1][1]),
-                  msgOpen
+                  msgOpen,
                 )) ||
                 (harn.transport.send.mock.calls[1][0] ===
                   "tcid_client_opening" &&
                   harn.transport.send.mock.calls[0][0] === "tcid_client_open" &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[1][1]),
-                    msgOpening
+                    msgOpening,
                   ) &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[0][1]),
-                    msgOpen
-                  ))
+                    msgOpen,
+                  )),
             ).toBe(true);
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
@@ -2150,7 +2150,7 @@ describe("The server.feedTermination() function", () => {
           let cidClosing; // eslint-disable-line no-unused-vars
           let cidTerminated; // eslint-disable-line no-unused-vars
           const feedSerial = FeedNameArgs("some_feed", {
-            feed: "args"
+            feed: "args",
           }).serial();
           beforeEach(() => {
             harn = harness();
@@ -2161,22 +2161,22 @@ describe("The server.feedTermination() function", () => {
               "tcid_client_closed",
               "other_feed",
               {
-                feed: "args"
+                feed: "args",
               },
-              { feed: "data" }
+              { feed: "data" },
             );
 
             cidOpening = harn.makeClient("tcid_client_opening");
             harn.makeFeedOpening("tcid_client_opening", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedOpen(
               "tcid_client_opening",
               "other_feed",
               {
-                feed: "args"
+                feed: "args",
               },
-              { feed: "data" }
+              { feed: "data" },
             );
 
             cidOpen = harn.makeClient("tcid_client_open");
@@ -2184,41 +2184,41 @@ describe("The server.feedTermination() function", () => {
               "tcid_client_open",
               "some_feed",
               { feed: "args" },
-              { feed: "data" }
+              { feed: "data" },
             );
             harn.makeFeedOpen(
               "tcid_client_open",
               "other_feed",
               {
-                feed: "args"
+                feed: "args",
               },
-              { feed: "data" }
+              { feed: "data" },
             );
 
             cidClosing = harn.makeClient("tcid_client_closing");
             harn.makeFeedClosing("tcid_client_closing", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedOpen(
               "tcid_client_closing",
               "other_feed",
               {
-                feed: "args"
+                feed: "args",
               },
-              { feed: "data" }
+              { feed: "data" },
             );
 
             cidTerminated = harn.makeClient("tcid_client_terminated");
             harn.makeFeedTerminated("tcid_client_terminated", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedOpen(
               "tcid_client_terminated",
               "other_feed",
               {
-                feed: "args"
+                feed: "args",
               },
-              { feed: "data" }
+              { feed: "data" },
             );
           });
           const go = () =>
@@ -2226,7 +2226,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -2264,7 +2264,7 @@ describe("The server.feedTermination() function", () => {
             delete newState._feedOpenResponses[cidOpening];
             delete newState._feedOpenResponseStates[cidOpening];
             newState._terminationTimers[cidOpen] = {
-              [feedSerial]: 123
+              [feedSerial]: 123,
             };
 
             expect(harn.server).toHaveState(newState);
@@ -2281,7 +2281,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             const msgOpen = {
@@ -2289,7 +2289,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -2303,23 +2303,23 @@ describe("The server.feedTermination() function", () => {
                 harn.transport.send.mock.calls[1][0] === "tcid_client_open" &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[0][1]),
-                  msgOpening
+                  msgOpening,
                 ) &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[1][1]),
-                  msgOpen
+                  msgOpen,
                 )) ||
                 (harn.transport.send.mock.calls[1][0] ===
                   "tcid_client_opening" &&
                   harn.transport.send.mock.calls[0][0] === "tcid_client_open" &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[1][1]),
-                    msgOpening
+                    msgOpening,
                   ) &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[0][1]),
-                    msgOpen
-                  ))
+                    msgOpen,
+                  )),
             ).toBe(true);
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
@@ -2402,7 +2402,7 @@ describe("The server.feedTermination() function", () => {
           let cidClosing; // eslint-disable-line no-unused-vars
           let cidTerminated; // eslint-disable-line no-unused-vars
           const feedSerial = FeedNameArgs("some_feed", {
-            feed: "args"
+            feed: "args",
           }).serial();
           beforeEach(() => {
             harn = harness();
@@ -2410,15 +2410,15 @@ describe("The server.feedTermination() function", () => {
 
             cidClosed = harn.makeClient("tcid_client_closed");
             harn.makeFeedClosing("tcid_client_closed", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidOpening = harn.makeClient("tcid_client_opening");
             harn.makeFeedOpening("tcid_client_opening", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedClosing("tcid_client_opening", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidOpen = harn.makeClient("tcid_client_open");
@@ -2426,26 +2426,26 @@ describe("The server.feedTermination() function", () => {
               "tcid_client_open",
               "some_feed",
               { feed: "args" },
-              { feed: "data" }
+              { feed: "data" },
             );
             harn.makeFeedClosing("tcid_client_open", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidClosing = harn.makeClient("tcid_client_closing");
             harn.makeFeedClosing("tcid_client_closing", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedClosing("tcid_client_closing", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidTerminated = harn.makeClient("tcid_client_terminated");
             harn.makeFeedTerminated("tcid_client_terminated", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedClosing("tcid_client_terminated", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
           });
           const go = () =>
@@ -2453,7 +2453,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -2491,7 +2491,7 @@ describe("The server.feedTermination() function", () => {
             delete newState._feedOpenResponses[cidOpening];
             delete newState._feedOpenResponseStates[cidOpening];
             newState._terminationTimers[cidOpen] = {
-              [feedSerial]: 123
+              [feedSerial]: 123,
             };
 
             expect(harn.server).toHaveState(newState);
@@ -2508,7 +2508,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             const msgOpen = {
@@ -2516,7 +2516,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -2530,23 +2530,23 @@ describe("The server.feedTermination() function", () => {
                 harn.transport.send.mock.calls[1][0] === "tcid_client_open" &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[0][1]),
-                  msgOpening
+                  msgOpening,
                 ) &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[1][1]),
-                  msgOpen
+                  msgOpen,
                 )) ||
                 (harn.transport.send.mock.calls[1][0] ===
                   "tcid_client_opening" &&
                   harn.transport.send.mock.calls[0][0] === "tcid_client_open" &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[1][1]),
-                    msgOpening
+                    msgOpening,
                   ) &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[0][1]),
-                    msgOpen
-                  ))
+                    msgOpen,
+                  )),
             ).toBe(true);
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
@@ -2629,7 +2629,7 @@ describe("The server.feedTermination() function", () => {
           let cidClosing; // eslint-disable-line no-unused-vars
           let cidTerminated; // eslint-disable-line no-unused-vars
           const feedSerial = FeedNameArgs("some_feed", {
-            feed: "args"
+            feed: "args",
           }).serial();
           beforeEach(() => {
             harn = harness();
@@ -2637,15 +2637,15 @@ describe("The server.feedTermination() function", () => {
 
             cidClosed = harn.makeClient("tcid_client_closed");
             harn.makeFeedTerminated("tcid_client_closed", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidOpening = harn.makeClient("tcid_client_opening");
             harn.makeFeedOpening("tcid_client_opening", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedTerminated("tcid_client_opening", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidOpen = harn.makeClient("tcid_client_open");
@@ -2653,26 +2653,26 @@ describe("The server.feedTermination() function", () => {
               "tcid_client_open",
               "some_feed",
               { feed: "args" },
-              { feed: "data" }
+              { feed: "data" },
             );
             harn.makeFeedTerminated("tcid_client_open", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidClosing = harn.makeClient("tcid_client_closing");
             harn.makeFeedClosing("tcid_client_closing", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedTerminated("tcid_client_closing", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
 
             cidTerminated = harn.makeClient("tcid_client_terminated");
             harn.makeFeedTerminated("tcid_client_terminated", "some_feed", {
-              feed: "args"
+              feed: "args",
             });
             harn.makeFeedTerminated("tcid_client_terminated", "other_feed", {
-              feed: "args"
+              feed: "args",
             });
           });
           const go = () =>
@@ -2680,7 +2680,7 @@ describe("The server.feedTermination() function", () => {
               feedName: "some_feed",
               feedArgs: { feed: "args" },
               errorCode: "SOME_ERROR",
-              errorData: { error: "data" }
+              errorData: { error: "data" },
             });
 
           // Events
@@ -2733,7 +2733,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             const msgOpen = {
@@ -2741,7 +2741,7 @@ describe("The server.feedTermination() function", () => {
               FeedName: "some_feed",
               FeedArgs: { feed: "args" },
               ErrorCode: "SOME_ERROR",
-              ErrorData: { error: "data" }
+              ErrorData: { error: "data" },
             };
 
             expect(harn.transport.start.mock.calls.length).toBe(0);
@@ -2755,23 +2755,23 @@ describe("The server.feedTermination() function", () => {
                 harn.transport.send.mock.calls[1][0] === "tcid_client_open" &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[0][1]),
-                  msgOpening
+                  msgOpening,
                 ) &&
                 _.isEqual(
                   JSON.parse(harn.transport.send.mock.calls[1][1]),
-                  msgOpen
+                  msgOpen,
                 )) ||
                 (harn.transport.send.mock.calls[1][0] ===
                   "tcid_client_opening" &&
                   harn.transport.send.mock.calls[0][0] === "tcid_client_open" &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[1][1]),
-                    msgOpening
+                    msgOpening,
                   ) &&
                   _.isEqual(
                     JSON.parse(harn.transport.send.mock.calls[0][1]),
-                    msgOpen
-                  ))
+                    msgOpen,
+                  )),
             ).toBe(true);
 
             expect(harn.transport.disconnect.mock.calls.length).toBe(0);
@@ -2818,13 +2818,13 @@ describe("The server.feedTermination() function", () => {
 
               newState._clientFeedStates = {
                 [cidClosing]: {
-                  [feedSerial]: "closing"
-                }
+                  [feedSerial]: "closing",
+                },
               };
               newState._feedClientStates = {
                 [feedSerial]: {
-                  [cidClosing]: "closing"
-                }
+                  [cidClosing]: "closing",
+                },
               };
               newState._terminationTimers = {};
               expect(harn.server).toHaveState(newState);

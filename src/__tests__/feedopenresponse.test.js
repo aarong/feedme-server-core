@@ -28,7 +28,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
     // Create the object
     const s = {
       _appFeedOpenSuccess: jest.fn(),
-      _appFeedOpenFailure: jest.fn()
+      _appFeedOpenFailure: jest.fn(),
     };
     const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
     const foreq = feedOpenRequest("some_client", feedNameArgs);
@@ -43,7 +43,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
     expect(() => {
       fores.success({ something: undefined });
     }).toThrow(
-      new Error("INVALID_ARGUMENT: Feed data is not JSON-expressible.")
+      new Error("INVALID_ARGUMENT: Feed data is not JSON-expressible."),
     );
 
     // Failure - throw on invalid errorCode - type
@@ -60,7 +60,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
     expect(() => {
       fores.failure("SOME_ERROR", { something: undefined });
     }).toThrow(
-      new Error("INVALID_ARGUMENT: Error data is not JSON-expressible.")
+      new Error("INVALID_ARGUMENT: Error data is not JSON-expressible."),
     );
   });
 
@@ -69,7 +69,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appFeedOpenSuccess: jest.fn(),
-        _appFeedOpenFailure: jest.fn()
+        _appFeedOpenFailure: jest.fn(),
       };
       const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
       const foreq = feedOpenRequest("some_client", feedNameArgs);
@@ -97,8 +97,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores.success({ feed: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(fores._server).toBe(null);
       expect(fores._feedOpenRequest).toBe(foreq);
@@ -115,8 +115,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(fores._server).toBe(null);
       expect(fores._feedOpenRequest).toBe(foreq);
@@ -130,7 +130,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appFeedOpenSuccess: jest.fn(),
-        _appFeedOpenFailure: jest.fn()
+        _appFeedOpenFailure: jest.fn(),
       };
       const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
       const foreq = feedOpenRequest("some_client", feedNameArgs);
@@ -158,8 +158,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores.failure("SOME_ERROR", { error: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(fores._server).toBe(null);
       expect(fores._feedOpenRequest).toBe(foreq);
@@ -176,8 +176,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(fores._server).toBe(null);
       expect(fores._feedOpenRequest).toBe(foreq);
@@ -191,7 +191,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appFeedOpenSuccess: jest.fn(),
-        _appFeedOpenFailure: jest.fn()
+        _appFeedOpenFailure: jest.fn(),
       };
       const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
       const foreq = feedOpenRequest("some_client", feedNameArgs);
@@ -220,8 +220,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores.success({ feed: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(fores._server).toBe(null);
       expect(fores._feedOpenRequest).toBe(foreq);
@@ -238,8 +238,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(fores._server).toBe(null);
       expect(fores._feedOpenRequest).toBe(foreq);
@@ -253,7 +253,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appFeedOpenSuccess: jest.fn(),
-        _appFeedOpenFailure: jest.fn()
+        _appFeedOpenFailure: jest.fn(),
       };
       const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
       const foreq = feedOpenRequest("some_client", feedNameArgs);
@@ -282,8 +282,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores.failure("SOME_ERROR", { error: "data" }).toBe(undefined);
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(fores._server).toBe(null);
       expect(fores._feedOpenRequest).toBe(foreq);
@@ -300,8 +300,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(fores._server).toBe(null);
       expect(fores._feedOpenRequest).toBe(foreq);
@@ -315,7 +315,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appFeedOpenSuccess: jest.fn(),
-        _appFeedOpenFailure: jest.fn()
+        _appFeedOpenFailure: jest.fn(),
       };
       const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
       const foreq = feedOpenRequest("some_client", feedNameArgs);
@@ -350,8 +350,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores.success({ feed: "data " });
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(fores._server).toBe(null);
       expect(fores._feedOpenRequest).toBe(foreq);
@@ -365,7 +365,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appFeedOpenSuccess: jest.fn(),
-        _appFeedOpenFailure: jest.fn()
+        _appFeedOpenFailure: jest.fn(),
       };
       const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
       const foreq = feedOpenRequest("some_client", feedNameArgs);
@@ -400,8 +400,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores.failure("SOME_ERROR", { error: "data" });
       }).toThrow(
         new Error(
-          "ALREADY_RESPONDED: The success() or failure() method has already been called."
-        )
+          "ALREADY_RESPONDED: The success() or failure() method has already been called.",
+        ),
       );
       expect(fores._server).toBe(null);
       expect(fores._feedOpenRequest).toBe(foreq);
@@ -415,7 +415,7 @@ describe("The success(), failure(), and _neutralize() functions", () => {
       // Create the object
       const s = {
         _appFeedOpenSuccess: jest.fn(),
-        _appFeedOpenFailure: jest.fn()
+        _appFeedOpenFailure: jest.fn(),
       };
       const feedNameArgs = FeedNameArgs("some_feed", { feed: "arg" });
       const foreq = feedOpenRequest("some_client", feedNameArgs);
@@ -438,8 +438,8 @@ describe("The success(), failure(), and _neutralize() functions", () => {
         fores._neutralize();
       }).toThrow(
         new Error(
-          "ALREADY_NEUTRALIZED: The object has already been neutralized."
-        )
+          "ALREADY_NEUTRALIZED: The object has already been neutralized.",
+        ),
       );
       expect(fores._server).toBe(null);
       expect(fores._feedOpenRequest).toBe(foreq);

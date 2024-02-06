@@ -1,7 +1,7 @@
 import harness from "./server.harness";
 
 expect.extend({
-  toHaveState: harness.toHaveState
+  toHaveState: harness.toHaveState,
 });
 
 describe("The server.feedTermination() function", () => {
@@ -39,7 +39,7 @@ describe("The server.feedTermination() function", () => {
             feedName: "some_feed",
             feedArgs: { feed: "arg" },
             errorCode: "SOME_ERROR",
-            errorData: { error: "data" }
+            errorData: { error: "data" },
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid client id."));
       });
@@ -53,7 +53,7 @@ describe("The server.feedTermination() function", () => {
             feedName: 123,
             feedArgs: { feed: "arg" },
             errorCode: "SOME_ERROR",
-            errorData: { error: "data" }
+            errorData: { error: "data" },
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid feed name."));
       });
@@ -67,10 +67,10 @@ describe("The server.feedTermination() function", () => {
             feedName: "some_feed",
             feedArgs: { feed: 1 },
             errorCode: "SOME_ERROR",
-            errorData: { error: "data" }
+            errorData: { error: "data" },
           });
         }).toThrow(
-          new Error("INVALID_ARGUMENT: Invalid feed arguments object.")
+          new Error("INVALID_ARGUMENT: Invalid feed arguments object."),
         );
       });
 
@@ -82,7 +82,7 @@ describe("The server.feedTermination() function", () => {
             clientId: "some_client",
             feedName: "some_feed",
             feedArgs: { feed: "arg" },
-            errorData: { error: "data" }
+            errorData: { error: "data" },
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
       });
@@ -96,7 +96,7 @@ describe("The server.feedTermination() function", () => {
             feedName: "some_feed",
             feedArgs: { feed: "arg" },
             errorCode: null,
-            errorData: { error: "data" }
+            errorData: { error: "data" },
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
       });
@@ -109,7 +109,7 @@ describe("The server.feedTermination() function", () => {
             clientId: "some_client",
             feedName: "some_feed",
             feedArgs: { feed: "arg" },
-            errorCode: "SOME_ERROR"
+            errorCode: "SOME_ERROR",
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error data."));
       });
@@ -123,7 +123,7 @@ describe("The server.feedTermination() function", () => {
             feedName: "some_feed",
             feedArgs: { feed: "arg" },
             errorCode: "SOME_ERROR",
-            errorData: []
+            errorData: [],
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error data."));
       });
@@ -137,7 +137,7 @@ describe("The server.feedTermination() function", () => {
             feedName: "some_feed",
             feedArgs: { feed: "arg" },
             errorCode: "SOME_ERROR",
-            errorData: { problem: undefined }
+            errorData: { problem: undefined },
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error data."));
       });
@@ -151,7 +151,7 @@ describe("The server.feedTermination() function", () => {
           harn.server.feedTermination({
             clientId: 1,
             errorCode: "SOME_ERROR",
-            errorData: { error: "data" }
+            errorData: { error: "data" },
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid client id."));
       });
@@ -162,7 +162,7 @@ describe("The server.feedTermination() function", () => {
         expect(() => {
           harn.server.feedTermination({
             clientId: "some_client",
-            errorData: { error: "data" }
+            errorData: { error: "data" },
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
       });
@@ -174,7 +174,7 @@ describe("The server.feedTermination() function", () => {
           harn.server.feedTermination({
             clientId: "some_client",
             errorCode: true,
-            errorData: { error: "data" }
+            errorData: { error: "data" },
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
       });
@@ -185,7 +185,7 @@ describe("The server.feedTermination() function", () => {
         expect(() => {
           harn.server.feedTermination({
             clientId: "some_client",
-            errorCode: "SOME_ERROR"
+            errorCode: "SOME_ERROR",
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error data."));
       });
@@ -197,7 +197,7 @@ describe("The server.feedTermination() function", () => {
           harn.server.feedTermination({
             clientId: "some_client",
             errorCode: "SOME_ERROR",
-            errorData: "junk"
+            errorData: "junk",
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error data."));
       });
@@ -209,7 +209,7 @@ describe("The server.feedTermination() function", () => {
           harn.server.feedTermination({
             clientId: "some_client",
             errorCode: "SOME_ERROR",
-            errorData: { problem: NaN }
+            errorData: { problem: NaN },
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error data."));
       });
@@ -224,7 +224,7 @@ describe("The server.feedTermination() function", () => {
             feedName: 123,
             feedArgs: { feed: "arg" },
             errorCode: "SOME_ERROR",
-            errorData: { error: "data" }
+            errorData: { error: "data" },
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid feed name."));
       });
@@ -237,10 +237,10 @@ describe("The server.feedTermination() function", () => {
             feedName: "some_feed",
             feedArgs: { feed: 1 },
             errorCode: "SOME_ERROR",
-            errorData: { error: "data" }
+            errorData: { error: "data" },
           });
         }).toThrow(
-          new Error("INVALID_ARGUMENT: Invalid feed arguments object.")
+          new Error("INVALID_ARGUMENT: Invalid feed arguments object."),
         );
       });
 
@@ -251,7 +251,7 @@ describe("The server.feedTermination() function", () => {
           harn.server.feedTermination({
             feedName: "some_feed",
             feedArgs: { feed: "arg" },
-            errorData: { error: "data" }
+            errorData: { error: "data" },
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
       });
@@ -264,7 +264,7 @@ describe("The server.feedTermination() function", () => {
             feedName: "some_feed",
             feedArgs: { feed: "arg" },
             errorCode: 123,
-            errorData: { error: "data" }
+            errorData: { error: "data" },
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error code."));
       });
@@ -276,7 +276,7 @@ describe("The server.feedTermination() function", () => {
           harn.server.feedTermination({
             feedName: "some_feed",
             feedArgs: { feed: "arg" },
-            errorCode: "SOME_ERROR"
+            errorCode: "SOME_ERROR",
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error data."));
       });
@@ -289,7 +289,7 @@ describe("The server.feedTermination() function", () => {
             feedName: "some_feed",
             feedArgs: { feed: "arg" },
             errorCode: "SOME_ERROR",
-            errorData: "junk"
+            errorData: "junk",
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error data."));
       });
@@ -302,7 +302,7 @@ describe("The server.feedTermination() function", () => {
             feedName: "some_feed",
             feedArgs: { feed: "arg" },
             errorCode: "SOME_ERROR",
-            errorData: { problem: NaN }
+            errorData: { problem: NaN },
           });
         }).toThrow(new Error("INVALID_ARGUMENT: Invalid error data."));
       });

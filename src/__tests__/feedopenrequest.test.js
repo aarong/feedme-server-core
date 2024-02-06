@@ -8,7 +8,7 @@ describe("The feedOpenRequest() factory function", () => {
       clientId: "client1",
       feedName: "some_feed",
       feedArgs: { feed: "arg" },
-      _feedNameArgs: feedNameArgs
+      _feedNameArgs: feedNameArgs,
     });
   });
 });

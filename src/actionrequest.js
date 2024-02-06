@@ -15,7 +15,7 @@ export default function actionRequestFactory(
   clientId,
   actionCallbackId,
   actionName,
-  actionArgs
+  actionArgs,
 ) {
   const actionRequest = {};
 

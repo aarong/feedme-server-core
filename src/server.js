@@ -345,11 +345,11 @@ export default function serverFactory(options) {
   server._transportWrapper.on("message", server._processMessage.bind(server));
   server._transportWrapper.on(
     "disconnect",
-    server._processDisconnect.bind(server)
+    server._processDisconnect.bind(server),
   );
   server._transportWrapper.on(
     "transportError",
-    server._processTransportError.bind(server)
+    server._processTransportError.bind(server),
   );
 
   return server;
@@ -551,7 +551,7 @@ proto.actionRevelation = function actionRevelation(params) {
   if (!check.array(params.feedDeltas)) {
     throw new Error("INVALID_ARGUMENT: Invalid feed deltas.");
   }
-  _.each(params.feedDeltas, delta => {
+  _.each(params.feedDeltas, (delta) => {
     const errorMessage = validateFeedDelta(delta, true); // Ensure values are JSON-expressible
     if (errorMessage) {
       throw new Error("INVALID_ARGUMENT: Invalid feed delta.");
@@ -561,7 +561,7 @@ proto.actionRevelation = function actionRevelation(params) {
   // Check that feed data/hash are not both present
   if ("feedMd5" in params && "feedData" in params) {
     throw new Error(
-      "INVALID_ARGUMENT: Cannot specify both params.feedMd5 and params.feedData."
+      "INVALID_ARGUMENT: Cannot specify both params.feedMd5 and params.feedData.",
     );
   }
   let feedMd5;
@@ -593,7 +593,7 @@ proto.actionRevelation = function actionRevelation(params) {
     ActionData: params.actionData,
     FeedName: params.feedName,
     FeedArgs: params.feedArgs,
-    FeedDeltas: params.feedDeltas
+    FeedDeltas: params.feedDeltas,
   };
   if (feedMd5) {
     msg.FeedMd5 = feedMd5;
@@ -686,7 +686,7 @@ proto.feedTermination = function feedTermination(params) {
       this._clientFeedStates,
       params.clientId,
       feedSerial,
-      "closed"
+      "closed",
     );
 
     if (feedState === "opening") {
@@ -694,14 +694,14 @@ proto.feedTermination = function feedTermination(params) {
         params.clientId,
         feedNameArgs,
         params.errorCode,
-        params.errorData
+        params.errorData,
       );
     } else if (feedState === "open") {
       this._terminateOpenFeed(
         params.clientId,
         feedNameArgs,
         params.errorCode,
-        params.errorData
+        params.errorData,
       );
     }
   } else if (usage === 2) {
@@ -716,7 +716,7 @@ proto.feedTermination = function feedTermination(params) {
             params.clientId,
             f,
             params.errorCode,
-            params.errorData
+            params.errorData,
           );
         } else if (state === "open") {
           const f = FeedNameArgs(feedSerial);
@@ -724,7 +724,7 @@ proto.feedTermination = function feedTermination(params) {
             params.clientId,
             f,
             params.errorCode,
-            params.errorData
+            params.errorData,
           );
         }
       });
@@ -742,14 +742,14 @@ proto.feedTermination = function feedTermination(params) {
             clientId,
             feedNameArgs,
             params.errorCode,
-            params.errorData
+            params.errorData,
           );
         } else if (state === "open") {
           this._terminateOpenFeed(
             clientId,
             feedNameArgs,
             params.errorCode,
-            params.errorData
+            params.errorData,
           );
         }
       });
@@ -870,8 +870,8 @@ proto._processConnect = function _processConnect(transportClientId) {
       this._transportWrapper.disconnect(
         transportClientId,
         new Error(
-          "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time."
-        )
+          "HANDSHAKE_TIMEOUT: The client did not complete a handshake within the configured amount of time.",
+        ),
       );
     }, this._options.handshakeMs);
   }
@@ -908,9 +908,9 @@ proto._processMessage = function _processMessage(transportClientId, msg) {
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Invalid JSON.",
-          Message: msg
-        }
-      })
+          Message: msg,
+        },
+      }),
     );
 
     // Emit badClientMessage
@@ -935,9 +935,9 @@ proto._processMessage = function _processMessage(transportClientId, msg) {
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Schema violation.",
-          Message: msg
-        }
-      })
+          Message: msg,
+        },
+      }),
     );
 
     // Emit badClientMessage
@@ -979,9 +979,9 @@ proto._processHandshake = function _processHandshake(clientId, msg, msgString) {
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected Handshake message.",
-          Message: msgString
-        }
-      })
+          Message: msgString,
+        },
+      }),
     );
 
     // Emit badClientMessage
@@ -999,8 +999,8 @@ proto._processHandshake = function _processHandshake(clientId, msg, msgString) {
       transportClientId,
       JSON.stringify({
         MessageType: "HandshakeResponse",
-        Success: false
-      })
+        Success: false,
+      }),
     );
     return; // Stop
   }
@@ -1037,8 +1037,8 @@ proto._processHandshake = function _processHandshake(clientId, msg, msgString) {
       JSON.stringify({
         MessageType: "HandshakeResponse",
         Success: true,
-        Version: feedmeVersion
-      })
+        Version: feedmeVersion,
+      }),
     );
   }
 };
@@ -1068,14 +1068,14 @@ proto._processAction = function _processAction(clientId, msg, msgString) {
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Handshake required.",
-          Message: msgString
-        }
-      })
+          Message: msgString,
+        },
+      }),
     );
 
     // Emit badClientMessage
     const err = new Error(
-      "UNEXPECTED_MESSAGE: Action message received before successful Handshake."
+      "UNEXPECTED_MESSAGE: Action message received before successful Handshake.",
     );
     err.clientMessage = msgString;
     this.emit("badClientMessage", clientId, err);
@@ -1094,14 +1094,14 @@ proto._processAction = function _processAction(clientId, msg, msgString) {
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Action message reused an outstanding CallbackId.",
-          Message: msgString
-        }
-      })
+          Message: msgString,
+        },
+      }),
     );
 
     // Emit badClientMessage
     const err = new Error(
-      "UNEXPECTED_MESSAGE: Action message reused an outstanding CallbackId."
+      "UNEXPECTED_MESSAGE: Action message reused an outstanding CallbackId.",
     );
     err.clientMessage = msgString;
     this.emit("badClientMessage", clientId, err);
@@ -1119,8 +1119,8 @@ proto._processAction = function _processAction(clientId, msg, msgString) {
         CallbackId: msg.CallbackId,
         Success: false,
         ErrorCode: "INTERNAL_ERROR",
-        ErrorData: {}
-      })
+        ErrorData: {},
+      }),
     );
     return; // Stop
   }
@@ -1134,7 +1134,7 @@ proto._processAction = function _processAction(clientId, msg, msgString) {
     clientId,
     msg.CallbackId,
     msg.ActionName,
-    msg.ActionArgs
+    msg.ActionArgs,
   );
   const ares = actionResponse(this, areq);
   this._set(this._actionResponses, clientId, msg.CallbackId, ares);
@@ -1168,14 +1168,14 @@ proto._processFeedOpen = function _processFeedOpen(clientId, msg, msgString) {
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Handshake required.",
-          Message: msgString
-        }
-      })
+          Message: msgString,
+        },
+      }),
     );
 
     // Emit badClientMessage
     const err = new Error(
-      "UNEXPECTED_MESSAGE: FeedOpen message received before successful Handshake."
+      "UNEXPECTED_MESSAGE: FeedOpen message received before successful Handshake.",
     );
     err.clientMessage = msgString;
     this.emit("badClientMessage", clientId, err);
@@ -1188,7 +1188,7 @@ proto._processFeedOpen = function _processFeedOpen(clientId, msg, msgString) {
     this._clientFeedStates,
     clientId,
     feedSerial,
-    "closed"
+    "closed",
   );
   if (feedState !== "closed" && feedState !== "terminated") {
     dbg("Unexpected FeedOpen message - feed not closed/terminated");
@@ -1200,14 +1200,14 @@ proto._processFeedOpen = function _processFeedOpen(clientId, msg, msgString) {
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected FeedOpen message.",
-          Message: msgString
-        }
-      })
+          Message: msgString,
+        },
+      }),
     );
 
     // Emit badClientMessage
     const err = new Error(
-      "UNEXPECTED_MESSAGE: FeedOpen message referenced a feed that was not closed or terminated."
+      "UNEXPECTED_MESSAGE: FeedOpen message referenced a feed that was not closed or terminated.",
     );
     err.clientMessage = msgString;
     this.emit("badClientMessage", clientId, err);
@@ -1241,8 +1241,8 @@ proto._processFeedOpen = function _processFeedOpen(clientId, msg, msgString) {
         FeedName: msg.FeedName,
         FeedArgs: msg.FeedArgs,
         ErrorCode: "INTERNAL_ERROR",
-        ErrorData: {}
-      })
+        ErrorData: {},
+      }),
     );
     return; // Stop
   }
@@ -1289,14 +1289,14 @@ proto._processFeedClose = function _processFeedClose(clientId, msg, msgString) {
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Handshake required.",
-          Message: msgString
-        }
-      })
+          Message: msgString,
+        },
+      }),
     );
 
     // Emit badClientMessage
     const err = new Error(
-      "UNEXPECTED_MESSAGE: FeedClose message received before successful Handshake."
+      "UNEXPECTED_MESSAGE: FeedClose message received before successful Handshake.",
     );
     err.clientMessage = msgString;
     this.emit("badClientMessage", clientId, err);
@@ -1309,7 +1309,7 @@ proto._processFeedClose = function _processFeedClose(clientId, msg, msgString) {
     this._clientFeedStates,
     clientId,
     feedSerial,
-    "closed"
+    "closed",
   );
   if (feedState !== "open" && feedState !== "terminated") {
     dbg("Unexpected FeedClose message - feed not closed/terminated");
@@ -1321,14 +1321,14 @@ proto._processFeedClose = function _processFeedClose(clientId, msg, msgString) {
         MessageType: "ViolationResponse",
         Diagnostics: {
           Problem: "Unexpected FeedClose message.",
-          Message: msgString
-        }
-      })
+          Message: msgString,
+        },
+      }),
     );
 
     // Emit badClientMessage
     const err = new Error(
-      "UNEXPECTED_MESSAGE: FeedClose message referenced a feed that was not open or terminated."
+      "UNEXPECTED_MESSAGE: FeedClose message referenced a feed that was not open or terminated.",
     );
     err.clientMessage = msgString;
     this.emit("badClientMessage", clientId, err);
@@ -1377,8 +1377,8 @@ proto._processFeedClose = function _processFeedClose(clientId, msg, msgString) {
       JSON.stringify({
         MessageType: "FeedCloseResponse",
         FeedName: msg.FeedName,
-        FeedArgs: msg.FeedArgs
-      })
+        FeedArgs: msg.FeedArgs,
+      }),
     );
   }
 };
@@ -1401,17 +1401,17 @@ proto._processDisconnect = function _processDisconnect(transportClientId, err) {
     this._handshakeResponses[clientId]._neutralize();
   }
   if (this._actionResponses[clientId]) {
-    _.each(this._actionResponses[clientId], ares => {
+    _.each(this._actionResponses[clientId], (ares) => {
       ares._neutralize();
     });
   }
   if (this._feedOpenResponses[clientId]) {
-    _.each(this._feedOpenResponses[clientId], fores => {
+    _.each(this._feedOpenResponses[clientId], (fores) => {
       fores._neutralize();
     });
   }
   if (this._feedCloseResponses[clientId]) {
-    _.each(this._feedCloseResponses[clientId], fcres => {
+    _.each(this._feedCloseResponses[clientId], (fcres) => {
       fcres._neutralize();
     });
   }
@@ -1421,7 +1421,7 @@ proto._processDisconnect = function _processDisconnect(transportClientId, err) {
     clearTimeout(this._handshakeTimers[clientId]);
   }
   if (this._terminationTimers[clientId]) {
-    _.each(this._terminationTimers[clientId], timerId => {
+    _.each(this._terminationTimers[clientId], (timerId) => {
       clearTimeout(timerId);
     });
   }
@@ -1489,8 +1489,8 @@ proto._appHandshakeSuccess = function _appHandshakeSuccess(clientId) {
     JSON.stringify({
       MessageType: "HandshakeResponse",
       Success: true,
-      Version: feedmeVersion
-    })
+      Version: feedmeVersion,
+    }),
   );
 };
 
@@ -1509,7 +1509,7 @@ proto._appHandshakeSuccess = function _appHandshakeSuccess(clientId) {
 proto._appActionSuccess = function _appActionSuccess(
   clientId,
   actionCallbackId,
-  actionData
+  actionData,
 ) {
   dbg("Processing action success");
 
@@ -1525,8 +1525,8 @@ proto._appActionSuccess = function _appActionSuccess(
       MessageType: "ActionResponse",
       CallbackId: actionCallbackId,
       Success: true,
-      ActionData: actionData
-    })
+      ActionData: actionData,
+    }),
   );
 };
 
@@ -1547,7 +1547,7 @@ proto._appActionFailure = function _appActionFailure(
   clientId,
   actionCallbackId,
   errorCode,
-  errorData
+  errorData,
 ) {
   dbg("Processing action failure");
 
@@ -1564,8 +1564,8 @@ proto._appActionFailure = function _appActionFailure(
       CallbackId: actionCallbackId,
       Success: false,
       ErrorCode: errorCode,
-      ErrorData: errorData
-    })
+      ErrorData: errorData,
+    }),
   );
 };
 
@@ -1584,7 +1584,7 @@ proto._appActionFailure = function _appActionFailure(
 proto._appFeedOpenSuccess = function _appFeedOpenSuccess(
   clientId,
   feedNameArgs,
-  feedData
+  feedData,
 ) {
   dbg("Processing feed open success");
 
@@ -1604,8 +1604,8 @@ proto._appFeedOpenSuccess = function _appFeedOpenSuccess(
       Success: true,
       FeedName: feedNameArgs.name(),
       FeedArgs: feedNameArgs.args(),
-      FeedData: feedData
-    })
+      FeedData: feedData,
+    }),
   );
 };
 
@@ -1626,7 +1626,7 @@ proto._appFeedOpenFailure = function _appFeedOpenFailure(
   clientId,
   feedNameArgs,
   errorCode,
-  errorData
+  errorData,
 ) {
   dbg("Processing feed open failure");
 
@@ -1647,8 +1647,8 @@ proto._appFeedOpenFailure = function _appFeedOpenFailure(
       FeedName: feedNameArgs.name(),
       FeedArgs: feedNameArgs.args(),
       ErrorCode: errorCode,
-      ErrorData: errorData
-    })
+      ErrorData: errorData,
+    }),
   );
 };
 
@@ -1664,7 +1664,7 @@ proto._appFeedOpenFailure = function _appFeedOpenFailure(
 
 proto._appFeedCloseSuccess = function _appFeedCloseSuccess(
   clientId,
-  feedNameArgs
+  feedNameArgs,
 ) {
   dbg("Processing feed close success");
 
@@ -1682,8 +1682,8 @@ proto._appFeedCloseSuccess = function _appFeedCloseSuccess(
     JSON.stringify({
       MessageType: "FeedCloseResponse",
       FeedName: feedNameArgs.name(),
-      FeedArgs: feedNameArgs.args()
-    })
+      FeedArgs: feedNameArgs.args(),
+    }),
   );
 };
 
@@ -1705,7 +1705,7 @@ proto._terminateOpeningFeed = function _terminateOpeningFeed(
   clientId,
   feedNameArgs,
   errorCode,
-  errorData
+  errorData,
 ) {
   dbg("Terminating opening feed");
 
@@ -1729,8 +1729,8 @@ proto._terminateOpeningFeed = function _terminateOpeningFeed(
       FeedName: feedNameArgs.name(),
       FeedArgs: feedNameArgs.args(),
       ErrorCode: errorCode,
-      ErrorData: errorData
-    })
+      ErrorData: errorData,
+    }),
   );
 };
 
@@ -1750,7 +1750,7 @@ proto._terminateOpenFeed = function _terminateOpenFeed(
   clientId,
   feedNameArgs,
   errorCode,
-  errorData
+  errorData,
 ) {
   dbg("Terminating open feed");
 
@@ -1771,7 +1771,7 @@ proto._terminateOpenFeed = function _terminateOpenFeed(
         this._delete(this._clientFeedStates, clientId, feedSerial);
         this._delete(this._feedClientStates, feedSerial, clientId);
         this._delete(this._terminationTimers, clientId, feedSerial);
-      }, this._options.terminationMs)
+      }, this._options.terminationMs),
     );
   }
 
@@ -1783,8 +1783,8 @@ proto._terminateOpenFeed = function _terminateOpenFeed(
       FeedName: feedNameArgs.name(),
       FeedArgs: feedNameArgs.args(),
       ErrorCode: errorCode,
-      ErrorData: errorData
-    })
+      ErrorData: errorData,
+    }),
   );
 };
 

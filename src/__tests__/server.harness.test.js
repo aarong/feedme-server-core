@@ -3,7 +3,7 @@ import check from "check-types";
 import harness from "./server.harness";
 
 expect.extend({
-  toHaveState: harness.toHaveState
+  toHaveState: harness.toHaveState,
 });
 
 describe("The test harness", () => {
@@ -120,7 +120,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, {});
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected root keys to be valid, but they weren't"
+          "expected root keys to be valid, but they weren't",
         );
       });
     });
@@ -130,7 +130,7 @@ describe("The test harness", () => {
       beforeEach(() => {
         harn = harness({
           handshakeMs: 123,
-          terminationMs: 456
+          terminationMs: 456,
         });
       });
 
@@ -138,7 +138,7 @@ describe("The test harness", () => {
         const state = harn.getServerState();
         expect(state._options).toEqual({
           handshakeMs: 123,
-          terminationMs: 456
+          terminationMs: 456,
         });
       });
 
@@ -153,7 +153,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._options to match, but they didn't"
+          "expected ._options to match, but they didn't",
         );
       });
     });
@@ -181,7 +181,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected transport wrapper objects to match, but they didn't"
+          "expected transport wrapper objects to match, but they didn't",
         );
       });
 
@@ -191,7 +191,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected transport wrapper states to match, but they didn't"
+          "expected transport wrapper states to match, but they didn't",
         );
       });
     });
@@ -202,7 +202,7 @@ describe("The test harness", () => {
         harn = harness();
         harn.server._clientIds = {
           cid1: "tcid1",
-          cid2: "tcid2"
+          cid2: "tcid2",
         };
       });
 
@@ -210,7 +210,7 @@ describe("The test harness", () => {
         const state = harn.getServerState();
         expect(state._clientIds).toEqual({
           cid1: "tcid1",
-          cid2: "tcid2"
+          cid2: "tcid2",
         });
       });
 
@@ -225,7 +225,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._clientIds to match, but they didn't"
+          "expected ._clientIds to match, but they didn't",
         );
       });
     });
@@ -236,7 +236,7 @@ describe("The test harness", () => {
         harn = harness();
         harn.server._transportClientIds = {
           tcid1: "cid1",
-          tcid2: "cid2"
+          tcid2: "cid2",
         };
       });
 
@@ -244,7 +244,7 @@ describe("The test harness", () => {
         const state = harn.getServerState();
         expect(state._transportClientIds).toEqual({
           tcid1: "cid1",
-          tcid2: "cid2"
+          tcid2: "cid2",
         });
       });
 
@@ -259,7 +259,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._transportClientIds to match, but they didn't"
+          "expected ._transportClientIds to match, but they didn't",
         );
       });
     });
@@ -270,7 +270,7 @@ describe("The test harness", () => {
         harn = harness();
         harn.server._handshakeTimers = {
           cid1: 123,
-          cid2: 456
+          cid2: 456,
         };
       });
 
@@ -278,7 +278,7 @@ describe("The test harness", () => {
         const state = harn.getServerState();
         expect(state._handshakeTimers).toEqual({
           cid1: 123,
-          cid2: 456
+          cid2: 456,
         });
       });
 
@@ -291,7 +291,7 @@ describe("The test harness", () => {
         const state = harn.getServerState();
         state._handshakeTimers = {
           cid1: 888,
-          cid2: 999
+          cid2: 999,
         };
         expect(harn.server).toHaveState(state);
       });
@@ -302,7 +302,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._handshakeTimers keys to match, but they didn't"
+          "expected ._handshakeTimers keys to match, but they didn't",
         );
       });
 
@@ -312,7 +312,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._handshakeTimers values to match, but they didn't"
+          "expected ._handshakeTimers values to match, but they didn't",
         );
       });
     });
@@ -323,7 +323,7 @@ describe("The test harness", () => {
         harn = harness();
         harn.server._handshakeStatus = {
           cid1: "waiting",
-          cid2: "processing"
+          cid2: "processing",
         };
       });
 
@@ -331,7 +331,7 @@ describe("The test harness", () => {
         const state = harn.getServerState();
         expect(state._handshakeStatus).toEqual({
           cid1: "waiting",
-          cid2: "processing"
+          cid2: "processing",
         });
       });
 
@@ -346,7 +346,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._handshakeStatus to match, but they didn't"
+          "expected ._handshakeStatus to match, but they didn't",
         );
       });
     });
@@ -361,17 +361,17 @@ describe("The test harness", () => {
           _server: {},
           _handshakeRequest: { clientId: "cid1" },
           _appResponded: true,
-          _neutralized: false
+          _neutralized: false,
         };
         hsr2 = {
           _server: {},
           _handshakeRequest: { clientId: "cid2" },
           _appResponded: false,
-          _neutralized: true
+          _neutralized: true,
         };
         harn.server._handshakeResponses = {
           cid1: hsr1,
-          cid2: hsr2
+          cid2: hsr2,
         };
       });
 
@@ -380,26 +380,26 @@ describe("The test harness", () => {
 
         expect(_.keys(state._handshakeResponses).sort()).toEqual([
           "cid1",
-          "cid2"
+          "cid2",
         ]);
         expect(state._handshakeResponses.cid1).toBe(hsr1);
         expect(state._handshakeResponses.cid2).toBe(hsr2);
 
         expect(_.keys(state._handshakeResponseStates).sort()).toEqual([
           "cid1",
-          "cid2"
+          "cid2",
         ]);
         expect(check.object(state._handshakeResponseStates.cid1)).toBe(true);
         expect(state._handshakeResponseStates.cid1._server).toBe(hsr1._server);
         expect(state._handshakeResponseStates.cid1._handshakeRequest).toEqual({
-          clientId: "cid1"
+          clientId: "cid1",
         });
         expect(state._handshakeResponseStates.cid1._appResponded).toBe(true);
         expect(state._handshakeResponseStates.cid1._neutralized).toBe(false);
         expect(check.object(state._handshakeResponseStates.cid2)).toBe(true);
         expect(state._handshakeResponseStates.cid2._server).toBe(hsr2._server);
         expect(state._handshakeResponseStates.cid2._handshakeRequest).toEqual({
-          clientId: "cid2"
+          clientId: "cid2",
         });
         expect(state._handshakeResponseStates.cid2._appResponded).toBe(false);
         expect(state._handshakeResponseStates.cid2._neutralized).toBe(true);
@@ -416,7 +416,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._handshakeResponses keys to match, but they didn't"
+          "expected ._handshakeResponses keys to match, but they didn't",
         );
       });
 
@@ -426,7 +426,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._handshakeResponses values to match, but they didn't"
+          "expected ._handshakeResponses values to match, but they didn't",
         );
       });
 
@@ -436,7 +436,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._handshakeResponseStates keys to match, but they didn't"
+          "expected ._handshakeResponseStates keys to match, but they didn't",
         );
       });
 
@@ -446,7 +446,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._handshakeResponseStates[cid] keys to be valid, but they weren't"
+          "expected ._handshakeResponseStates[cid] keys to be valid, but they weren't",
         );
       });
 
@@ -456,19 +456,19 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._handshakeResponseStates[cid] values to match, but they didn't"
+          "expected ._handshakeResponseStates[cid] values to match, but they didn't",
         );
       });
 
       it("should compare the state correctly - mismatched ._handshakeResponseStates[cid]._handshakeRequest", () => {
         const state = harn.getServerState();
         state._handshakeResponseStates.cid1._handshakeRequest = {
-          clientId: "junk"
+          clientId: "junk",
         };
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._handshakeResponseStates[cid] values to match, but they didn't"
+          "expected ._handshakeResponseStates[cid] values to match, but they didn't",
         );
       });
 
@@ -478,7 +478,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._handshakeResponseStates[cid] values to match, but they didn't"
+          "expected ._handshakeResponseStates[cid] values to match, but they didn't",
         );
       });
 
@@ -488,7 +488,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._handshakeResponseStates[cid] values to match, but they didn't"
+          "expected ._handshakeResponseStates[cid] values to match, but they didn't",
         );
       });
     });
@@ -506,10 +506,10 @@ describe("The test harness", () => {
             clientId: "cid1",
             _actionCallbackId: "acb11",
             actionName: "action11",
-            actionArgs: { action: "args11" }
+            actionArgs: { action: "args11" },
           },
           _appResponded: true,
-          _neutralized: true
+          _neutralized: true,
         };
         ar12 = {
           _server: {},
@@ -517,10 +517,10 @@ describe("The test harness", () => {
             clientId: "cid1",
             _actionCallbackId: "acb12",
             actionName: "action12",
-            actionArgs: { action: "args12" }
+            actionArgs: { action: "args12" },
           },
           _appResponded: true,
-          _neutralized: false
+          _neutralized: false,
         };
         ar21 = {
           _server: {},
@@ -528,14 +528,14 @@ describe("The test harness", () => {
             clientId: "cid2",
             _actionCallbackId: "acb21",
             actionName: "action21",
-            actionArgs: { action: "args21" }
+            actionArgs: { action: "args21" },
           },
           _appResponded: false,
-          _neutralized: true
+          _neutralized: true,
         };
         harn.server._actionResponses = {
           cid1: { acb11: ar11, acb12: ar12 },
-          cid2: { acb21: ar21 }
+          cid2: { acb21: ar21 },
         };
       });
 
@@ -544,7 +544,7 @@ describe("The test harness", () => {
         expect(_.keys(state._actionResponses).sort()).toEqual(["cid1", "cid2"]);
         expect(_.keys(state._actionResponses.cid1).sort()).toEqual([
           "acb11",
-          "acb12"
+          "acb12",
         ]);
         expect(_.keys(state._actionResponses.cid2).sort()).toEqual(["acb21"]);
         expect(state._actionResponses.cid1.acb11).toBe(ar11);
@@ -553,51 +553,51 @@ describe("The test harness", () => {
 
         expect(_.keys(state._actionResponseStates).sort()).toEqual([
           "cid1",
-          "cid2"
+          "cid2",
         ]);
         expect(_.keys(state._actionResponseStates.cid1).sort()).toEqual([
           "acb11",
-          "acb12"
+          "acb12",
         ]);
         expect(_.keys(state._actionResponseStates.cid2).sort()).toEqual([
-          "acb21"
+          "acb21",
         ]);
 
         expect(state._actionResponseStates.cid1.acb11._server).toBe(
-          ar11._server
+          ar11._server,
         );
         expect(state._actionResponseStates.cid1.acb11._actionRequest).toEqual({
           clientId: "cid1",
           _actionCallbackId: "acb11",
           actionName: "action11",
-          actionArgs: { action: "args11" }
+          actionArgs: { action: "args11" },
         });
         expect(state._actionResponseStates.cid1.acb11._appResponded).toBe(true);
         expect(state._actionResponseStates.cid1.acb11._neutralized).toBe(true);
 
         expect(state._actionResponseStates.cid1.acb12._server).toBe(
-          ar12._server
+          ar12._server,
         );
         expect(state._actionResponseStates.cid1.acb12._actionRequest).toEqual({
           clientId: "cid1",
           _actionCallbackId: "acb12",
           actionName: "action12",
-          actionArgs: { action: "args12" }
+          actionArgs: { action: "args12" },
         });
         expect(state._actionResponseStates.cid1.acb12._appResponded).toBe(true);
         expect(state._actionResponseStates.cid1.acb12._neutralized).toBe(false);
 
         expect(state._actionResponseStates.cid2.acb21._server).toBe(
-          ar21._server
+          ar21._server,
         );
         expect(state._actionResponseStates.cid2.acb21._actionRequest).toEqual({
           clientId: "cid2",
           _actionCallbackId: "acb21",
           actionName: "action21",
-          actionArgs: { action: "args21" }
+          actionArgs: { action: "args21" },
         });
         expect(state._actionResponseStates.cid2.acb21._appResponded).toBe(
-          false
+          false,
         );
         expect(state._actionResponseStates.cid2.acb21._neutralized).toBe(true);
       });
@@ -613,7 +613,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._actionResponses keys to match, but they didn't"
+          "expected ._actionResponses keys to match, but they didn't",
         );
       });
 
@@ -623,7 +623,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._actionResponses[cid] keys to match, but they didn't"
+          "expected ._actionResponses[cid] keys to match, but they didn't",
         );
       });
 
@@ -633,7 +633,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._actionResponses[cid] values to match, but they didn't"
+          "expected ._actionResponses[cid] values to match, but they didn't",
         );
       });
 
@@ -643,7 +643,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._actionResponseStates keys to match, but they didn't"
+          "expected ._actionResponseStates keys to match, but they didn't",
         );
       });
 
@@ -653,7 +653,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._actionResponseStates[cid] keys to match, but they didn't"
+          "expected ._actionResponseStates[cid] keys to match, but they didn't",
         );
       });
 
@@ -663,7 +663,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._actionResponseStates[cid][acb] keys to be valid, but they weren't"
+          "expected ._actionResponseStates[cid][acb] keys to be valid, but they weren't",
         );
       });
 
@@ -673,7 +673,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._actionResponseStates[cid][acb] values to match, but they didn't"
+          "expected ._actionResponseStates[cid][acb] values to match, but they didn't",
         );
       });
 
@@ -683,12 +683,12 @@ describe("The test harness", () => {
           clientId: "junk",
           _actionCallbackId: "junk",
           actionName: "junk",
-          actionArgs: { action: "junk" }
+          actionArgs: { action: "junk" },
         };
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._actionResponseStates[cid][acb] values to match, but they didn't"
+          "expected ._actionResponseStates[cid][acb] values to match, but they didn't",
         );
       });
 
@@ -698,7 +698,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._actionResponseStates[cid][acb] values to match, but they didn't"
+          "expected ._actionResponseStates[cid][acb] values to match, but they didn't",
         );
       });
 
@@ -708,7 +708,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._actionResponseStates[cid][acb] values to match, but they didn't"
+          "expected ._actionResponseStates[cid][acb] values to match, but they didn't",
         );
       });
     });
@@ -720,11 +720,11 @@ describe("The test harness", () => {
         harn.server._clientFeedStates = {
           cid1: {
             ser1: "opening",
-            ser2: "open"
+            ser2: "open",
           },
           cid2: {
-            ser1: "closing"
-          }
+            ser1: "closing",
+          },
         };
       });
 
@@ -733,11 +733,11 @@ describe("The test harness", () => {
         expect(state._clientFeedStates).toEqual({
           cid1: {
             ser1: "opening",
-            ser2: "open"
+            ser2: "open",
           },
           cid2: {
-            ser1: "closing"
-          }
+            ser1: "closing",
+          },
         });
       });
 
@@ -752,7 +752,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._clientFeedStates to match, but they didn't"
+          "expected ._clientFeedStates to match, but they didn't",
         );
       });
     });
@@ -764,11 +764,11 @@ describe("The test harness", () => {
         harn.server._feedClientStates = {
           ser1: {
             cid1: "opening",
-            cid2: "closing"
+            cid2: "closing",
           },
           ser2: {
-            cid1: "open"
-          }
+            cid1: "open",
+          },
         };
       });
 
@@ -777,11 +777,11 @@ describe("The test harness", () => {
         expect(state._feedClientStates).toEqual({
           ser1: {
             cid1: "opening",
-            cid2: "closing"
+            cid2: "closing",
           },
           ser2: {
-            cid1: "open"
-          }
+            cid1: "open",
+          },
         });
       });
 
@@ -796,7 +796,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedClientStates to match, but they didn't"
+          "expected ._feedClientStates to match, but they didn't",
         );
       });
     });
@@ -808,11 +808,11 @@ describe("The test harness", () => {
         harn.server._terminationTimers = {
           cid1: {
             ser1: 123,
-            ser2: 456
+            ser2: 456,
           },
           cid2: {
-            ser1: 789
-          }
+            ser1: 789,
+          },
         };
       });
 
@@ -821,11 +821,11 @@ describe("The test harness", () => {
         expect(state._terminationTimers).toEqual({
           cid1: {
             ser1: 123,
-            ser2: 456
+            ser2: 456,
           },
           cid2: {
-            ser1: 789
-          }
+            ser1: 789,
+          },
         });
       });
 
@@ -846,7 +846,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._terminationTimers keys to match, but they didn't"
+          "expected ._terminationTimers keys to match, but they didn't",
         );
       });
 
@@ -856,7 +856,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._terminationTimers[cid] keys to match, but they didn't"
+          "expected ._terminationTimers[cid] keys to match, but they didn't",
         );
       });
 
@@ -866,7 +866,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._terminationTimers[cid] values to match, but they didn't"
+          "expected ._terminationTimers[cid] values to match, but they didn't",
         );
       });
     });
@@ -883,34 +883,34 @@ describe("The test harness", () => {
           _feedOpenRequest: {
             clientId: "cid1",
             feedName: "feed1",
-            feedArgs: { feed: "args1" }
+            feedArgs: { feed: "args1" },
           },
           _appResponded: true,
-          _neutralized: true
+          _neutralized: true,
         };
         for12 = {
           _server: {},
           _feedOpenRequest: {
             clientId: "cid1",
             feedName: "feed2",
-            feedArgs: { feed: "args2" }
+            feedArgs: { feed: "args2" },
           },
           _appResponded: true,
-          _neutralized: false
+          _neutralized: false,
         };
         for21 = {
           _server: {},
           _feedOpenRequest: {
             clientId: "cid2",
             feedName: "feed1",
-            feedArgs: { feed: "args1" }
+            feedArgs: { feed: "args1" },
           },
           _appResponded: false,
-          _neutralized: true
+          _neutralized: true,
         };
         harn.server._feedOpenResponses = {
           cid1: { ser1: for11, ser2: for12 },
-          cid2: { ser1: for21 }
+          cid2: { ser1: for21 },
         };
       });
 
@@ -918,11 +918,11 @@ describe("The test harness", () => {
         const state = harn.getServerState();
         expect(_.keys(state._feedOpenResponses).sort()).toEqual([
           "cid1",
-          "cid2"
+          "cid2",
         ]);
         expect(_.keys(state._feedOpenResponses.cid1).sort()).toEqual([
           "ser1",
-          "ser2"
+          "ser2",
         ]);
         expect(_.keys(state._feedOpenResponses.cid2).sort()).toEqual(["ser1"]);
         expect(state._feedOpenResponses.cid1.ser1).toBe(for11);
@@ -931,60 +931,60 @@ describe("The test harness", () => {
 
         expect(_.keys(state._feedOpenResponseStates).sort()).toEqual([
           "cid1",
-          "cid2"
+          "cid2",
         ]);
         expect(_.keys(state._feedOpenResponseStates.cid1).sort()).toEqual([
           "ser1",
-          "ser2"
+          "ser2",
         ]);
         expect(_.keys(state._feedOpenResponseStates.cid2).sort()).toEqual([
-          "ser1"
+          "ser1",
         ]);
 
         expect(state._feedOpenResponseStates.cid1.ser1._server).toBe(
-          for11._server
+          for11._server,
         );
         expect(
-          state._feedOpenResponseStates.cid1.ser1._feedOpenRequest
+          state._feedOpenResponseStates.cid1.ser1._feedOpenRequest,
         ).toEqual({
           clientId: "cid1",
           feedName: "feed1",
-          feedArgs: { feed: "args1" }
+          feedArgs: { feed: "args1" },
         });
         expect(state._feedOpenResponseStates.cid1.ser1._appResponded).toBe(
-          true
+          true,
         );
         expect(state._feedOpenResponseStates.cid1.ser1._neutralized).toBe(true);
 
         expect(state._feedOpenResponseStates.cid1.ser2._server).toBe(
-          for12._server
+          for12._server,
         );
         expect(
-          state._feedOpenResponseStates.cid1.ser2._feedOpenRequest
+          state._feedOpenResponseStates.cid1.ser2._feedOpenRequest,
         ).toEqual({
           clientId: "cid1",
           feedName: "feed2",
-          feedArgs: { feed: "args2" }
+          feedArgs: { feed: "args2" },
         });
         expect(state._feedOpenResponseStates.cid1.ser2._appResponded).toBe(
-          true
+          true,
         );
         expect(state._feedOpenResponseStates.cid1.ser2._neutralized).toBe(
-          false
+          false,
         );
 
         expect(state._feedOpenResponseStates.cid2.ser1._server).toBe(
-          for21._server
+          for21._server,
         );
         expect(
-          state._feedOpenResponseStates.cid2.ser1._feedOpenRequest
+          state._feedOpenResponseStates.cid2.ser1._feedOpenRequest,
         ).toEqual({
           clientId: "cid2",
           feedName: "feed1",
-          feedArgs: { feed: "args1" }
+          feedArgs: { feed: "args1" },
         });
         expect(state._feedOpenResponseStates.cid2.ser1._appResponded).toBe(
-          false
+          false,
         );
         expect(state._feedOpenResponseStates.cid2.ser1._neutralized).toBe(true);
       });
@@ -1000,7 +1000,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedOpenResponses keys to match, but they didn't"
+          "expected ._feedOpenResponses keys to match, but they didn't",
         );
       });
 
@@ -1010,7 +1010,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedOpenResponses[cid] keys to match, but they didn't"
+          "expected ._feedOpenResponses[cid] keys to match, but they didn't",
         );
       });
 
@@ -1020,7 +1020,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedOpenResponses[cid] values to match, but they didn't"
+          "expected ._feedOpenResponses[cid] values to match, but they didn't",
         );
       });
 
@@ -1030,7 +1030,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedOpenResponseStates keys to match, but they didn't"
+          "expected ._feedOpenResponseStates keys to match, but they didn't",
         );
       });
 
@@ -1040,7 +1040,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedOpenResponseStates[cid] keys to match, but they didn't"
+          "expected ._feedOpenResponseStates[cid] keys to match, but they didn't",
         );
       });
 
@@ -1050,7 +1050,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedOpenResponseStates[cid][ser] keys to be valid, but they weren't"
+          "expected ._feedOpenResponseStates[cid][ser] keys to be valid, but they weren't",
         );
       });
 
@@ -1060,7 +1060,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedOpenResponseStates[cid][ser] values to match, but they didn't"
+          "expected ._feedOpenResponseStates[cid][ser] values to match, but they didn't",
         );
       });
 
@@ -1069,12 +1069,12 @@ describe("The test harness", () => {
         state._feedOpenResponseStates.cid1.ser1._feedOpenRequest = {
           clientId: "junk",
           feedName: "junk",
-          feedArgs: { feed: "junk" }
+          feedArgs: { feed: "junk" },
         };
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedOpenResponseStates[cid][ser] values to match, but they didn't"
+          "expected ._feedOpenResponseStates[cid][ser] values to match, but they didn't",
         );
       });
 
@@ -1084,7 +1084,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedOpenResponseStates[cid][ser] values to match, but they didn't"
+          "expected ._feedOpenResponseStates[cid][ser] values to match, but they didn't",
         );
       });
 
@@ -1094,7 +1094,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedOpenResponseStates[cid][ser] values to match, but they didn't"
+          "expected ._feedOpenResponseStates[cid][ser] values to match, but they didn't",
         );
       });
     });
@@ -1111,34 +1111,34 @@ describe("The test harness", () => {
           _feedCloseRequest: {
             clientId: "cid1",
             feedName: "feed1",
-            feedArgs: { feed: "args1" }
+            feedArgs: { feed: "args1" },
           },
           _appResponded: true,
-          _neutralized: true
+          _neutralized: true,
         };
         fcr12 = {
           _server: {},
           _feedCloseRequest: {
             clientId: "cid1",
             feedName: "feed2",
-            feedArgs: { feed: "args2" }
+            feedArgs: { feed: "args2" },
           },
           _appResponded: true,
-          _neutralized: false
+          _neutralized: false,
         };
         fcr21 = {
           _server: {},
           _feedCloseRequest: {
             clientId: "cid2",
             feedName: "feed1",
-            feedArgs: { feed: "args1" }
+            feedArgs: { feed: "args1" },
           },
           _appResponded: false,
-          _neutralized: true
+          _neutralized: true,
         };
         harn.server._feedCloseResponses = {
           cid1: { ser1: fcr11, ser2: fcr12 },
-          cid2: { ser1: fcr21 }
+          cid2: { ser1: fcr21 },
         };
       });
 
@@ -1146,11 +1146,11 @@ describe("The test harness", () => {
         const state = harn.getServerState();
         expect(_.keys(state._feedCloseResponses).sort()).toEqual([
           "cid1",
-          "cid2"
+          "cid2",
         ]);
         expect(_.keys(state._feedCloseResponses.cid1).sort()).toEqual([
           "ser1",
-          "ser2"
+          "ser2",
         ]);
         expect(_.keys(state._feedCloseResponses.cid2).sort()).toEqual(["ser1"]);
         expect(state._feedCloseResponses.cid1.ser1).toBe(fcr11);
@@ -1159,11 +1159,11 @@ describe("The test harness", () => {
 
         expect(_.keys(state._feedCloseResponses).sort()).toEqual([
           "cid1",
-          "cid2"
+          "cid2",
         ]);
         expect(_.keys(state._feedCloseResponses.cid1).sort()).toEqual([
           "ser1",
-          "ser2"
+          "ser2",
         ]);
         expect(_.keys(state._feedCloseResponses.cid2).sort()).toEqual(["ser1"]);
 
@@ -1171,7 +1171,7 @@ describe("The test harness", () => {
         expect(state._feedCloseResponses.cid1.ser1._feedCloseRequest).toEqual({
           clientId: "cid1",
           feedName: "feed1",
-          feedArgs: { feed: "args1" }
+          feedArgs: { feed: "args1" },
         });
         expect(state._feedCloseResponses.cid1.ser1._appResponded).toBe(true);
         expect(state._feedCloseResponses.cid1.ser1._neutralized).toBe(true);
@@ -1180,7 +1180,7 @@ describe("The test harness", () => {
         expect(state._feedCloseResponses.cid1.ser2._feedCloseRequest).toEqual({
           clientId: "cid1",
           feedName: "feed2",
-          feedArgs: { feed: "args2" }
+          feedArgs: { feed: "args2" },
         });
         expect(state._feedCloseResponses.cid1.ser2._appResponded).toBe(true);
         expect(state._feedCloseResponses.cid1.ser2._neutralized).toBe(false);
@@ -1189,7 +1189,7 @@ describe("The test harness", () => {
         expect(state._feedCloseResponses.cid2.ser1._feedCloseRequest).toEqual({
           clientId: "cid2",
           feedName: "feed1",
-          feedArgs: { feed: "args1" }
+          feedArgs: { feed: "args1" },
         });
         expect(state._feedCloseResponses.cid2.ser1._appResponded).toBe(false);
         expect(state._feedCloseResponses.cid2.ser1._neutralized).toBe(true);
@@ -1206,7 +1206,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedCloseResponses keys to match, but they didn't"
+          "expected ._feedCloseResponses keys to match, but they didn't",
         );
       });
 
@@ -1216,7 +1216,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedCloseResponses[cid] keys to match, but they didn't"
+          "expected ._feedCloseResponses[cid] keys to match, but they didn't",
         );
       });
 
@@ -1226,7 +1226,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedCloseResponses[cid] values to match, but they didn't"
+          "expected ._feedCloseResponses[cid] values to match, but they didn't",
         );
       });
 
@@ -1236,7 +1236,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedCloseResponseStates keys to match, but they didn't"
+          "expected ._feedCloseResponseStates keys to match, but they didn't",
         );
       });
 
@@ -1246,7 +1246,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedCloseResponseStates[cid] keys to match, but they didn't"
+          "expected ._feedCloseResponseStates[cid] keys to match, but they didn't",
         );
       });
 
@@ -1256,7 +1256,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedCloseResponseStates[cid][ser] keys to be valid, but they weren't"
+          "expected ._feedCloseResponseStates[cid][ser] keys to be valid, but they weren't",
         );
       });
 
@@ -1266,7 +1266,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedCloseResponseStates[cid][ser] values to match, but they didn't"
+          "expected ._feedCloseResponseStates[cid][ser] values to match, but they didn't",
         );
       });
 
@@ -1275,12 +1275,12 @@ describe("The test harness", () => {
         state._feedCloseResponseStates.cid1.ser1._feedCloseRequest = {
           clientId: "junk",
           feedName: "junk",
-          feedArgs: { feed: "junk" }
+          feedArgs: { feed: "junk" },
         };
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedCloseResponseStates[cid][ser] values to match, but they didn't"
+          "expected ._feedCloseResponseStates[cid][ser] values to match, but they didn't",
         );
       });
 
@@ -1290,7 +1290,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedCloseResponseStates[cid][ser] values to match, but they didn't"
+          "expected ._feedCloseResponseStates[cid][ser] values to match, but they didn't",
         );
       });
 
@@ -1300,7 +1300,7 @@ describe("The test harness", () => {
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
-          "expected ._feedCloseResponseStates[cid][ser] values to match, but they didn't"
+          "expected ._feedCloseResponseStates[cid][ser] values to match, but they didn't",
         );
       });
     });

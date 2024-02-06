@@ -32,7 +32,7 @@ export default function transportWrapperFactory(transport) {
   // Check that the transport is an object
   if (!check.object(transport)) {
     throw new Error(
-      "INVALID_ARGUMENT: The supplied transport is not an object."
+      "INVALID_ARGUMENT: The supplied transport is not an object.",
     );
   }
 
@@ -46,7 +46,7 @@ export default function transportWrapperFactory(transport) {
     !check.function(transport.disconnect)
   ) {
     throw new Error(
-      "INVALID_ARGUMENT: The supplied transport does not implement the required API."
+      "INVALID_ARGUMENT: The supplied transport does not implement the required API.",
     );
   }
 
@@ -89,31 +89,31 @@ export default function transportWrapperFactory(transport) {
   // Listen for transport events
   transportWrapper._transport.on(
     "starting",
-    transportWrapper._processTransportStarting.bind(transportWrapper)
+    transportWrapper._processTransportStarting.bind(transportWrapper),
   );
   transportWrapper._transport.on(
     "start",
-    transportWrapper._processTransportStart.bind(transportWrapper)
+    transportWrapper._processTransportStart.bind(transportWrapper),
   );
   transportWrapper._transport.on(
     "stopping",
-    transportWrapper._processTransportStopping.bind(transportWrapper)
+    transportWrapper._processTransportStopping.bind(transportWrapper),
   );
   transportWrapper._transport.on(
     "stop",
-    transportWrapper._processTransportStop.bind(transportWrapper)
+    transportWrapper._processTransportStop.bind(transportWrapper),
   );
   transportWrapper._transport.on(
     "connect",
-    transportWrapper._processTransportConnect.bind(transportWrapper)
+    transportWrapper._processTransportConnect.bind(transportWrapper),
   );
   transportWrapper._transport.on(
     "message",
-    transportWrapper._processTransportMessage.bind(transportWrapper)
+    transportWrapper._processTransportMessage.bind(transportWrapper),
   );
   transportWrapper._transport.on(
     "disconnect",
-    transportWrapper._processTransportDisconnect.bind(transportWrapper)
+    transportWrapper._processTransportDisconnect.bind(transportWrapper),
   );
 
   return transportWrapper;
@@ -209,12 +209,12 @@ proto.state = function state() {
   // Did it throw an error? Never should
   if (transportErr) {
     const emitErr = new Error(
-      `INVALID_RESULT: Transport threw an error on call to state().`
+      `INVALID_RESULT: Transport threw an error on call to state().`,
     );
     emitErr.transportError = transportErr;
     this.emit("transportError", emitErr);
     throw new Error(
-      `TRANSPORT_ERROR: The transport unexpectedly threw an error.`
+      `TRANSPORT_ERROR: The transport unexpectedly threw an error.`,
     );
   }
 
@@ -228,11 +228,11 @@ proto.state = function state() {
     this.emit(
       "transportError",
       new Error(
-        `INVALID_RESULT: Transport unexpectedly returned '${st}' on a call to state() when previous emission was '${this._lastStateEmission}'.` // prettier-ignore
-      )
+        `INVALID_RESULT: Transport unexpectedly returned '${st}' on a call to state() when previous emission was '${this._lastStateEmission}'.`, // prettier-ignore
+      ),
     );
     throw new Error(
-      `TRANSPORT_ERROR: The transport returned an unexpected state.`
+      `TRANSPORT_ERROR: The transport returned an unexpected state.`,
     );
   }
 
@@ -252,7 +252,7 @@ proto.start = function start() {
   // Check invocation sequence (library behavior)
   if (this._lastStateEmission !== "stop") {
     throw new Error(
-      "INVALID_CALL: Call to start() when the transport state was not 'stopped'."
+      "INVALID_CALL: Call to start() when the transport state was not 'stopped'.",
     );
   }
 
@@ -262,7 +262,7 @@ proto.start = function start() {
   } catch (e) {
     // Invalid behavior from the transport
     const emitErr = new Error(
-      `INVALID_RESULT: Transport threw an error on a call to start() when previous emission was 'stop'.`
+      `INVALID_RESULT: Transport threw an error on a call to start() when previous emission was 'stop'.`,
     );
     emitErr.transportError = e;
     this.emit("transportError", emitErr);
@@ -282,7 +282,7 @@ proto.stop = function stop() {
   // Check invocation sequence (library behavior)
   if (this._lastStateEmission !== "start") {
     throw new Error(
-      "INVALID_CALL: Call to stop() when the transport state was not 'started'."
+      "INVALID_CALL: Call to stop() when the transport state was not 'started'.",
     );
   }
 
@@ -292,7 +292,7 @@ proto.stop = function stop() {
   } catch (e) {
     // Invalid behavior from the transport
     const emitErr = new Error(
-      `INVALID_RESULT: Transport threw an error on a call to stop() when previous emission was 'start'.`
+      `INVALID_RESULT: Transport threw an error on a call to stop() when previous emission was 'start'.`,
     );
     emitErr.transportError = e;
     this.emit("transportError", emitErr);
@@ -314,14 +314,14 @@ proto.send = function send(clientId, msg) {
   // Check invocation sequence (library behavior)
   if (this._lastStateEmission !== "start") {
     throw new Error(
-      "INVALID_CALL: Call to send() when the transport state was not 'started'."
+      "INVALID_CALL: Call to send() when the transport state was not 'started'.",
     );
   }
 
   // Was this a valid call from the server? Check that client is connected
   if (!this._clientIds.includes(clientId)) {
     throw new Error(
-      "INVALID_CALL: Call to send() referencing client not understood to be connected."
+      "INVALID_CALL: Call to send() referencing client not understood to be connected.",
     );
   }
 
@@ -331,7 +331,7 @@ proto.send = function send(clientId, msg) {
   } catch (e) {
     // Invalid behavior from the transport
     const emitErr = new Error(
-      `INVALID_RESULT: Transport threw an error on a call to send() when previous state emission was 'start' and client was understood to be connected.`
+      `INVALID_RESULT: Transport threw an error on a call to send() when previous state emission was 'start' and client was understood to be connected.`,
     );
     emitErr.transportError = e;
     this.emit("transportError", emitErr);
@@ -353,14 +353,14 @@ proto.disconnect = function disconnect(clientId, inErr) {
   // // Check invocation sequence (library behavior)
   if (this._lastStateEmission !== "start") {
     throw new Error(
-      "INVALID_CALL: Call to disconnect() when the transport state was not 'started'."
+      "INVALID_CALL: Call to disconnect() when the transport state was not 'started'.",
     );
   }
 
   // Was this a valid call from the server? Check that client is connected
   if (!this._clientIds.includes(clientId)) {
     throw new Error(
-      "INVALID_CALL: Call to disconnect() referencing client not understood to be connected."
+      "INVALID_CALL: Call to disconnect() referencing client not understood to be connected.",
     );
   }
 
@@ -374,7 +374,7 @@ proto.disconnect = function disconnect(clientId, inErr) {
   } catch (e) {
     // Invalid behavior from the transport
     const emitErr = new Error(
-      `INVALID_RESULT: Transport threw an error on a call to disconnect() when previous state emission was 'start' and client was understood to be connected.`
+      `INVALID_RESULT: Transport threw an error on a call to disconnect() when previous state emission was 'start' and client was understood to be connected.`,
     );
     emitErr.transportError = e;
     this.emit("transportError", emitErr);
@@ -398,8 +398,8 @@ proto._processTransportStarting = function _processTransportStarting(...args) {
     this.emit(
       "transportError",
       new Error(
-        `UNEXPECTED_EVENT: Transport emitted a  'starting' event following a '${this._lastStateEmission}' emission.` // prettier-ignore
-      )
+        `UNEXPECTED_EVENT: Transport emitted a  'starting' event following a '${this._lastStateEmission}' emission.`, // prettier-ignore
+      ),
     );
     return; // Stop
   }
@@ -409,8 +409,8 @@ proto._processTransportStarting = function _processTransportStarting(...args) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'starting' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'starting' event.",
+      ),
     );
     return; // Stop
   }
@@ -434,8 +434,8 @@ proto._processTransportStart = function _processTransportStart(...args) {
     this.emit(
       "transportError",
       new Error(
-        `UNEXPECTED_EVENT: Transport emitted a  'start' event following a '${this._lastStateEmission}' emission.` // prettier-ignore
-      )
+        `UNEXPECTED_EVENT: Transport emitted a  'start' event following a '${this._lastStateEmission}' emission.`, // prettier-ignore
+      ),
     );
     return; // Stop
   }
@@ -445,8 +445,8 @@ proto._processTransportStart = function _processTransportStart(...args) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'start' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'start' event.",
+      ),
     );
     return; // Stop
   }
@@ -473,8 +473,8 @@ proto._processTransportStopping = function _processTransportStopping(...args) {
     this.emit(
       "transportError",
       new Error(
-        `UNEXPECTED_EVENT: Transport emitted a  'stopping' event following a '${this._lastStateEmission}' emission.` // prettier-ignore
-      )
+        `UNEXPECTED_EVENT: Transport emitted a  'stopping' event following a '${this._lastStateEmission}' emission.`, // prettier-ignore
+      ),
     );
     return; // Stop
   }
@@ -484,8 +484,8 @@ proto._processTransportStopping = function _processTransportStopping(...args) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'stopping' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'stopping' event.",
+      ),
     );
     return; // Stop
   }
@@ -499,8 +499,8 @@ proto._processTransportStopping = function _processTransportStopping(...args) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stopping' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stopping' event.",
+      ),
     );
     return; // Stop
   }
@@ -528,8 +528,8 @@ proto._processTransportStop = function _processTransportStop(...args) {
     this.emit(
       "transportError",
       new Error(
-        `UNEXPECTED_EVENT: Transport emitted a  'stop' event following a '${this._lastStateEmission}' emission.` // prettier-ignore
-      )
+        `UNEXPECTED_EVENT: Transport emitted a  'stop' event following a '${this._lastStateEmission}' emission.`, // prettier-ignore
+      ),
     );
     return; // Stop
   }
@@ -539,8 +539,8 @@ proto._processTransportStop = function _processTransportStop(...args) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'stop' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'stop' event.",
+      ),
     );
     return; // Stop
   }
@@ -554,8 +554,8 @@ proto._processTransportStop = function _processTransportStop(...args) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stop' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'stop' event.",
+      ),
     );
     return; // Stop
   }
@@ -583,8 +583,8 @@ proto._processTransportConnect = function _processTransportConnect(...args) {
     this.emit(
       "transportError",
       new Error(
-        `UNEXPECTED_EVENT: Transport emitted a  'connect' event while not started.`
-      )
+        `UNEXPECTED_EVENT: Transport emitted a  'connect' event while not started.`,
+      ),
     );
     return; // Stop
   }
@@ -594,8 +594,8 @@ proto._processTransportConnect = function _processTransportConnect(...args) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'connect' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'connect' event.",
+      ),
     );
     return; // Stop
   }
@@ -605,8 +605,8 @@ proto._processTransportConnect = function _processTransportConnect(...args) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'connect' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'connect' event.",
+      ),
     );
     return; // Stop
   }
@@ -616,8 +616,8 @@ proto._processTransportConnect = function _processTransportConnect(...args) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed an already-connected client id with the 'connect' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed an already-connected client id with the 'connect' event.",
+      ),
     );
     return; // Stop
   }
@@ -644,8 +644,8 @@ proto._processTransportMessage = function _processTransportMessage(...args) {
     this.emit(
       "transportError",
       new Error(
-        `UNEXPECTED_EVENT: Transport emitted a  'message' event while not started.`
-      )
+        `UNEXPECTED_EVENT: Transport emitted a  'message' event while not started.`,
+      ),
     );
     return; // Stop
   }
@@ -655,8 +655,8 @@ proto._processTransportMessage = function _processTransportMessage(...args) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'message' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'message' event.",
+      ),
     );
     return; // Stop
   }
@@ -666,8 +666,8 @@ proto._processTransportMessage = function _processTransportMessage(...args) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'message' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'message' event.",
+      ),
     );
     return; // Stop
   }
@@ -677,8 +677,8 @@ proto._processTransportMessage = function _processTransportMessage(...args) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed a non-string message with the 'message' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed a non-string message with the 'message' event.",
+      ),
     );
     return; // Stop
   }
@@ -688,8 +688,8 @@ proto._processTransportMessage = function _processTransportMessage(...args) {
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed an unknown client id with the 'message' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed an unknown client id with the 'message' event.",
+      ),
     );
     return; // Stop
   }
@@ -714,8 +714,8 @@ proto._processTransportDisconnect = function _processTransportDisconnect(
     this.emit(
       "transportError",
       new Error(
-        `UNEXPECTED_EVENT: Transport emitted a  'disconnect' event while not started.`
-      )
+        `UNEXPECTED_EVENT: Transport emitted a  'disconnect' event while not started.`,
+      ),
     );
     return; // Stop
   }
@@ -725,8 +725,8 @@ proto._processTransportDisconnect = function _processTransportDisconnect(
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'disconnect' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed one or more extraneous arguments with the 'disconnect' event.",
+      ),
     );
     return; // Stop
   }
@@ -736,8 +736,8 @@ proto._processTransportDisconnect = function _processTransportDisconnect(
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'disconnect' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed a non-string or empty client id with the 'disconnect' event.",
+      ),
     );
     return; // Stop
   }
@@ -747,8 +747,8 @@ proto._processTransportDisconnect = function _processTransportDisconnect(
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed an unknown client id with the 'disconnect' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed an unknown client id with the 'disconnect' event.",
+      ),
     );
     return; // Stop
   }
@@ -764,8 +764,8 @@ proto._processTransportDisconnect = function _processTransportDisconnect(
     this.emit(
       "transportError",
       new Error(
-        "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'disconnect' event."
-      )
+        "BAD_EVENT_ARGUMENT: Transport passed an invalid argument with the 'disconnect' event.",
+      ),
     );
     return; // Stop
   }
