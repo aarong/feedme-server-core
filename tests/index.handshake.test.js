@@ -6,7 +6,9 @@ describe("When the transport emits a valid Handshake message", () => {
       // Events
 
       it("should emit no events", () => {
-        const harn = harness();
+        const harn = harness({
+          handshakeMs: 0 // Don't leave a pending timer (Jest warns)
+        });
         harn.makeServerStarted();
         harn.transport.emit("connect", "some_tcid");
 
@@ -26,7 +28,9 @@ describe("When the transport emits a valid Handshake message", () => {
       // Transport
 
       it("should return HandshakeResponse indicating failure", () => {
-        const harn = harness();
+        const harn = harness({
+          handshakeMs: 0 // Don't leave a pending timer (Jest warns)
+        });
         harn.makeServerStarted();
         harn.transport.emit("connect", "some_tcid");
 
@@ -181,7 +185,9 @@ describe("When the transport emits a valid Handshake message", () => {
       // Events
 
       it("should emit no events", () => {
-        const harn = harness();
+        const harn = harness({
+          handshakeMs: 0 // Don't leave a pending timer (Jest warns)
+        });
         harn.makeServerStarted();
         harn.transport.emit("connect", "some_tcid");
 
@@ -212,7 +218,9 @@ describe("When the transport emits a valid Handshake message", () => {
       // Transport
 
       it("should return HandshakeResponse indicating failure", () => {
-        const harn = harness();
+        const harn = harness({
+          handshakeMs: 0 // Don't leave a pending timer (Jest warns)
+        });
         harn.makeServerStarted();
         harn.transport.emit("connect", "some_tcid");
 

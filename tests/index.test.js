@@ -1,7 +1,7 @@
 import _ from "lodash";
 import check from "check-types";
 import harness from "./index.harness";
-import feedmeServerCore from "../build";
+import feedmeServerCore from "../build/index";
 import config from "../src/config";
 
 /*

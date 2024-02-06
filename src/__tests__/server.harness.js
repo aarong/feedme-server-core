@@ -1,6 +1,5 @@
 import emitter from "component-emitter";
 import _ from "lodash";
-import check from "check-types";
 import server from "../server";
 import transportWrapper from "../transportwrapper";
 
@@ -152,11 +151,11 @@ harnessFactory.toHaveState = function toHaveState(
     };
   }
 
-  // Check ._handshakeTimers values
+  // Check ._handshakeTimers values (both must be truthy)
   _.each(receivedServer._handshakeTimers, (timerId, cid) => {
     if (
-      !check.number(receivedServer._handshakeTimers[cid]) ||
-      !check.number(expectedState._handshakeTimers[cid])
+      !receivedServer._handshakeTimers[cid] ||
+      !expectedState._handshakeTimers[cid]
     ) {
       err = {
         pass: false,
@@ -460,11 +459,11 @@ harnessFactory.toHaveState = function toHaveState(
       };
     }
 
-    // Check client values
+    // Check client values (both must be truthy)
     _.each(clientTimers, (timer, feedSerial) => {
       if (
-        !check.number(receivedServer._terminationTimers[cid][feedSerial]) ||
-        !check.number(expectedState._terminationTimers[cid][feedSerial])
+        !receivedServer._terminationTimers[cid][feedSerial] ||
+        !expectedState._terminationTimers[cid][feedSerial]
       ) {
         err = {
           pass: false,

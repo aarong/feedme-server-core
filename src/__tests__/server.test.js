@@ -6,6 +6,8 @@ import config from "../config";
 import harness from "./server.harness";
 
 jest.useFakeTimers();
+jest.spyOn(global, "setTimeout");
+jest.spyOn(global, "clearTimeout");
 
 /*
 

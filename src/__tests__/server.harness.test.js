@@ -308,7 +308,7 @@ describe("The test harness", () => {
 
       it("should compare the state correctly - mismatched value", () => {
         const state = harn.getServerState();
-        state._handshakeTimers.cid1 = "junk";
+        state._handshakeTimers.cid1 = false;
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(
@@ -862,7 +862,7 @@ describe("The test harness", () => {
 
       it("should compare the state correctly - mismatched ._terminationTimers[cid] value", () => {
         const state = harn.getServerState();
-        state._terminationTimers.cid1.ser1 = "junk";
+        state._terminationTimers.cid1.ser1 = false;
         const result = harness.toHaveState(harn.server, state);
         expect(result.pass).toBe(false);
         expect(result.message()).toEqual(

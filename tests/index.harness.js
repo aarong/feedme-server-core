@@ -1,5 +1,5 @@
 import emitter from "component-emitter";
-import feedmeServerCore from "../build";
+import feedmeServerCore from "../build/index";
 
 const harnessProto = {};
 
