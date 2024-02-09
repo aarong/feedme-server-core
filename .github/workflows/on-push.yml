@@ -1,0 +1,10 @@
+name: CI-CD12345
+run-name: On-Push
+on:
+  - push
+  - workflow_dispatch # Permit manual initiation
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+    
+ 

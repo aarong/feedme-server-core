@@ -1,0 +1,18 @@
+name: CI-CD
+run-name: Test
+on:
+  - workflow_call # Reusable from other workflows
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 'latest'
+      - run: npm ci
+      - run: npm run build
+      
+      - run: npm run coverage
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2
