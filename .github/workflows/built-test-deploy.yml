@@ -17,10 +17,15 @@ jobs:
       - run: npm run coverage
       - name: Coveralls
         uses: coverallsapp/github-action@v2
-      
-      # Publish takes place only if new version tag
+
+  deploy:
+    # Wait for tests to complete
+    needs: tests 
+    # Only publish if tagged v*
+    if: startsWith(github.event.ref, 'refs/tags/v')    
+    runs-on: ubuntu-latest
+    steps:
       - uses: JS-DevTools/npm-publish@v3
         with:
           package: build # Path
           token: ${{ secrets.NPM_TOKEN }}
- 
