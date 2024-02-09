@@ -1,6 +1,6 @@
 {
   "name": "feedme-server-core",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A low-level Feedme server library for Node.js.",
   "main": "index.js",
   "scripts": {
